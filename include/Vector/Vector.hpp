@@ -34,8 +34,13 @@
 #include <array> //std::array
 #include <stddef.h> //sizt_t
 #include <iostream> //ostream, istream
+#include <cassert> //assert
+#include <cstring> //memset
+#include <cmath> //sqrt
 
-#include "../Type/TypeTraitsAlias.hpp"
+#include "../Type/TypeTraitsAlias.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
+#include "../Numeric/Limits.hpp" //isSame
+
 
 namespace FoxMath::Vector
 {
@@ -53,7 +58,7 @@ namespace FoxMath::Vector
     
         #pragma region attribut
 
-        std::array<TType, TLength> m_data;
+        ::std::array<TType, TLength> m_data;
 
         #pragma endregion //!attribut
     
@@ -105,7 +110,34 @@ namespace FoxMath::Vector
         inline constexpr  
         void fill (const TType scalar);
 
-        
+        [[nodiscard]] inline constexpr
+        TType squartLength () const;
+
+        [[nodiscard]] inline constexpr
+        TType length () const;
+
+/*
+		float 		dotProduct	 	(const Vec3& other) const;
+		static float dot(const Vec3& vec1, const Vec3& vec2) { return vec1.dotProduct(vec2); }
+
+		//same as get magnitude
+		float 		length		 		() 			 const;
+		float 		squartLength 		() 			 const;
+
+		//creat unit vector
+		Vec3& 	normalize		();
+		Vec3 	getNormalize	() const;
+
+		//clamp magnitude
+		Vec3& clampLength(float max);
+
+		//cross product between 2 vectors
+		void 			cross		(const Vec3& other);
+		Vec3 			cross	    (const Vec3& other) const;
+		static Vec3 	cross		(const Vec3& vec1, const Vec3& vec2) { return vec1.getCross(vec2); }
+
+		static Vec3 	lerp		(const Vec3& vec1, const Vec3& vec2, float t);
+        */
 
         #pragma endregion //!methods
     
@@ -147,21 +179,21 @@ namespace FoxMath::Vector
          * @param other 
          * @return constexpr Vector& 
          */
-        template<typename TScaleType, Type::IsArithmetic<TScaleType> = true>
+        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		Vector& operator=(TScaleType scalar);
+		Vector& operator=(TscalarType scalar);
 
         /**
          * @brief addition assignment 
          * 
-         * @tparam TScaleType 
+         * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
          * @return constexpr Vector& 
          */
-        template<typename TScaleType, Type::IsArithmetic<TScaleType> = true>
+        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		Vector& operator+=(TScaleType scalar);
+		Vector& operator+=(TscalarType scalar);
 
         /**
          * @brief addition assignment 
@@ -178,14 +210,14 @@ namespace FoxMath::Vector
         /**
          * @brief subtraction assignment 
          * 
-         * @tparam TScaleType 
+         * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
          * @return constexpr Vector& 
          */
-        template<typename TScaleType, Type::IsArithmetic<TScaleType> = true>
+        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		Vector& operator-=(TScaleType scalar);
+		Vector& operator-=(TscalarType scalar);
 
         /**
          * @brief subtraction assignment 
@@ -202,14 +234,14 @@ namespace FoxMath::Vector
         /**
          * @brief multiplication assignment 
          * 
-         * @tparam TScaleType 
+         * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
          * @return constexpr Vector& 
          */
-        template<typename TScaleType, Type::IsArithmetic<TScaleType> = true>
+        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		Vector& operator*=(TScaleType scalar);
+		Vector& operator*=(TscalarType scalar);
 
         /**
          * @brief multiplication assignment 
@@ -226,14 +258,14 @@ namespace FoxMath::Vector
         /**
          * @brief division assignment
          * 
-         * @tparam TScaleType 
+         * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
          * @return constexpr Vector& 
          */
-        template<typename TScaleType, Type::IsArithmetic<TScaleType> = true>
+        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		Vector& operator/=(TScaleType scalar);
+		Vector& operator/=(TscalarType scalar);
 
         /**
          * @brief division assignment
@@ -250,14 +282,14 @@ namespace FoxMath::Vector
         /**
          * @brief modulo assignment
          * 
-         * @tparam TScaleType 
+         * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
          * @return constexpr Vector& 
          */
-        template<typename TScaleType, Type::IsArithmetic<TScaleType> = true>
+        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		Vector& operator%=(TScaleType scalar);
+		Vector& operator%=(TscalarType scalar);
 
         /**
          * @brief modulo assignment
@@ -274,14 +306,14 @@ namespace FoxMath::Vector
         /**
          * @brief bitwise AND assignment 
          * 
-         * @tparam TScaleType 
+         * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
          * @return constexpr Vector& 
          */
-        template<typename TScaleType, Type::IsArithmetic<TScaleType> = true>
+        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		Vector& operator&=(TScaleType scalar);
+		Vector& operator&=(TscalarType scalar);
 
         /**
          * @brief bitwise AND assignment 
@@ -298,14 +330,14 @@ namespace FoxMath::Vector
         /**
          * @brief bitwise OR assignment 
          * 
-         * @tparam TScaleType 
+         * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
          * @return constexpr Vector& 
          */
-        template<typename TScaleType, Type::IsArithmetic<TScaleType> = true>
+        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		Vector& operator|=(TScaleType scalar);
+		Vector& operator|=(TscalarType scalar);
 
         /**
          * @brief bitwise OR assignment 
@@ -322,14 +354,14 @@ namespace FoxMath::Vector
         /**
          * @brief bitwise XOR assignment 
          * 
-         * @tparam TScaleType 
+         * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
          * @return constexpr Vector& 
          */
-        template<typename TScaleType, Type::IsArithmetic<TScaleType> = true>
+        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		Vector& operator^=(TScaleType scalar);
+		Vector& operator^=(TscalarType scalar);
 
         /**
          * @brief bitwise XOR assignment 
@@ -346,14 +378,14 @@ namespace FoxMath::Vector
         /**
          * @brief bitwise left shift assignment 
          * 
-         * @tparam TScaleType 
+         * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
          * @return constexpr Vector& 
          */
-        template<typename TScaleType, Type::IsArithmetic<TScaleType> = true>
+        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		Vector& operator<<=(TScaleType scalar);
+		Vector& operator<<=(TscalarType scalar);
 
         /**
          * @brief bitwise left shift assignment 
@@ -370,14 +402,14 @@ namespace FoxMath::Vector
         /**
          * @brief bitwise right shift assignment 
          * 
-         * @tparam TScaleType 
+         * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
          * @return constexpr Vector& 
          */
-        template<typename TScaleType, Type::IsArithmetic<TScaleType> = true>
+        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		Vector& operator>>=(TScaleType scalar);
+		Vector& operator>>=(TscalarType scalar);
 
         /**
          * @brief bitwise right shift assignment 
@@ -427,7 +459,6 @@ namespace FoxMath::Vector
 		Vector 	    operator--	(int);
 
         #pragma endregion //!increment decrement operators
-    
         #pragma region convertor
 
         template <size_t TLengthOther, typename TTypeOther>
@@ -435,7 +466,6 @@ namespace FoxMath::Vector
         operator Vector<TLengthOther, TTypeOther>() const;
 
         #pragma endregion //!convertor
-    
     };
 
     #pragma region arithmetic operators
@@ -449,140 +479,120 @@ namespace FoxMath::Vector
     Vector<TLength, TType> operator-(Vector<TLength, TType> const& vec);
 
 	template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator+(Vector<TLength, TType> const& vec, TTypeScalar scalar);
+    Vector<TLength, TType> operator+(Vector<TLength, TType> const& vec, TType scalar);
 
 	template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator+(TTypeScalar scalar, Vector<TLength, TType> const& vec);
+    Vector<TLength, TType> operator+(TType scalar, Vector<TLength, TType> const& vec);
 
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
     Vector<TLength, TType> operator+(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
 
 	template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator-(Vector<TLength, TType> const& vec, TTypeScalar scalar);
+    Vector<TLength, TType> operator-(Vector<TLength, TType> const& vec, TType scalar);
 
 	template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator-(TTypeScalar scalar, Vector<TLength, TType> const& vec);
+    Vector<TLength, TType> operator-(TType scalar, Vector<TLength, TType> const& vec);
 
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
     Vector<TLength, TType> operator-(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
 
 	template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator*(Vector<TLength, TType> const& vec, TTypeScalar scalar);
+    Vector<TLength, TType> operator*(Vector<TLength, TType> const& vec, TType scalar);
 
 	template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator*(TTypeScalar scalar, Vector<TLength, TType> const& vec);
+    Vector<TLength, TType> operator*(TType scalar, Vector<TLength, TType> const& vec);
 
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
     Vector<TLength, TType> operator*(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
 
 	template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator/(Vector<TLength, TType> const& vec, TTypeScalar scalar);
+    Vector<TLength, TType> operator/(Vector<TLength, TType> const& vec, TType scalar);
 
 	template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator/(TTypeScalar scalar, Vector<TLength, TType> const& vec);
+    Vector<TLength, TType> operator/(TType scalar, Vector<TLength, TType> const& vec);
 
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
     Vector<TLength, TType> operator/(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
 
 	template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator%(Vector<TLength, TType> const& vec, TTypeScalar scalar);
+    Vector<TLength, TType> operator%(Vector<TLength, TType> const& vec, TType scalar);
 
 	template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator%(TTypeScalar scalar, Vector<TLength, TType> const& vec);
+    Vector<TLength, TType> operator%(TType scalar, Vector<TLength, TType> const& vec);
 
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
     Vector<TLength, TType> operator%(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
 
 	template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator&(Vector<TLength, TType> const& vec1, TTypeScalar scalar);
+    Vector<TLength, TType> operator&(Vector<TLength, TType> const& vec1, TType scalar);
 
 	template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator&(TTypeScalar scalar, Vector<TLength, TType> const& vec);
+    Vector<TLength, TType> operator&(TType scalar, Vector<TLength, TType> const& vec);
 
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
     Vector<TLength, TType> operator&(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
 
 	template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator|(Vector<TLength, TType> const& vec, TTypeScalar scalar);
+    Vector<TLength, TType> operator|(Vector<TLength, TType> const& vec, TType scalar);
 
 	template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator|(TTypeScalar scalar, Vector<TLength, TType> const& vec);
+    Vector<TLength, TType> operator|(TType scalar, Vector<TLength, TType> const& vec);
 
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
     Vector<TLength, TType> operator|(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
 
 	template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator^(Vector<TLength, TType> const& vec, TTypeScalar scalar);
+    Vector<TLength, TType> operator^(Vector<TLength, TType> const& vec, TType scalar);
 
 	template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator^(TTypeScalar scalar, Vector<TLength, TType> const& vec);
+    Vector<TLength, TType> operator^(TType scalar, Vector<TLength, TType> const& vec);
 
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
     Vector<TLength, TType> operator^(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
 
 	template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator<<(Vector<TLength, TType> const& vec, TTypeScalar scalar);
+    Vector<TLength, TType> operator<<(Vector<TLength, TType> const& vec, TType scalar);
 
 	template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator<<(TTypeScalar scalar, Vector<TLength, TType> const& vec);
+    Vector<TLength, TType> operator<<(TType scalar, Vector<TLength, TType> const& vec);
 
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
     Vector<TLength, TType> operator<<(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
 
 	template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator>>(Vector<TLength, TType> const& vec, TTypeScalar scalar);
+    Vector<TLength, TType> operator>>(Vector<TLength, TType> const& vec, TType scalar);
 
 	template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator>>(TTypeScalar scalar, Vector<TLength, TType> const& vec);
+    Vector<TLength, TType> operator>>(TType scalar, Vector<TLength, TType> const& vec);
 
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
@@ -616,78 +626,71 @@ namespace FoxMath::Vector
 
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
-    bool operator!=(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
+    bool operator==(Vector<TLength, TType> const& vec, TType scalar);
 
-    /*Length comparision*/
+    template <size_t TLength, typename TType>
+    [[nodiscard]] inline constexpr
+    bool operator==(TType scalar, Vector<TLength, TType> const& vec);
+
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
     bool operator!=(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
 
     template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
     [[nodiscard]] inline constexpr
-    bool operator!=(Vector<TLength, TType> const& vec, TTypeScalar scale);
+    bool operator!=(Vector<TLength, TType> const& vec, TType scalar);
 
     template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
     [[nodiscard]] inline constexpr
-    bool operator!=(TTypeScalar scale, Vector<TLength, TType> const& vec);
+    bool operator!=(TType scalar, Vector<TLength, TType> const& vec);
 
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
     bool operator<(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
 
     template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
     [[nodiscard]] inline constexpr
-    bool operator<(Vector<TLength, TType> const& vec, TTypeScalar scale);
+    bool operator<(Vector<TLength, TType> const& vec, TType scalar);
 
     template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
     [[nodiscard]] inline constexpr
-    bool operator<(TTypeScalar scale, Vector<TLength, TType> const& vec);
+    bool operator<(TType scalar, Vector<TLength, TType> const& vec);
 
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
     bool operator>(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
 
     template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
     [[nodiscard]] inline constexpr
-    bool operator>(Vector<TLength, TType> const& vec, TTypeScalar scale);
+    bool operator>(Vector<TLength, TType> const& vec, TType scalar);
 
     template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
     [[nodiscard]] inline constexpr
-    bool operator>(TTypeScalar scale, Vector<TLength, TType> const& vec);
+    bool operator>(TType scalar, Vector<TLength, TType> const& vec);
 
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
     bool operator<=(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
 
     template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
     [[nodiscard]] inline constexpr
-    bool operator<=(Vector<TLength, TType> const& vec, TTypeScalar scale);
+    bool operator<=(Vector<TLength, TType> const& vec, TType scalar);
 
     template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
     [[nodiscard]] inline constexpr
-    bool operator<=(TTypeScalar scale, Vector<TLength, TType> const& vec);
+    bool operator<=(TType scalar, Vector<TLength, TType> const& vec);
 
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
     bool operator>=(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
 
     template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
     [[nodiscard]] inline constexpr
-    bool operator>=(Vector<TLength, TType> const& vec, TTypeScalar scale);
+    bool operator>=(Vector<TLength, TType> const& vec, TType scalar);
 
     template <size_t TLength, typename TType>
-    template <typename TTypeScalar>
     [[nodiscard]] inline constexpr
-    bool operator>=(TTypeScalar scale, Vector<TLength, TType> const& vec);
+    bool operator>=(TType scalar, Vector<TLength, TType> const& vec);
 
     #pragma endregion //!comparision operators
     #pragma region stream operators

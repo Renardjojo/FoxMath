@@ -27,18 +27,17 @@
  * SOFTWARE.
  */
 
-#include <cassert> //assert
-#include <string.h> //memset
-
 template <size_t TLength, typename TType>
 constexpr inline
 Vector<TLength, TType>::Vector()
 {
-    std::memset(m_data, 0, sizeof(TType) * TLength);
+    std::memset(m_data.data(), 0, sizeof(TType) * TLength);
 }
 
+template <size_t TLength, typename TType>
 template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>> = true>
-constexpr inline Vector (T... args)
+constexpr inline 
+Vector<TLength, TType>::Vector (T... args)
 {
     static_assert(sizeof...(T) <= TLength, "Too many initializer for Vector");
     m_data = std::array<TType, TLength>{args...};
@@ -48,10 +47,32 @@ template <size_t TLength, typename TType>
 inline constexpr 
 void Vector<TLength, TType>::fill(const TType scalar)
 {
-    for (TType& i : m_data)
+    for (TType& data : m_data)
     {
-        m_data[i] = scalar;
+        data = scalar;
     }
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+TType Vector<TLength, TType>::squartLength () const
+{
+    TType sqrtLength = static_cast<TType>(0);
+
+    //x * x + y * y + z * z + [...]
+    for (const TType& data : m_data)
+    {
+        sqrtLength += data * data;
+    }
+
+	return sqrtLength;
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+TType Vector<TLength, TType>::length () const
+{
+    return std::sqrt(squartLength());
 }
 
 template <size_t TLength, typename TType>
@@ -69,13 +90,13 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator=(const Vector<TLengthOt
 }
 
 template <size_t TLength, typename TType>
-template<typename TScaleType, Type::IsArithmetic<TScaleType> = true>
+template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator=(TScaleType scalar)
+Vector<TLength, TType>& Vector<TLength, TType>::operator=(TscalarType scalar)
 {
-    for (TType& i : m_data)
+    for (const TType& data : m_data)
     {
-        m_data[i] = scalar;
+        data = scalar;
     }
     return *this;
 }
@@ -97,13 +118,13 @@ const TType&    Vector<TLength, TType>::operator[]	(size_t index) const
 }
 
 template <size_t TLength, typename TType>
-template<typename TScaleType, Type::IsArithmetic<TScaleType> = true>
+template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator+=(TScaleType scalar)
+Vector<TLength, TType>& Vector<TLength, TType>::operator+=(TscalarType scalar)
 {
-    for (TType& i : m_data)
+    for (TType& data : m_data)
     {
-        m_data[i] += static_cast<TType>(scalar);
+        data += static_cast<TType>(scalar);
     }
     return *this;
 }
@@ -123,13 +144,13 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator+=(const Vector<TLengthO
 }
 
 template <size_t TLength, typename TType>
-template<typename TScaleType, Type::IsArithmetic<TScaleType> = true>
+template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator-=(TScaleType scalar)
+Vector<TLength, TType>& Vector<TLength, TType>::operator-=(TscalarType scalar)
 {
-    for (TType& i : m_data)
+    for (TType& data : m_data)
     {
-        m_data[i] -= static_cast<TType>(scalar);
+        data -= static_cast<TType>(scalar);
     }
     return *this;
 }
@@ -149,13 +170,13 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator-=(const Vector<TLengthO
 }
 
 template <size_t TLength, typename TType>
-template<typename TScaleType, Type::IsArithmetic<TScaleType> = true>
+template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator*=(TScaleType scalar)
+Vector<TLength, TType>& Vector<TLength, TType>::operator*=(TscalarType scalar)
 {
-    for (TType& i : m_data)
+    for (TType& data : m_data)
     {
-        m_data[i] *= static_cast<TType>(scalar);
+        data *= static_cast<TType>(scalar);
     }
     return *this;
 }
@@ -175,13 +196,13 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator*=(const Vector<TLengthO
 }
 
 template <size_t TLength, typename TType>
-template<typename TScaleType, Type::IsArithmetic<TScaleType> = true>
+template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator/=(TScaleType scalar)
+Vector<TLength, TType>& Vector<TLength, TType>::operator/=(TscalarType scalar)
 {
-    for (TType& i : m_data)
+    for (TType& data : m_data)
     {
-        m_data[i] /= static_cast<TType>(scalar);
+        data /= static_cast<TType>(scalar);
     }
     return *this;
 }
@@ -201,13 +222,13 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator/=(const Vector<TLengthO
 }
 
 template <size_t TLength, typename TType>
-template<typename TScaleType, Type::IsArithmetic<TScaleType> = true>
+template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator%=(TScaleType scalar)
+Vector<TLength, TType>& Vector<TLength, TType>::operator%=(TscalarType scalar)
 {
-    for (TType& i : m_data)
+    for (TType& data : m_data)
     {
-        m_data[i] %= static_cast<TType>(scalar);
+        data %= static_cast<TType>(scalar);
     }
     return *this;
 }
@@ -227,13 +248,13 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator%=(const Vector<TLengthO
 }
 
 template <size_t TLength, typename TType>
-template<typename TScaleType, Type::IsArithmetic<TScaleType> = true>
+template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator&=(TScaleType scalar)
+Vector<TLength, TType>& Vector<TLength, TType>::operator&=(TscalarType scalar)
 {
-    for (TType& i : m_data)
+    for (TType& data : m_data)
     {
-        m_data[i] &= static_cast<TType>(scalar);
+        data &= static_cast<TType>(scalar);
     }
     return *this;
 }
@@ -253,13 +274,13 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator&=(const Vector<TLengthO
 }
 
 template <size_t TLength, typename TType>
-template<typename TScaleType, Type::IsArithmetic<TScaleType> = true>
+template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator|=(TScaleType scalar)
+Vector<TLength, TType>& Vector<TLength, TType>::operator|=(TscalarType scalar)
 {
-    for (TType& i : m_data)
+    for (TType& data : m_data)
     {
-        m_data[i] |= static_cast<TType>(scalar);
+        data |= static_cast<TType>(scalar);
     }
     return *this;
 }
@@ -279,13 +300,13 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator|=(const Vector<TLengthO
 }
 
 template <size_t TLength, typename TType>
-template<typename TScaleType, Type::IsArithmetic<TScaleType> = true>
+template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator^=(TScaleType scalar)
+Vector<TLength, TType>& Vector<TLength, TType>::operator^=(TscalarType scalar)
 {
-    for (TType& i : m_data)
+    for (TType& data : m_data)
     {
-        m_data[i] ^= static_cast<TType>(scalar);
+        data ^= static_cast<TType>(scalar);
     }
     return *this;
 }
@@ -305,13 +326,13 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator^=(const Vector<TLengthO
 }
 
 template <size_t TLength, typename TType>
-template<typename TScaleType, Type::IsArithmetic<TScaleType> = true>
+template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator<<=(TScaleType scalar)
+Vector<TLength, TType>& Vector<TLength, TType>::operator<<=(TscalarType scalar)
 {
-    for (TType& i : m_data)
+    for (TType& data : m_data)
     {
-        m_data[i] <<= static_cast<TType>(scalar);
+        data <<= static_cast<TType>(scalar);
     }
     return *this;
 }
@@ -331,13 +352,13 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator<<=(const Vector<TLength
 }
 
 template <size_t TLength, typename TType>
-template<typename TScaleType, Type::IsArithmetic<TScaleType> = true>
+template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator>>=(TScaleType scalar)
+Vector<TLength, TType>& Vector<TLength, TType>::operator>>=(TscalarType scalar)
 {
-    for (TType& i : m_data)
+    for (TType& data : m_data)
     {
-        m_data[i] >>= static_cast<TType>(scalar);
+        data >>= static_cast<TType>(scalar);
     }
     return *this;
 }
@@ -360,9 +381,9 @@ template <size_t TLength, typename TType>
 inline constexpr 
 Vector<TLength, TType>& 	Vector<TLength, TType>::operator++	()
 {
-    for (TType& i : m_data)
+    for (TType& data : m_data)
     {
-        ++i;
+        ++data;
     }
     return *this;
 }
@@ -371,9 +392,9 @@ template <size_t TLength, typename TType>
 inline constexpr
 Vector<TLength, TType>& 	Vector<TLength, TType>::operator--	()
 {
-    for (TType& i : m_data)
+    for (TType& data : m_data)
     {
-        --i;
+        --data;
     }
     return *this;
 }
@@ -399,7 +420,7 @@ Vector<TLength, TType> Vector<TLength, TType>::operator--	(int)
 
 template <size_t TLength, typename TType>
 template <size_t TLengthOther, typename TTypeOther>
-constexpr inline explicit 
+constexpr inline 
 Vector<TLength, TType>::operator Vector<TLengthOther, TTypeOther>() const
 {
     Vector<TLengthOther, TTypeOther> result;
@@ -424,7 +445,7 @@ template <size_t TLength, typename TType>
 inline constexpr
 Vector<TLength, TType> operator+(Vector<TLength, TType> const& vec)
 {
-    return vec
+    return vec;
 }
 
 template <size_t TLength, typename TType>
@@ -435,17 +456,15 @@ Vector<TLength, TType> operator-(Vector<TLength, TType> vec)
 }
 
 template <size_t TLength, typename TType>
-template <typename TTypeScalar>
 inline constexpr
-Vector<TLength, TType> operator+(Vector<TLength, TType> vec, TTypeScalar scalar)
+Vector<TLength, TType> operator+(Vector<TLength, TType> vec, TType scalar)
 {
-    return vec += scale; 
+    return vec += scalar; 
 }
 
 template <size_t TLength, typename TType>
-template <typename TTypeScalar>
 inline constexpr
-Vector<TLength, TType> operator+(TTypeScalar scalar, Vector<TLength, TType> const& vec)
+Vector<TLength, TType> operator+(TType scalar, Vector<TLength, TType> const& vec)
 {
     Vector<TLength, TType> result;
 
@@ -458,25 +477,22 @@ Vector<TLength, TType> operator+(TTypeScalar scalar, Vector<TLength, TType> cons
 }
 
 template <size_t TLength, typename TType>
-template <size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType> operator+(Vector<TLength, TType> vec1, Vector<TLengthOther, TTypeOther> const& vec2)
+Vector<TLength, TType> operator+(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2)
 {
     return vec1 += vec2;
 }
 
 template <size_t TLength, typename TType>
-template <typename TTypeScalar>
 inline constexpr
-Vector<TLength, TType> operator-(Vector<TLength, TType> vec, TTypeScalar scalar)
+Vector<TLength, TType> operator-(Vector<TLength, TType> vec, TType scalar)
 {
     return vec -= scalar;
 }
 
 template <size_t TLength, typename TType>
-template <typename TTypeScalar>
 inline constexpr
-Vector<TLength, TType> operator-(TTypeScalar scalar, Vector<TLength, TType> const& vec)
+Vector<TLength, TType> operator-(TType scalar, Vector<TLength, TType> const& vec)
 {
     Vector<TLength, TType> result;
 
@@ -496,17 +512,15 @@ Vector<TLength, TType> operator-(Vector<TLength, TType> vec1, Vector<TLength, TT
 }
 
 template <size_t TLength, typename TType>
-template <typename TTypeScalar>
 inline constexpr
-Vector<TLength, TType> operator*(Vector<TLength, TType> vec, TTypeScalar scalar)
+Vector<TLength, TType> operator*(Vector<TLength, TType> vec, TType scalar)
 {
     return vec *= scalar;
 }
 
 template <size_t TLength, typename TType>
-template <typename TTypeScalar>
 inline constexpr
-Vector<TLength, TType> operator*(TTypeScalar scalar, Vector<TLength, TType> const& vec)
+Vector<TLength, TType> operator*(TType scalar, Vector<TLength, TType> const& vec)
 {
     Vector<TLength, TType> result;
 
@@ -526,17 +540,15 @@ Vector<TLength, TType> operator*(Vector<TLength, TType> vec1, Vector<TLength, TT
 }
 
 template <size_t TLength, typename TType>
-template <typename TTypeScalar>
 inline constexpr
-Vector<TLength, TType> operator/(Vector<TLength, TType> vec, TTypeScalar scalar)
+Vector<TLength, TType> operator/(Vector<TLength, TType> vec, TType scalar)
 {
     return vec /= scalar;
 }
 
 template <size_t TLength, typename TType>
-template <typename TTypeScalar>
 inline constexpr
-Vector<TLength, TType> operator/(TTypeScalar scalar, Vector<TLength, TType> const& vec)
+Vector<TLength, TType> operator/(TType scalar, Vector<TLength, TType> const& vec)
 {
     Vector<TLength, TType> result;
 
@@ -556,17 +568,15 @@ Vector<TLength, TType> operator/(Vector<TLength, TType> vec1, Vector<TLength, TT
 }
 
 template <size_t TLength, typename TType>
-template <typename TTypeScalar>
 inline constexpr
-Vector<TLength, TType> operator%(Vector<TLength, TType> vec, TTypeScalar scalar)
+Vector<TLength, TType> operator%(Vector<TLength, TType> vec, TType scalar)
 {
     return vec %= scalar;
 }
 
 template <size_t TLength, typename TType>
-template <typename TTypeScalar>
 inline constexpr
-Vector<TLength, TType> operator%(TTypeScalar scalar, Vector<TLength, TType> const& vec)
+Vector<TLength, TType> operator%(TType scalar, Vector<TLength, TType> const& vec)
 {
     Vector<TLength, TType> result;
 
@@ -586,17 +596,15 @@ Vector<TLength, TType> operator%(Vector<TLength, TType> vec1, Vector<TLength, TT
 }
 
 template <size_t TLength, typename TType>
-template <typename TTypeScalar>
 inline constexpr
-Vector<TLength, TType> operator&(Vector<TLength, TType> vec, TTypeScalar scalar)
+Vector<TLength, TType> operator&(Vector<TLength, TType> vec, TType scalar)
 {
     return vec &= scalar;
 }
 
 template <size_t TLength, typename TType>
-template <typename TTypeScalar>
 inline constexpr
-Vector<TLength, TType> operator&(TTypeScalar scalar, Vector<TLength, TType> const& vec)
+Vector<TLength, TType> operator&(TType scalar, Vector<TLength, TType> const& vec)
 {
     Vector<TLength, TType> result;
 
@@ -616,17 +624,15 @@ Vector<TLength, TType> operator&(Vector<TLength, TType> vec1, Vector<TLength, TT
 }
 
 template <size_t TLength, typename TType>
-template <typename TTypeScalar>
 inline constexpr
-Vector<TLength, TType> operator|(Vector<TLength, TType> vec, TTypeScalar scalar)
+Vector<TLength, TType> operator|(Vector<TLength, TType> vec, TType scalar)
 {
     return vec |= scalar;
 }
 
 template <size_t TLength, typename TType>
-template <typename TTypeScalar>
 inline constexpr
-Vector<TLength, TType> operator|(TTypeScalar scalar, Vector<TLength, TType> const& vec)
+Vector<TLength, TType> operator|(TType scalar, Vector<TLength, TType> const& vec)
 {
     Vector<TLength, TType> result;
 
@@ -646,17 +652,15 @@ Vector<TLength, TType> operator|(Vector<TLength, TType> vec1, Vector<TLength, TT
 }
 
 template <size_t TLength, typename TType>
-template <typename TTypeScalar>
 inline constexpr
-Vector<TLength, TType> operator^(Vector<TLength, TType> vec, TTypeScalar scalar)
+Vector<TLength, TType> operator^(Vector<TLength, TType> vec, TType scalar)
 {
     return vec ^= scalar;
 }
 
 template <size_t TLength, typename TType>
-template <typename TTypeScalar>
 inline constexpr
-Vector<TLength, TType> operator^(TTypeScalar scalar, Vector<TLength, TType> const& vec)
+Vector<TLength, TType> operator^(TType scalar, Vector<TLength, TType> const& vec)
 {
     Vector<TLength, TType> result;
 
@@ -677,17 +681,15 @@ Vector<TLength, TType> operator^(Vector<TLength, TType> vec1, Vector<TLength, TT
 
 
 template <size_t TLength, typename TType>
-template <typename TTypeScalar>
 inline constexpr
-Vector<TLength, TType> operator<<(Vector<TLength, TType> vec, TTypeScalar scalar)
+Vector<TLength, TType> operator<<(Vector<TLength, TType> vec, TType scalar)
 {
     return vec << scalar;
 }
 
 template <size_t TLength, typename TType>
-template <typename TTypeScalar>
 inline constexpr
-Vector<TLength, TType> operator<<(TTypeScalar scalar, Vector<TLength, TType> const& vec)
+Vector<TLength, TType> operator<<(TType scalar, Vector<TLength, TType> const& vec)
 {
     Vector<TLength, TType> result;
 
@@ -708,17 +710,15 @@ Vector<TLength, TType> operator<<(Vector<TLength, TType> vec1, Vector<TLength, T
 
 
 template <size_t TLength, typename TType>
-template <typename TTypeScalar>
 inline constexpr
-Vector<TLength, TType> operator>>(Vector<TLength, TType> vec, TTypeScalar scalar)
+Vector<TLength, TType> operator>>(Vector<TLength, TType> vec, TType scalar)
 {
     return vec >> scalar;
 }
 
 template <size_t TLength, typename TType>
-template <typename TTypeScalar>
 inline constexpr
-Vector<TLength, TType> operator>>(TTypeScalar scalar, Vector<TLength, TType> const& vec)
+Vector<TLength, TType> operator>>(TType scalar, Vector<TLength, TType> const& vec)
 {
     Vector<TLength, TType> result;
 
@@ -796,82 +796,138 @@ Vector<TLength, bool> operator||(Vector<TLength, bool> const& vec1, Vector<TLeng
 
 template <size_t TLength, typename TType>
 [[nodiscard]] inline constexpr
-bool operator==(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
+bool operator==(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2)
+{
+    bool rst = true;
+
+    for (size_t i = 0; i < TLength && rst; i++)
+    {
+        rst &= vec1[i] == vec2[i];
+    }
+
+    return rst;
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+bool operator==(Vector<TLength, TType> const& vec, TType scalar)
+{
+    return Numeric::isSame<TType>(vec.squartLength(), scalar);
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+bool operator==(TType scalar, Vector<TLength, TType> const& vec)
+{
+    return Numeric::isSame<TType>(scalar, vec.squartLength());
+}
 
 template <size_t TLength, typename TType>
 [[nodiscard]] inline constexpr
-bool operator!=(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
-
-/*Length comparision*/
-template <size_t TLength, typename TType>
-[[nodiscard]] inline constexpr
-bool operator!=(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
-
-template <size_t TLength, typename TType>
-template <typename TTypeScalar>
-[[nodiscard]] inline constexpr
-bool operator!=(Vector<TLength, TType> const& vec, TTypeScalar scale);
-
-template <size_t TLength, typename TType>
-template <typename TTypeScalar>
-[[nodiscard]] inline constexpr
-bool operator!=(TTypeScalar scale, Vector<TLength, TType> const& vec);
+bool operator!=(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2)
+{
+    return !(vec1 == vec2);
+}
 
 template <size_t TLength, typename TType>
 [[nodiscard]] inline constexpr
-bool operator<(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
-
-template <size_t TLength, typename TType>
-template <typename TTypeScalar>
-[[nodiscard]] inline constexpr
-bool operator<(Vector<TLength, TType> const& vec, TTypeScalar scale);
-
-template <size_t TLength, typename TType>
-template <typename TTypeScalar>
-[[nodiscard]] inline constexpr
-bool operator<(TTypeScalar scale, Vector<TLength, TType> const& vec);
+bool operator!=(Vector<TLength, TType> const& vec, TType scalar)
+{
+    return !(vec == scalar);
+}
 
 template <size_t TLength, typename TType>
 [[nodiscard]] inline constexpr
-bool operator>(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
-
-template <size_t TLength, typename TType>
-template <typename TTypeScalar>
-[[nodiscard]] inline constexpr
-bool operator>(Vector<TLength, TType> const& vec, TTypeScalar scale);
-
-template <size_t TLength, typename TType>
-template <typename TTypeScalar>
-[[nodiscard]] inline constexpr
-bool operator>(TTypeScalar scale, Vector<TLength, TType> const& vec);
+bool operator!=(TType scalar, Vector<TLength, TType> const& vec)
+{
+    return !(scalar == vec);
+}
 
 template <size_t TLength, typename TType>
 [[nodiscard]] inline constexpr
-bool operator<=(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
-
-template <size_t TLength, typename TType>
-template <typename TTypeScalar>
-[[nodiscard]] inline constexpr
-bool operator<=(Vector<TLength, TType> const& vec, TTypeScalar scale);
-
-template <size_t TLength, typename TType>
-template <typename TTypeScalar>
-[[nodiscard]] inline constexpr
-bool operator<=(TTypeScalar scale, Vector<TLength, TType> const& vec);
+bool operator<(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2)
+{
+    return vec1.squartLength() < vec2.squartLength();
+}
 
 template <size_t TLength, typename TType>
 [[nodiscard]] inline constexpr
-bool operator>=(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
+bool operator<(Vector<TLength, TType> const& vec, TType scalar)
+{
+    return vec.squartLength() < scalar;
+}
 
 template <size_t TLength, typename TType>
-template <typename TTypeScalar>
 [[nodiscard]] inline constexpr
-bool operator>=(Vector<TLength, TType> const& vec, TTypeScalar scale);
+bool operator<(TType scalar, Vector<TLength, TType> const& vec)
+{
+    return scalar < vec.squartLength();
+}
 
 template <size_t TLength, typename TType>
-template <typename TTypeScalar>
 [[nodiscard]] inline constexpr
-bool operator>=(TTypeScalar scale, Vector<TLength, TType> const& vec);
+bool operator>(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2)
+{
+    return vec1.squartLength() > vec2.squartLength();
+}
+
+template <size_t TLength, typename TType>
+[[nodiscard]] inline constexpr
+bool operator>(Vector<TLength, TType> const& vec, TType scalar)
+{
+    return vec.squartLength() > scalar;
+}
+
+template <size_t TLength, typename TType>
+[[nodiscard]] inline constexpr
+bool operator>(TType scalar, Vector<TLength, TType> const& vec)
+{
+    return scalar > vec.squartLength();
+}
+
+template <size_t TLength, typename TType>
+[[nodiscard]] inline constexpr
+bool operator<=(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2)
+{
+    return vec1.squartLength() <= vec2.squartLength();
+}
+
+template <size_t TLength, typename TType>
+[[nodiscard]] inline constexpr
+bool operator<=(Vector<TLength, TType> const& vec, TType scalar)
+{
+    return vec.squartLength() <= scalar;
+}
+
+template <size_t TLength, typename TType>
+[[nodiscard]] inline constexpr
+bool operator<=(TType scalar, Vector<TLength, TType> const& vec)
+{
+    return scalar <= vec.squartLength();
+}
+
+template <size_t TLength, typename TType>
+[[nodiscard]] inline constexpr
+bool operator>=(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2)
+{
+    return vec1.squartLength() >= vec2.squartLength();
+}
+
+
+template <size_t TLength, typename TType>
+[[nodiscard]] inline constexpr
+bool operator>=(Vector<TLength, TType> const& vec, TType scalar)
+{
+    return vec.squartLength() >= scalar;
+}
+
+template <size_t TLength, typename TType>
+[[nodiscard]] inline constexpr
+bool operator>=(TType scalar, Vector<TLength, TType> const& vec)
+{
+    return scalar >= vec.squartLength();
+}
+
 
 template <size_t TLength, typename TType>
 inline constexpr
