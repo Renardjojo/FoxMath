@@ -36,7 +36,7 @@ namespace FoxMath::Type
     /**
      * @brief Sfinae shorthand for std::is_signed_v
      * @note us
-     * @param T Type to test
+     * @tparam T Type to test
      */
     template<typename T>
     using IsSigned = std::enable_if_t<std::is_signed_v<T>, bool>;
@@ -44,7 +44,7 @@ namespace FoxMath::Type
     /**
      * @brief Sfinae shorthand for std::is_unsigned_v
      * @note usage : `template<IsUnsigned<T> = true>`
-     * @param T Type to test
+     * @tparam T Type to test
      */
     template<typename T>
     using IsUnsigned = std::enable_if_t<std::is_unsigned_v<T>, bool>;
@@ -52,7 +52,7 @@ namespace FoxMath::Type
     /**
      * @brief Sfinae shorthand for std::is_arithmetic_v
      * @note usage : `template<IsArithmetic<T> = true>`
-     * @param T Type to test
+     * @tparam T Type to test
      */
     template<typename T>
     using IsArithmetic = std::enable_if_t<std::is_arithmetic_v<T>, bool>;
@@ -60,9 +60,26 @@ namespace FoxMath::Type
     /**
      * @brief Sfinae shorthand for std::is_floating_point_v
      * @note usage : `template<IsFloatingPoint<T> = true>`
-     * @param T Type to test
+     * @tparam T Type to test
      */
     template<typename T>
     using IsFloatingPoint = std::enable_if_t<std::is_floating_point_v<T>, bool>;
+
+    /**
+     * @brief 
+     * @note usage : `Type::Pack<Type, VarType...>` or `Type::Pack<VarType..., Type>`
+     * @tparam  
+     */
+    template <class...>
+    struct Pack { };
+
+    /**
+     * @brief Sfinae shorthand for std::is_same
+     * @note usage : `template<IsSame<T1, T2> = true>`. Can be use with Pack : `template<typename... VT, Type::IsSame<Type::Pack<T, VT...>, Type::Pack<T..., VT>> = true>`
+     * @tparam TType1 to test
+     * @tparam TType2 to test
+     */
+    template<typename TType1, typename TType2>
+    using IsSame = std::enable_if_t<std::is_same<TType1, TType2>::value, bool>;
 
 } /*namespace FoxMath::Type*/

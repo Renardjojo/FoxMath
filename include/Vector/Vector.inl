@@ -31,9 +31,27 @@
 #include <string.h> //memset
 
 template <size_t TLength, typename TType>
+constexpr inline
 Vector<TLength, TType>::Vector()
 {
     std::memset(m_data, 0, sizeof(TType) * TLength);
+}
+
+template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>> = true>
+constexpr inline Vector (T... args)
+{
+    static_assert(sizeof...(T) <= TLength, "Too many initializer for Vector");
+    m_data = std::array<TType, TLength>{args...};
+}
+
+template <size_t TLength, typename TType>
+inline constexpr 
+void Vector<TLength, TType>::fill(const TType scalar)
+{
+    for (TType& i : m_data)
+    {
+        m_data[i] = scalar;
+    }
 }
 
 template <size_t TLength, typename TType>

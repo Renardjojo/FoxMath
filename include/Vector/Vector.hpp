@@ -67,18 +67,46 @@ namespace FoxMath::Vector
     
         #pragma region constructor/destructor
     
+        constexpr inline 
         Vector ();
+        
+        constexpr inline
         Vector (const Vector& other)			    = default;
+        
+        constexpr inline 
         Vector (Vector&& other)				        = default;
-        virtual ~Vector ()				            = default;
+        
+        ~Vector ()				                    = default;
+        
+        constexpr inline 
         Vector& operator=(Vector const& other)		= default;
+        
+        constexpr inline 
         Vector& operator=(Vector && other)			= default;
     
-
+        /**
+         * @brief Variadic templated constructor to init member
+         * @example `FoxMath::Vector::Vector<2, int> vec (1, 1, 3)` or `FoxMath::Vector::Vector<2, int> vec (1, 2)`
+         * @tparam T 
+         * @tparam Sfinae IsSame 
+         */
+        template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>> = true>
+        explicit inline constexpr
+        Vector (T... args);
 
         #pragma endregion //!constructor/destructor
     
         #pragma region methods
+
+        /**
+         * @brief Fill vector's member with scalar value
+         * 
+         */
+        inline constexpr  
+        void fill (const TType scalar);
+
+        
+
         #pragma endregion //!methods
     
         #pragma region accessor
