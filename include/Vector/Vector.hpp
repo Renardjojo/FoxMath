@@ -27,8 +27,6 @@
  * SOFTWARE.
  */
 
-//TODO: add scalar and other operator
-
 #pragma once
 
 #include <array> //std::array
@@ -40,7 +38,6 @@
 
 #include "../Type/TypeTraitsAlias.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
 #include "../Numeric/Limits.hpp" //isSame
-
 
 namespace FoxMath::Vector
 {
@@ -72,6 +69,10 @@ namespace FoxMath::Vector
     
         #pragma region constructor/destructor
     
+        /**
+         * @brief Default constructor, init the vector to zero
+         * 
+         */
         constexpr inline 
         Vector ();
         
@@ -98,6 +99,19 @@ namespace FoxMath::Vector
         template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>> = true>
         explicit inline constexpr
         Vector (T... args);
+
+        /**
+         * @brief Variadic templated constructor to init member with vector and scalar
+         * @example `FoxMath::Vector::Vector<10, int> vect(FoxMath::Vector::Vector<5, int>(), 22, 31)`
+         * @tparam TLengthOther 
+         * @tparam TScalarArgs
+         */
+        template<size_t TLengthOther, typename... TScalarArgs, 
+        Type::IsSame<Type::Pack<TType, TScalarArgs...>, Type::Pack<TScalarArgs..., TType>> = true,
+        Type::IsLessThanOrEqualTo<sizeof...(TScalarArgs) + TLengthOther, TLength> = true,
+        Type::IsLessThan<TLengthOther, TLength> = true>
+        explicit inline constexpr
+        Vector (const Vector<TLengthOther, TType>& other, TScalarArgs... args);
 
         #pragma endregion //!constructor/destructor
     
@@ -461,6 +475,14 @@ namespace FoxMath::Vector
         #pragma endregion //!increment decrement operators
         #pragma region convertor
 
+        /**
+         * @brief Converte vector to another vector type
+         * @note use static_cast<> to call this function
+         * @example `FoxMath::Vector::Vector<2, float> vec2 = static_cast<FoxMath::Vector::Vector<2, float>>(vec)`
+         * @tparam TLengthOther 
+         * @tparam TTypeOther 
+         * @return Vector<TLengthOther, TTypeOther> 
+         */
         template <size_t TLengthOther, typename TTypeOther>
         constexpr inline explicit 
         operator Vector<TLengthOther, TTypeOther>() const;
@@ -470,224 +492,721 @@ namespace FoxMath::Vector
 
     #pragma region arithmetic operators
 
+    /**
+     * @brief unary plus 
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
     Vector<TLength, TType> operator+(Vector<TLength, TType> const& vec);
 
+    /**
+     * @brief unary minus 
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator-(Vector<TLength, TType> const& vec);
+    Vector<TLength, TType> operator-(Vector<TLength, TType> vec);
 
+    /**
+     * @brief addition 
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec 
+     * @param scalar 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator+(Vector<TLength, TType> const& vec, TType scalar);
+    Vector<TLength, TType> operator+(Vector<TLength, TType> vec, TType scalar);
 
+    /**
+     * @brief addition 
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param scalar 
+     * @param vec 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator+(TType scalar, Vector<TLength, TType> const& vec);
+    Vector<TLength, TType> operator+(TType scalar, Vector<TLength, TType> vec);
 
+    /**
+     * @brief addition 
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec1 
+     * @param vec2 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator+(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
+    Vector<TLength, TType> operator+(Vector<TLength, TType> vec1, Vector<TLength, TType> vec2);
 
+    /**
+     * @brief subtraction
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec 
+     * @param scalar 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator-(Vector<TLength, TType> const& vec, TType scalar);
+    Vector<TLength, TType> operator-(Vector<TLength, TType> vec, TType scalar);
 
+    /**
+     * @brief subtraction
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param scalar 
+     * @param vec 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator-(TType scalar, Vector<TLength, TType> const& vec);
+    Vector<TLength, TType> operator-(TType scalar, Vector<TLength, TType> vec);
 
+    /**
+     * @brief subtraction
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec1 
+     * @param vec2 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator-(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
+    Vector<TLength, TType> operator-(Vector<TLength, TType> vec1, Vector<TLength, TType> vec2);
 
+    /**
+     * @brief multiplication
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec 
+     * @param scalar 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator*(Vector<TLength, TType> const& vec, TType scalar);
+    Vector<TLength, TType> operator*(Vector<TLength, TType> vec, TType scalar);
 
+    /**
+     * @brief multiplication
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param scalar 
+     * @param vec 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator*(TType scalar, Vector<TLength, TType> const& vec);
+    Vector<TLength, TType> operator*(TType scalar, Vector<TLength, TType> vec);
 
+    /**
+     * @brief multiplication
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec1 
+     * @param vec2 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator*(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
+    Vector<TLength, TType> operator*(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2);
 
+    /**
+     * @brief division
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec 
+     * @param scalar 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator/(Vector<TLength, TType> const& vec, TType scalar);
+    Vector<TLength, TType> operator/(Vector<TLength, TType> vec, TType scalar);
 
+    /**
+     * @brief division
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param scalar 
+     * @param vec 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator/(TType scalar, Vector<TLength, TType> const& vec);
+    Vector<TLength, TType> operator/(TType scalar, Vector<TLength, TType> vec);
 
+    /**
+     * @brief division
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec1 
+     * @param vec2 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator/(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
+    Vector<TLength, TType> operator/(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2);
 
+    /**
+     * @brief modulo
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec 
+     * @param scalar 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator%(Vector<TLength, TType> const& vec, TType scalar);
+    Vector<TLength, TType> operator%(Vector<TLength, TType> vec, TType scalar);
 
+    /**
+     * @brief modulo
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param scalar 
+     * @param vec 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator%(TType scalar, Vector<TLength, TType> const& vec);
+    Vector<TLength, TType> operator%(TType scalar, Vector<TLength, TType> vec);
 
+    /**
+     * @brief modulo
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec1 
+     * @param vec2 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator%(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
+    Vector<TLength, TType> operator%(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2);
 
+    /**
+     * @brief bitwise AND
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec1 
+     * @param scalar 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator&(Vector<TLength, TType> const& vec1, TType scalar);
+    Vector<TLength, TType> operator&(Vector<TLength, TType> vec1, TType scalar);
 
+    /**
+     * @brief bitwise AND
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param scalar 
+     * @param vec 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator&(TType scalar, Vector<TLength, TType> const& vec);
+    Vector<TLength, TType> operator&(TType scalar, Vector<TLength, TType> vec);
 
+    /**
+     * @brief bitwise AND 
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec1 
+     * @param vec2 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator&(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
+    Vector<TLength, TType> operator&(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2);
 
+    /**
+     * @brief bitwise OR 
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec 
+     * @param scalar 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator|(Vector<TLength, TType> const& vec, TType scalar);
+    Vector<TLength, TType> operator|(Vector<TLength, TType> vec, TType scalar);
 
+    /**
+     * @brief bitwise OR
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param scalar 
+     * @param vec 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator|(TType scalar, Vector<TLength, TType> const& vec);
+    Vector<TLength, TType> operator|(TType scalar, Vector<TLength, TType> vec);
 
+    /**
+     * @brief bitwise OR 
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec1 
+     * @param vec2 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator|(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
+    Vector<TLength, TType> operator|(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2);
 
+    /**
+     * @brief bitwise XOR
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec 
+     * @param scalar 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator^(Vector<TLength, TType> const& vec, TType scalar);
+    Vector<TLength, TType> operator^(Vector<TLength, TType> vec, TType scalar);
 
+    /**
+     * @brief bitwise XOR
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param scalar 
+     * @param vec 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator^(TType scalar, Vector<TLength, TType> const& vec);
+    Vector<TLength, TType> operator^(TType scalar, Vector<TLength, TType> vec);
 
+    /**
+     * @brief bitwise XOR
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec1 
+     * @param vec2 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator^(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
+    Vector<TLength, TType> operator^(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2);
 
+    /**
+     * @brief bitwise left shift
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec 
+     * @param scalar 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator<<(Vector<TLength, TType> const& vec, TType scalar);
+    Vector<TLength, TType> operator<<(Vector<TLength, TType> vec, TType scalar);
 
+    /**
+     * @brief bitwise left shift
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param scalar 
+     * @param vec 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator<<(TType scalar, Vector<TLength, TType> const& vec);
+    Vector<TLength, TType> operator<<(TType scalar, Vector<TLength, TType> vec);
 
+    /**
+     * @brief bitwise left shift
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec1 
+     * @param vec2 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator<<(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
+    Vector<TLength, TType> operator<<(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2);
 
+    /**
+     * @brief bitwise right shift
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec 
+     * @param scalar 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator>>(Vector<TLength, TType> const& vec, TType scalar);
+    Vector<TLength, TType> operator>>(Vector<TLength, TType> vec, TType scalar);
 
+    /**
+     * @brief bitwise right shift 
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param scalar 
+     * @param vec 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator>>(TType scalar, Vector<TLength, TType> const& vec);
+    Vector<TLength, TType> operator>>(TType scalar, Vector<TLength, TType> vec);
 
+    /**
+     * @brief bitwise right shift 
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec1 
+     * @param vec2 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator>>(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
+    Vector<TLength, TType> operator>>(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2);
 
+    /**
+     * @brief bitwise NOT
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec 
+     * @return constexpr Vector<TLength, TType> 
+     */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator~(Vector<TLength, TType> const& vec);
+    Vector<TLength, TType> operator~(Vector<TLength, TType> vec);
 
     #pragma endregion //!logical operators
     #pragma region logical operators
     
+    /**
+     * @brief negation
+     * 
+     * @tparam TLength 
+     * @param vec 
+     * @return constexpr Vector<TLength, bool> 
+     */
     template <size_t TLength>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, bool> operator!(Vector<TLength, bool> const& vec);
+    Vector<TLength, bool> operator!(Vector<TLength, bool> vec);
 	
+    /**
+     * @brief AND
+     * 
+     * @tparam TLength 
+     * @param vec1 
+     * @param vec2 
+     * @return constexpr Vector<TLength, bool> 
+     */
     template <size_t TLength>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, bool> operator&&(Vector<TLength, bool> const& vec1, Vector<TLength, bool> const& vec2);
+    Vector<TLength, bool> operator&&(Vector<TLength, bool> vec1, Vector<TLength, bool> const& vec2);
 
+    /**
+     * @brief inclusive OR
+     * 
+     * @tparam TLength 
+     * @param vec1 
+     * @param vec2 
+     * @return constexpr Vector<TLength, bool> 
+     */
 	template <size_t TLength>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, bool> operator||(Vector<TLength, bool> const& vec1, Vector<TLength, bool> const& vec2);
+    Vector<TLength, bool> operator||(Vector<TLength, bool> vec1, Vector<TLength, bool> const& vec2);
     
     #pragma endregion //!logical operators
     #pragma region comparision operators
 
+    /**
+     * @brief equal to
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec1 
+     * @param vec2 
+     * @return true 
+     * @return false 
+     */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
     bool operator==(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
 
+    /**
+     * @brief equal to
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec 
+     * @param scalar 
+     * @return true 
+     * @return false 
+     */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
     bool operator==(Vector<TLength, TType> const& vec, TType scalar);
 
+    /**
+     * @brief equal to
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param scalar 
+     * @param vec 
+     * @return true 
+     * @return false 
+     */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
     bool operator==(TType scalar, Vector<TLength, TType> const& vec);
 
+    /**
+     * @brief not equal to
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec1 
+     * @param vec2 
+     * @return true 
+     * @return false 
+     */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
     bool operator!=(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
 
+    /**
+     * @brief not equal to
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec 
+     * @param scalar 
+     * @return true 
+     * @return false 
+     */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
     bool operator!=(Vector<TLength, TType> const& vec, TType scalar);
 
+    /**
+     * @brief not equal to
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param scalar 
+     * @param vec 
+     * @return true 
+     * @return false 
+     */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
     bool operator!=(TType scalar, Vector<TLength, TType> const& vec);
 
+    /**
+     * @brief less than
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec1 
+     * @param vec2 
+     * @return true 
+     * @return false 
+     */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
     bool operator<(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
 
+    /**
+     * @brief less than
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec 
+     * @param scalar 
+     * @return true 
+     * @return false 
+     */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
     bool operator<(Vector<TLength, TType> const& vec, TType scalar);
 
+    /**
+     * @brief less than
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param scalar 
+     * @param vec 
+     * @return true 
+     * @return false 
+     */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
     bool operator<(TType scalar, Vector<TLength, TType> const& vec);
 
+    /**
+     * @brief greater than
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec1 
+     * @param vec2 
+     * @return true 
+     * @return false 
+     */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
     bool operator>(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
 
+    /**
+     * @brief greater than
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec 
+     * @param scalar 
+     * @return true 
+     * @return false 
+     */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
     bool operator>(Vector<TLength, TType> const& vec, TType scalar);
 
+    /**
+     * @brief greater than
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param scalar 
+     * @param vec 
+     * @return true 
+     * @return false 
+     */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
     bool operator>(TType scalar, Vector<TLength, TType> const& vec);
 
+    /**
+     * @brief less than or equal to
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec1 
+     * @param vec2 
+     * @return true 
+     * @return false 
+     */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
     bool operator<=(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
 
+    /**
+     * @brief less than or equal to
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec 
+     * @param scalar 
+     * @return true 
+     * @return false 
+     */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
     bool operator<=(Vector<TLength, TType> const& vec, TType scalar);
 
+    /**
+     * @brief less than or equal to
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param scalar 
+     * @param vec 
+     * @return true 
+     * @return false 
+     */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
     bool operator<=(TType scalar, Vector<TLength, TType> const& vec);
 
+    /**
+     * @brief greater than or equal to
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec1 
+     * @param vec2 
+     * @return true 
+     * @return false 
+     */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
     bool operator>=(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2);
 
+    /**
+     * @brief greater than or equal to
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param vec 
+     * @param scalar 
+     * @return true 
+     * @return false 
+     */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
     bool operator>=(Vector<TLength, TType> const& vec, TType scalar);
 
+    /**
+     * @brief greater than or equal to
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param scalar 
+     * @param vec 
+     * @return true 
+     * @return false 
+     */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
     bool operator>=(TType scalar, Vector<TLength, TType> const& vec);
@@ -695,10 +1214,28 @@ namespace FoxMath::Vector
     #pragma endregion //!comparision operators
     #pragma region stream operators
 
+    /**
+     * @brief output stream
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param out 
+     * @param vec 
+     * @return constexpr std::ostream& 
+     */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
     std::ostream& 	operator<<		(std::ostream& out, const Vector<TLength, TType>& vec);
 
+    /**
+     * @brief input stream
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param out 
+     * @param vec 
+     * @return constexpr std::ostream& 
+     */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
     std::istream& 	operator>>		(std::istream& in, const Vector<TLength, TType>& vec);
