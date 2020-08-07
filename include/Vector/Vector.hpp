@@ -70,7 +70,7 @@ namespace FoxMath::Vector
         #pragma region constructor/destructor
     
         /**
-         * @brief Default constructor, init the vector to zero
+         * @brief Default constructor, doesn't init the vector's member at zero to optimize class
          * 
          */
         constexpr inline 
@@ -158,7 +158,7 @@ namespace FoxMath::Vector
 
 /*
 		float 		dotProduct	 	(const Vec3& other) const;
-		static float dot(const Vec3& vec1, const Vec3& vec2) { return vec1.dotProduct(vec2); }
+		static float dot(const Vec3& lhs, const Vec3& rhs) { return lhs.dotProduct(rhs); }
 
 		//same as get magnitude
 		float 		length		 		() 			 const;
@@ -174,9 +174,9 @@ namespace FoxMath::Vector
 		//cross product between 2 vectors
 		void 			cross		(const Vec3& other);
 		Vec3 			cross	    (const Vec3& other) const;
-		static Vec3 	cross		(const Vec3& vec1, const Vec3& vec2) { return vec1.getCross(vec2); }
+		static Vec3 	cross		(const Vec3& lhs, const Vec3& rhs) { return lhs.getCross(rhs); }
 
-		static Vec3 	lerp		(const Vec3& vec1, const Vec3& vec2, float t);
+		static Vec3 	lerp		(const Vec3& lhs, const Vec3& rhs, float t);
         */
 
         #pragma endregion //!methods
@@ -504,7 +504,7 @@ namespace FoxMath::Vector
         /**
          * @brief Converte vector to another vector type
          * @note use static_cast<> to call this function
-         * @example `FoxMath::Vector::Vector<2, float> vec2 = static_cast<FoxMath::Vector::Vector<2, float>>(vec)`
+         * @example `FoxMath::Vector::Vector<2, float> rhs = static_cast<FoxMath::Vector::Vector<2, float>>(vec)`
          * @tparam TLengthOther 
          * @tparam TTypeOther 
          * @return Vector<TLengthOther, TTypeOther> 
@@ -573,13 +573,13 @@ namespace FoxMath::Vector
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec1 
-     * @param vec2 
+     * @param lhs 
+     * @param rhs 
      * @return constexpr Vector<TLength, TType> 
      */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator+(Vector<TLength, TType> vec1, Vector<TLength, TType> vec2) noexcept;
+    Vector<TLength, TType> operator+(Vector<TLength, TType> lhs, Vector<TLength, TType> rhs) noexcept;
 
     /**
      * @brief subtraction
@@ -612,13 +612,13 @@ namespace FoxMath::Vector
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec1 
-     * @param vec2 
+     * @param lhs 
+     * @param rhs 
      * @return constexpr Vector<TLength, TType> 
      */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator-(Vector<TLength, TType> vec1, Vector<TLength, TType> vec2) noexcept;
+    Vector<TLength, TType> operator-(Vector<TLength, TType> lhs, Vector<TLength, TType> rhs) noexcept;
 
     /**
      * @brief multiplication
@@ -651,13 +651,13 @@ namespace FoxMath::Vector
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec1 
-     * @param vec2 
+     * @param lhs 
+     * @param rhs 
      * @return constexpr Vector<TLength, TType> 
      */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator*(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2) noexcept;
+    Vector<TLength, TType> operator*(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept;
 
     /**
      * @brief division
@@ -690,13 +690,13 @@ namespace FoxMath::Vector
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec1 
-     * @param vec2 
+     * @param lhs 
+     * @param rhs 
      * @return constexpr Vector<TLength, TType> 
      */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator/(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2) noexcept;
+    Vector<TLength, TType> operator/(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept;
 
     /**
      * @brief modulo
@@ -729,26 +729,26 @@ namespace FoxMath::Vector
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec1 
-     * @param vec2 
+     * @param lhs 
+     * @param rhs 
      * @return constexpr Vector<TLength, TType> 
      */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator%(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2) noexcept;
+    Vector<TLength, TType> operator%(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept;
 
     /**
      * @brief bitwise AND
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec1 
+     * @param lhs 
      * @param scalar 
      * @return constexpr Vector<TLength, TType> 
      */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator&(Vector<TLength, TType> vec1, TType scalar) noexcept;
+    Vector<TLength, TType> operator&(Vector<TLength, TType> lhs, TType scalar) noexcept;
 
     /**
      * @brief bitwise AND
@@ -768,13 +768,13 @@ namespace FoxMath::Vector
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec1 
-     * @param vec2 
+     * @param lhs 
+     * @param rhs 
      * @return constexpr Vector<TLength, TType> 
      */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator&(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2) noexcept;
+    Vector<TLength, TType> operator&(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept;
 
     /**
      * @brief bitwise OR 
@@ -807,13 +807,13 @@ namespace FoxMath::Vector
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec1 
-     * @param vec2 
+     * @param lhs 
+     * @param rhs 
      * @return constexpr Vector<TLength, TType> 
      */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator|(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2) noexcept;
+    Vector<TLength, TType> operator|(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept;
 
     /**
      * @brief bitwise XOR
@@ -846,13 +846,13 @@ namespace FoxMath::Vector
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec1 
-     * @param vec2 
+     * @param lhs 
+     * @param rhs 
      * @return constexpr Vector<TLength, TType> 
      */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator^(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2) noexcept;
+    Vector<TLength, TType> operator^(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept;
 
     /**
      * @brief bitwise left shift
@@ -885,13 +885,13 @@ namespace FoxMath::Vector
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec1 
-     * @param vec2 
+     * @param lhs 
+     * @param rhs 
      * @return constexpr Vector<TLength, TType> 
      */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator<<(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2) noexcept;
+    Vector<TLength, TType> operator<<(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept;
 
     /**
      * @brief bitwise right shift
@@ -924,13 +924,13 @@ namespace FoxMath::Vector
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec1 
-     * @param vec2 
+     * @param lhs 
+     * @param rhs 
      * @return constexpr Vector<TLength, TType> 
      */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator>>(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2) noexcept;
+    Vector<TLength, TType> operator>>(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept;
 
     /**
      * @brief bitwise NOT
@@ -962,25 +962,25 @@ namespace FoxMath::Vector
      * @brief AND
      * 
      * @tparam TLength 
-     * @param vec1 
-     * @param vec2 
+     * @param lhs 
+     * @param rhs 
      * @return constexpr Vector<TLength, bool> 
      */
     template <size_t TLength>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, bool> operator&&(Vector<TLength, bool> vec1, Vector<TLength, bool> const& vec2) noexcept;
+    Vector<TLength, bool> operator&&(Vector<TLength, bool> lhs, Vector<TLength, bool> const& rhs) noexcept;
 
     /**
      * @brief inclusive OR
      * 
      * @tparam TLength 
-     * @param vec1 
-     * @param vec2 
+     * @param lhs 
+     * @param rhs 
      * @return constexpr Vector<TLength, bool> 
      */
 	template <size_t TLength>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, bool> operator||(Vector<TLength, bool> vec1, Vector<TLength, bool> const& vec2) noexcept;
+    Vector<TLength, bool> operator||(Vector<TLength, bool> lhs, Vector<TLength, bool> const& rhs) noexcept;
     
     #pragma endregion //!logical operators
     #pragma region comparision operators
@@ -991,14 +991,14 @@ namespace FoxMath::Vector
      *          By default, VECTOR_OPERATOR_EGALE_COMPARE_LENGTH is not define
      * @tparam TLength 
      * @tparam TType 
-     * @param vec1 
-     * @param vec2 
+     * @param lhs 
+     * @param rhs 
      * @return true 
      * @return false 
      */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
-    bool operator==(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2) noexcept;
+    bool operator==(Vector<TLength, TType> const& lhs, Vector<TLength, TType> const& rhs) noexcept;
 
     /**
      * @brief equal to
@@ -1033,14 +1033,14 @@ namespace FoxMath::Vector
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec1 
-     * @param vec2 
+     * @param lhs 
+     * @param rhs 
      * @return true 
      * @return false 
      */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
-    bool operator!=(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2) noexcept;
+    bool operator!=(Vector<TLength, TType> const& lhs, Vector<TLength, TType> const& rhs) noexcept;
 
     /**
      * @brief not equal to
@@ -1075,14 +1075,14 @@ namespace FoxMath::Vector
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec1 
-     * @param vec2 
+     * @param lhs 
+     * @param rhs 
      * @return true 
      * @return false 
      */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
-    bool operator<(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2) noexcept;
+    bool operator<(Vector<TLength, TType> const& lhs, Vector<TLength, TType> const& rhs) noexcept;
 
     /**
      * @brief less than
@@ -1117,14 +1117,14 @@ namespace FoxMath::Vector
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec1 
-     * @param vec2 
+     * @param lhs 
+     * @param rhs 
      * @return true 
      * @return false 
      */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
-    bool operator>(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2) noexcept;
+    bool operator>(Vector<TLength, TType> const& lhs, Vector<TLength, TType> const& rhs) noexcept;
 
     /**
      * @brief greater than
@@ -1159,14 +1159,14 @@ namespace FoxMath::Vector
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec1 
-     * @param vec2 
+     * @param lhs 
+     * @param rhs 
      * @return true 
      * @return false 
      */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
-    bool operator<=(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2) noexcept;
+    bool operator<=(Vector<TLength, TType> const& lhs, Vector<TLength, TType> const& rhs) noexcept;
 
     /**
      * @brief less than or equal to
@@ -1201,14 +1201,14 @@ namespace FoxMath::Vector
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec1 
-     * @param vec2 
+     * @param lhs 
+     * @param rhs 
      * @return true 
      * @return false 
      */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
-    bool operator>=(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2) noexcept;
+    bool operator>=(Vector<TLength, TType> const& lhs, Vector<TLength, TType> const& rhs) noexcept;
 
     /**
      * @brief greater than or equal to

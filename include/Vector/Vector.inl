@@ -521,9 +521,9 @@ Vector<TLength, TType> operator+(TType scalar, Vector<TLength, TType> vec) noexc
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType> operator+(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2) noexcept
+Vector<TLength, TType> operator+(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept
 {
-    return vec1 += vec2;
+    return lhs += rhs;
 }
 
 template <size_t TLength, typename TType>
@@ -547,9 +547,9 @@ Vector<TLength, TType> operator-(TType scalar, Vector<TLength, TType> vec) noexc
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType> operator-(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2) noexcept
+Vector<TLength, TType> operator-(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept
 {
-    return vec1 -= vec2;
+    return lhs -= rhs;
 }
 
 template <size_t TLength, typename TType>
@@ -573,9 +573,9 @@ Vector<TLength, TType> operator*(TType scalar, Vector<TLength, TType> vec) noexc
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType> operator*(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2) noexcept
+Vector<TLength, TType> operator*(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept
 {
-    return vec1 *= vec2;
+    return lhs *= rhs;
 }
 
 template <size_t TLength, typename TType>
@@ -599,9 +599,9 @@ Vector<TLength, TType> operator/(TType scalar, Vector<TLength, TType> vec) noexc
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType> operator/(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2) noexcept
+Vector<TLength, TType> operator/(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept
 {
-    return vec1 /= vec2;
+    return lhs /= rhs;
 }
 
 template <size_t TLength, typename TType>
@@ -625,9 +625,9 @@ Vector<TLength, TType> operator%(TType scalar, Vector<TLength, TType> vec) noexc
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType> operator%(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2) noexcept
+Vector<TLength, TType> operator%(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept
 {
-    return vec1 %= vec2;
+    return lhs %= rhs;
 }
 
 template <size_t TLength, typename TType>
@@ -651,9 +651,9 @@ Vector<TLength, TType> operator&(TType scalar, Vector<TLength, TType> vec) noexc
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType> operator&(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2) noexcept
+Vector<TLength, TType> operator&(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept
 {
-    return vec1 &= vec2;
+    return lhs &= rhs;
 }
 
 template <size_t TLength, typename TType>
@@ -677,9 +677,9 @@ Vector<TLength, TType> operator|(TType scalar, Vector<TLength, TType> vec) noexc
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType> operator|(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2) noexcept
+Vector<TLength, TType> operator|(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept
 {
-    return vec1 |= vec2;
+    return lhs |= rhs;
 }
 
 template <size_t TLength, typename TType>
@@ -703,9 +703,9 @@ Vector<TLength, TType> operator^(TType scalar, Vector<TLength, TType> vec) noexc
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType> operator^(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2) noexcept
+Vector<TLength, TType> operator^(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept
 {
-    return vec1 ^= vec2;
+    return lhs ^= rhs;
 }
 
 
@@ -730,9 +730,9 @@ Vector<TLength, TType> operator<<(TType scalar, Vector<TLength, TType> vec) noex
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType> operator<<(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2) noexcept
+Vector<TLength, TType> operator<<(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept
 {
-    return vec1 << vec2;
+    return lhs << rhs;
 }
 
 
@@ -757,9 +757,9 @@ Vector<TLength, TType> operator>>(TType scalar, Vector<TLength, TType> vec) noex
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType> operator>>(Vector<TLength, TType> vec1, Vector<TLength, TType> const& vec2) noexcept
+Vector<TLength, TType> operator>>(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept
 {
-    return vec1 >> vec2;
+    return lhs >> rhs;
 }
 
 
@@ -789,35 +789,35 @@ Vector<TLength, bool> operator!(Vector<TLength, bool> vec) noexcept
 
 template <size_t TLength>
 inline constexpr
-Vector<TLength, bool> operator&&(Vector<TLength, bool> vec1, Vector<TLength, bool> const& vec2) noexcept
+Vector<TLength, bool> operator&&(Vector<TLength, bool> lhs, Vector<TLength, bool> const& rhs) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
-        vec1[i] &= vec2[i];
+        lhs[i] &= rhs[i];
     }
     
-    return vec1;
+    return lhs;
 }
 
 template <size_t TLength>
 inline constexpr
-Vector<TLength, bool> operator||(Vector<TLength, bool> vec1, Vector<TLength, bool> const& vec2) noexcept
+Vector<TLength, bool> operator||(Vector<TLength, bool> lhs, Vector<TLength, bool> const& rhs) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
-        vec1[i] |= vec2[i];
+        lhs[i] |= rhs[i];
     }
     
-    return vec1;
+    return lhs;
 }
 
 template <size_t TLength, typename TType>
 [[nodiscard]] inline constexpr
-bool operator==(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2) noexcept
+bool operator==(Vector<TLength, TType> const& lhs, Vector<TLength, TType> const& rhs) noexcept
 {
 #ifdef VECTOR_OPERATOR_EGALE_COMPARE_LENGTH
 
-    return Numeric::isSame<TType>(vec1.squartLength(), vec2.squartLength());
+    return Numeric::isSame<TType>(lhs.squartLength(), rhs.squartLength());
 
 #else
 
@@ -825,7 +825,7 @@ bool operator==(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const
 
     for (size_t i = 0; i < TLength && rst; i++)
     {
-        rst &= vec1[i] == vec2[i];
+        rst &= lhs[i] == rhs[i];
     }
 
     return rst;
@@ -849,9 +849,9 @@ bool operator==(TType scalar, Vector<TLength, TType> const& vec) noexcept
 
 template <size_t TLength, typename TType>
 [[nodiscard]] inline constexpr
-bool operator!=(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2) noexcept
+bool operator!=(Vector<TLength, TType> const& lhs, Vector<TLength, TType> const& rhs) noexcept
 {
-    return !(vec1 == vec2);
+    return !(lhs == rhs);
 }
 
 template <size_t TLength, typename TType>
@@ -870,9 +870,9 @@ bool operator!=(TType scalar, Vector<TLength, TType> const& vec) noexcept
 
 template <size_t TLength, typename TType>
 [[nodiscard]] inline constexpr
-bool operator<(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2) noexcept
+bool operator<(Vector<TLength, TType> const& lhs, Vector<TLength, TType> const& rhs) noexcept
 {
-    return vec1.squartLength() < vec2.squartLength();
+    return lhs.squartLength() < rhs.squartLength();
 }
 
 template <size_t TLength, typename TType>
@@ -891,9 +891,9 @@ bool operator<(TType scalar, Vector<TLength, TType> const& vec) noexcept
 
 template <size_t TLength, typename TType>
 [[nodiscard]] inline constexpr
-bool operator>(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2) noexcept
+bool operator>(Vector<TLength, TType> const& lhs, Vector<TLength, TType> const& rhs) noexcept
 {
-    return vec1.squartLength() > vec2.squartLength();
+    return lhs.squartLength() > rhs.squartLength();
 }
 
 template <size_t TLength, typename TType>
@@ -912,9 +912,9 @@ bool operator>(TType scalar, Vector<TLength, TType> const& vec) noexcept
 
 template <size_t TLength, typename TType>
 [[nodiscard]] inline constexpr
-bool operator<=(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2) noexcept
+bool operator<=(Vector<TLength, TType> const& lhs, Vector<TLength, TType> const& rhs) noexcept
 {
-    return vec1.squartLength() <= vec2.squartLength();
+    return lhs.squartLength() <= rhs.squartLength();
 }
 
 template <size_t TLength, typename TType>
@@ -933,9 +933,9 @@ bool operator<=(TType scalar, Vector<TLength, TType> const& vec) noexcept
 
 template <size_t TLength, typename TType>
 [[nodiscard]] inline constexpr
-bool operator>=(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2) noexcept
+bool operator>=(Vector<TLength, TType> const& lhs, Vector<TLength, TType> const& rhs) noexcept
 {
-    return vec1.squartLength() >= vec2.squartLength();
+    return lhs.squartLength() >= rhs.squartLength();
 }
 
 
