@@ -82,4 +82,58 @@ namespace FoxMath::Type
     template<typename TType1, typename TType2>
     using IsSame = std::enable_if_t<std::is_same<TType1, TType2>::value, bool>;
 
+    /**
+     * @brief Sfinae shorthand for operator==
+     * @note usage :
+     * @tparam A to test
+     * @tparam B to test
+     */
+    template<auto A, auto B>
+    using IsEqualTo = std::enable_if_t<(A == B), bool>;
+
+    /**
+     * @brief Sfinae shorthand for operator!=
+     * @note usage :
+     * @tparam A to test
+     * @tparam B to test
+     */
+    template<auto A, auto B>
+    using IsNotEqualTo = std::enable_if_t<(A != B), bool>;
+
+    /**
+     * @brief Sfinae shorthand for operator<
+     * @note usage :
+     * @tparam A to test
+     * @tparam B to test
+     */
+    template<auto A, auto B>
+    using IsLessThan = std::enable_if_t<(A < B), bool>;
+
+    /**
+     * @brief Sfinae shorthand for operator>
+     * @note usage :
+     * @tparam A to test
+     * @tparam B to test
+     */
+    template<auto A, auto B>
+    using IsGreaterThan = std::enable_if_t<(A > B), bool>;
+
+    /**
+     * @brief Sfinae shorthand for operator<=
+     * @note usage :
+     * @tparam A to test
+     * @tparam B to test
+     */
+    template<auto A, auto B>
+    using IsLessThanOrEqualTo = std::enable_if_t<(A <= B), bool>;
+    
+    /**
+     * @brief Sfinae shorthand for operator>=
+     * @note usage :
+     * @tparam A to test
+     * @tparam B to test
+     */
+    template<auto A, auto B>
+    using IsGreaterThanOrEqualTo = std::enable_if_t<(A >= B), bool>;
+
 } /*namespace FoxMath::Type*/
