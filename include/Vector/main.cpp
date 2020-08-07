@@ -32,6 +32,9 @@ int main()
 
     FoxMath::Vector::Vector<3, float> constVect;
     constexpr FoxMath::Vector::Vector<3, float> constVect2  (5.f, 5.f);
+    //constVect2[2] = 3.f; /*Doesn't work yet*/
+
+
     static_assert(!is_constexpr<true>(constVect2), "is_constexpr<true>(0)");
     
 
