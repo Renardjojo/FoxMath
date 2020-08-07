@@ -124,9 +124,19 @@ namespace FoxMath::Vector
         inline constexpr  
         void fill (const TType scalar);
 
+        /**
+         * @brief Return squartLength of vector. More optimize to compare distance than length
+         * 
+         * @return constexpr TType 
+         */
         [[nodiscard]] inline constexpr
         TType squartLength () const;
 
+        /**
+         * @brief return length of the vector 
+         * 
+         * @return constexpr TType 
+         */
         [[nodiscard]] inline constexpr
         TType length () const;
 
@@ -961,7 +971,8 @@ namespace FoxMath::Vector
 
     /**
      * @brief equal to
-     * 
+     * @note    if VECTOR_OPERATOR_EGALE_COMPARE_LENGTH is define, this function compare length of the both vector. Else it compare the both member.
+     *          By default, VECTOR_OPERATOR_EGALE_COMPARE_LENGTH is not define
      * @tparam TLength 
      * @tparam TType 
      * @param vec1 

@@ -800,6 +800,12 @@ template <size_t TLength, typename TType>
 [[nodiscard]] inline constexpr
 bool operator==(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const& vec2)
 {
+#ifdef VECTOR_OPERATOR_EGALE_COMPARE_LENGTH
+
+    return Numeric::isSame<TType>(vec1.squartLength(), vec2.squartLength());
+
+#else
+
     bool rst = true;
 
     for (size_t i = 0; i < TLength && rst; i++)
@@ -808,6 +814,8 @@ bool operator==(Vector<TLength, TType> const& vec1, Vector<TLength, TType> const
     }
 
     return rst;
+
+#endif
 }
 
 template <size_t TLength, typename TType>
