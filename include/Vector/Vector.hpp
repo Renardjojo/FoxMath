@@ -133,7 +133,7 @@ namespace FoxMath::Vector
         TType squartLength () const noexcept;
 
         /**
-         * @brief return length of the vector 
+         * @brief return magnitude of the vector 
          * 
          * @return constexpr TType 
          */
@@ -146,7 +146,7 @@ namespace FoxMath::Vector
          * @return constexpr Vector& 
          */
         inline constexpr
-		Vector& 	normalize	    () noexcept;
+		Vector& 	    normalize	        () noexcept;
 
         /**
          * @brief  Returns the normalized vector. If the vector is null (all components are set to 0), then vector zero is returned.
@@ -154,28 +154,96 @@ namespace FoxMath::Vector
          * @return constexpr const Vector& 
          */
         [[nodiscard]] inline constexpr
-        const Vector& getNormalized		() const noexcept;
+        Vector      getNormalized		() const noexcept;
 
-/*
-		float 		dotProduct	 	(const Vec3& other) const;
+        /**
+         * @brief Clamp the vector's length to max value
+         * 
+         * @param maxLength 
+         * @return constexpr Vector& 
+         */
+        inline constexpr
+        Vector&         clampLength         (TType maxLength) noexcept;
+
+        /**
+         * @brief Get the Clamped Length object
+         * 
+         * @param maxLength 
+         * @return constexpr Vector 
+         */
+        [[nodiscard]] inline constexpr
+        Vector         getClampedLength         (TType maxLength) const noexcept;
+
+        /**
+         * @brief Perform dot product with another vector
+         * 
+         * @param other 
+         * @return constexpr TType 
+         */
+        [[nodiscard]] inline constexpr
+        TType           dot		            (const Vector& other) const noexcept;
+
+        /**
+         * @brief perform cross product with another vector
+         * 
+         * @param other 
+         * @return constexpr Vector& 
+         */
+        inline constexpr
+        Vector&         cross	            (const Vector& other) noexcept;
+
+        /**
+         * @brief Get the Cross object
+         * 
+         * @param other 
+         * @return constexpr Vector 
+         */
+        [[nodiscard]] inline constexpr
+        Vector         getCross	            (const Vector& other) const noexcept;
+
+        /**
+         * @brief Performs a linear interpolation between 2 vectors of the same type.
+         * 
+         * @param other 
+         * @param t 
+         * @return constexpr Vector& 
+         */
+        inline constexpr
+        Vector& 	    lerp		        (const Vector& other, TType t) noexcept;
+
+        [[nodiscard]] inline constexpr
+        Vector 	        getLerp		        (const Vector& other, TType t) const noexcept;
+
+        /**
+         * @brief Performs a reflection with a normal vector
+         * 
+         * @param normalNormalized : Normal must be normalized
+         * @return constexpr Vector& 
+         */
+        inline constexpr
+        Vector&         reflect		        (const Vector& normalNormalized) noexcept;
+
+        /**
+         * @brief Get the Reflection object
+         * 
+         * @param normalNormalized 
+         * @return constexpr Vector 
+         */
+        [[nodiscard]] inline constexpr
+        Vector 	        getReflection		 (const Vector& normalNormalized) const noexcept;
+
+        /**
+         * @brief Set the magnitude of the current vector
+         * 
+         * @param newLength 
+         * @return constexpr Vector& 
+         */
+        inline constexpr
+        Vector& 	    setLength		     (TType newLength) noexcept;
+
+        /*
 		static float dot(const Vec3& lhs, const Vec3& rhs) { return lhs.dotProduct(rhs); }
-
-		//same as get magnitude
-		float 		length		 		() 			 const;
-		float 		squartLength 		() 			 const;
-
-		//creat unit vector
-		Vec3& 	normalize		();
-		Vec3 	getNormalize	() const;
-
-		//clamp magnitude
-		Vec3& clampLength(float max);
-
-		//cross product between 2 vectors
-		void 			cross		(const Vec3& other);
-		Vec3 			cross	    (const Vec3& other) const;
 		static Vec3 	cross		(const Vec3& lhs, const Vec3& rhs) { return lhs.getCross(rhs); }
-
 		static Vec3 	lerp		(const Vec3& lhs, const Vec3& rhs, float t);
         */
 
@@ -618,7 +686,7 @@ namespace FoxMath::Vector
      */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator-(Vector<TLength, TType> lhs, Vector<TLength, TType> rhs) noexcept;
+    Vector<TLength, TType> operator-(Vector<TLength, TType> lhs, Vector<TLength, TType>& rhs) noexcept;
 
     /**
      * @brief multiplication

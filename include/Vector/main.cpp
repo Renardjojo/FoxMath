@@ -30,14 +30,13 @@ int main()
     vec = vect.normalize();
 */
 
-    FoxMath::Vector::Vector<3, float> constVect;
+    constexpr FoxMath::Vector::Vector<3, float> constVect (3.f, 5.f, 10.f);
     constexpr FoxMath::Vector::Vector<3, float> constVect2  (5.f, 5.f);
-    //constVect2[2] = 3.f; /*Doesn't work yet*/
-
-
-    static_assert(!is_constexpr<true>(constVect2), "is_constexpr<true>(0)");
+    
+    constexpr auto value = constVect.getReflection(FoxMath::Vector::Vector<3, float>(0.f, 1.f, 0.f));
+    static_assert(value.length(), "is_constexpr<true>(0)");
     
 
-    std::cout << constVect << std::endl;
+    std::cout << value << std::endl;
     std::cout << constVect2 << std::endl;
 }

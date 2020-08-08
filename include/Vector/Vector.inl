@@ -115,9 +115,158 @@ Vector<TLength, TType>& Vector<TLength, TType>::normalize	    () noexcept
 
 template <size_t TLength, typename TType>
 inline constexpr
-const Vector<TLength, TType>& Vector<TLength, TType>::getNormalized		() const noexcept
+Vector<TLength, TType> Vector<TLength, TType>::getNormalized		() const noexcept
 {
     return Vector<TLength, TType>(*this).normalize();
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+Vector<TLength, TType>&         Vector<TLength, TType>::clampLength         (TType maxLength) noexcept
+{
+	TType magnitude {length()};
+
+    if (magnitude && magnitude > maxLength)
+    {
+		*this /= magnitude;
+		*this *= maxLength;
+    }
+    return *this;
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+Vector<TLength, TType>         Vector<TLength, TType>::getClampedLength         (TType maxLength) const noexcept
+{
+    return Vector<TLength, TType>(*this).clampLength(maxLength);
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+TType           Vector<TLength, TType>::dot		            (const Vector& other) const noexcept
+{
+    TType rst {static_cast<TType>(0)};
+
+    for (size_t i = 0; i < TLength; i++)
+    {
+        rst += m_data[i] * other[i];
+    }
+    
+    return rst;
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+Vector<TLength, TType>&         Vector<TLength, TType>::cross	            (const Vector& other) noexcept
+{
+    Vector<TLength, TType> copyTemp {*this};
+
+    for (size_t i = 0; i < TLength; i++)
+    {
+        switch (i)
+        {
+        case 0:
+            m_data[i] = copyTemp[i + 1] * other[TLength - 1] - other[i + 1] * copyTemp[TLength - 1];
+            break;
+        
+        case TLength:
+            m_data[i] = copyTemp[0] * other[i - 1] - other[0] * copyTemp[i - 1];
+            break;
+
+        default:
+            m_data[i] = copyTemp[i + 1] * other[i - 1] - other[i + 1] * copyTemp[i - 1];
+            break;
+        }
+    }
+
+    return *this;
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+Vector<TLength, TType>         Vector<TLength, TType>::getCross	            (const Vector& other) const noexcept
+{
+    Vector<TLength, TType> rst;
+
+    for (size_t i = 0; i < TLength; i++)
+    {
+        switch (i)
+        {
+        case 0:
+            rst[i] = m_data[i + 1] * other[TLength - 1] - other[i + 1] * m_data[TLength - 1];
+            break;
+        
+        case TLength:
+            rst[i] = m_data[0] * other[i - 1] - other[0] * m_data[i - 1];
+            break;
+
+        default:
+            rst[i] = m_data[i + 1] * other[i - 1] - other[i + 1] * m_data[i - 1];
+            break;
+        }
+    }
+
+    return *this;
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+Vector<TLength, TType>& Vector<TLength, TType>::lerp		        (const Vector& other, TType t) noexcept
+{
+    Vector<TLength, TType> rst;
+
+    for (size_t i = 0; i < TLength; i++)
+    {
+        m_data[i] = std::lerp(m_data[i], other[i], t);
+    }
+
+    return *this;
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+Vector<TLength, TType> Vector<TLength, TType>::getLerp		        (const Vector& other, TType t) const noexcept
+{
+    Vector<TLength, TType> rst;
+
+    for (size_t i = 0; i < TLength; i++)
+    {
+        rst[i] = std::lerp(m_data[i], other[i], t);
+    }
+
+    return rst;
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+Vector<TLength, TType>& Vector<TLength, TType>::reflect		        (const Vector& normalNormalized) noexcept
+{
+    *this = static_cast<TType>(2) * normalNormalized.dot(*this) * normalNormalized - (*this);
+    return *this;
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+Vector<TLength, TType> Vector<TLength, TType>::getReflection		 (const Vector& normalNormalized) const noexcept
+{
+    Vector<TLength, TType> rst;
+    rst = static_cast<TType>(2) * normalNormalized.dot(*this) * normalNormalized - (*this);
+    return rst;
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+Vector<TLength, TType>& Vector<TLength, TType>::setLength		     (TType newLength) noexcept
+{
+	TType magnitude {length()};
+
+    if (magnitude)
+    {
+		*this /= magnitude;
+		*this *= newLength;
+    }
+
+    return *this;
 }
 
 template <size_t TLength, typename TType>
