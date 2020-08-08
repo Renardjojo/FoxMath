@@ -34,7 +34,7 @@
 #include <iostream> //ostream, istream
 #include <cassert> //assert
 #include <cstring> //memset
-#include <cmath> //sqrt
+#include <cmath> //sqrt, lerp (if c++ 2020)
 
 #include "../Type/TypeTraitsAlias.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
 #include "../Numeric/Limits.hpp" //isSame
@@ -249,7 +249,7 @@ namespace FoxMath::Vector
          * @return false 
          */
         [[nodiscard]] inline constexpr
-		bool 	isColinearTo	(const Vector& other) noexcept;
+		bool 	isColinearTo	(const Vector& other) const noexcept;
 
         /**
          * @brief return true if vector is perpendicular this other vector. Comput dot product. If dot product is near of zero, vectors is colinear
@@ -259,7 +259,7 @@ namespace FoxMath::Vector
          * @return false 
          */
         [[nodiscard]] inline constexpr
-		bool 	isPerpendicularTo	(const Vector& other) noexcept;
+		bool 	isPerpendicularTo	(const Vector& other) const noexcept;
 
         /**
          * @brief Area correspond to the ares of parralelogram formed by the two vectors.
@@ -820,7 +820,7 @@ namespace FoxMath::Vector
      */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator+(Vector<TLength, TType> lhs, Vector<TLength, TType> rhs) noexcept;
+    Vector<TLength, TType> operator+(Vector<TLength, TType> lhs, const Vector<TLength, TType>& rhs) noexcept;
 
     /**
      * @brief subtraction
@@ -859,7 +859,7 @@ namespace FoxMath::Vector
      */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator-(Vector<TLength, TType> lhs, Vector<TLength, TType>& rhs) noexcept;
+    Vector<TLength, TType> operator-(Vector<TLength, TType> lhs, const Vector<TLength, TType>& rhs) noexcept;
 
     /**
      * @brief multiplication

@@ -169,7 +169,7 @@ Vector<TLength, TType>&         Vector<TLength, TType>::cross	            (const
             m_data[i] = copyTemp[i + 1] * other[TLength - 1] - other[i + 1] * copyTemp[TLength - 1];
             break;
         
-        case TLength:
+        case TLength - 1:
             m_data[i] = copyTemp[0] * other[i - 1] - other[0] * copyTemp[i - 1];
             break;
 
@@ -217,7 +217,12 @@ Vector<TLength, TType>& Vector<TLength, TType>::lerp		        (const Vector& oth
 
     for (size_t i = 0; i < TLength; i++)
     {
+#if __cplusplus == 201709L //Constexpr std::lerp
         m_data[i] = std::lerp(m_data[i], other[i], t);
+#else
+        m_data[i] = m_data[i] + t * (other[i] - m_data[i]);
+#endif
+
     }
 
     return *this;
@@ -231,7 +236,11 @@ Vector<TLength, TType> Vector<TLength, TType>::getLerp		        (const Vector& o
 
     for (size_t i = 0; i < TLength; i++)
     {
+#if __cplusplus == 201709L //Constexpr std::lerp
         rst[i] = std::lerp(m_data[i], other[i], t);
+#else
+        rst[i] = m_data[i] + t * (other[i] - m_data[i]);
+#endif
     }
 
     return rst;
@@ -279,16 +288,16 @@ Vector<TLength, TType>& Vector<TLength, TType>::setLength		     (TType newLength
 
 template <size_t TLength, typename TType>
 inline constexpr
-bool Vector<TLength, TType>::isColinearTo	(const Vector<TLength, TType>& other) noexcept
+bool Vector<TLength, TType>::isColinearTo	(const Vector<TLength, TType>& other) const noexcept
 {
 	return Numeric::isSameAsZero(getCross(other).squartLength()); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType>
 inline constexpr
-bool Vector<TLength, TType>::isPerpendicularTo	(const Vector<TLength, TType>& other) noexcept
+bool Vector<TLength, TType>::isPerpendicularTo	(const Vector<TLength, TType>& other) const noexcept
 {
-	return Numeric::isSameAsZero(getDot(other)); //hack to avoid sqrt
+	return Numeric::isSameAsZero(dot(other)); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType>
@@ -313,7 +322,7 @@ Vector<TLength, TType>& Vector<TLength, TType>::rotateAroundAxis (const Vector<T
     assert(unitAxis == static_cast<TType>(1) && "You must use unit vector. If you wan't disable assert for unit vector guard. Please define DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR");
 #endif
 
-	(*this) = getRotateArroundAxis(unitAxis, angleRad);
+	(*this) = getRotationAroundAxis(unitAxis, angleRad);
     return *this;
 }
 
@@ -325,10 +334,10 @@ Vector<TLength, TType> Vector<TLength, TType>::getRotationAroundAxis (const Vect
     assert(unitAxis == static_cast<TType>(1) && "You must use unit vector. If you wan't disable assert for unit vector guard. Please define DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR");
 #endif
 
-	TType cosA = cos(angleRad);
+	TType cosA = std::cos(angleRad);
 
 	//rodrigues rotation formula
-	return (*this) * cosA + unitAxis.getCross(*this) * sin(angleRad) + unitAxis * unitAxis.dotProduct(*this) * (static_cast<TType>(1) - cosA);
+	return (*this) * cosA + unitAxis.getCross(*this) * std::sin(angleRad) + unitAxis * unitAxis.dot(*this) * (static_cast<TType>(1) - cosA);
 }
 
 template <size_t TLength, typename TType>
@@ -342,7 +351,7 @@ template <size_t TLength, typename TType>
 inline constexpr
 TType Vector<TLength, TType>::getScalarRejectionWith(const Vector& other) const noexcept
 {
-    return cross(*this, other.getNormalized());
+    return cross(*this, other.getNormalized()).length();
 }
 
 template <size_t TLength, typename TType>
@@ -787,7 +796,7 @@ Vector<TLength, TType> operator-(TType scalar, Vector<TLength, TType> vec) noexc
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType> operator-(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept
+Vector<TLength, TType> operator-(Vector<TLength, TType> lhs, const Vector<TLength, TType>& rhs) noexcept
 {
     return lhs -= rhs;
 }
