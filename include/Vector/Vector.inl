@@ -241,6 +241,10 @@ template <size_t TLength, typename TType>
 inline constexpr
 Vector<TLength, TType>& Vector<TLength, TType>::reflect		        (const Vector& normalNormalized) noexcept
 {
+#ifndef DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR
+    assert(normalNormalized == static_cast<TType>(1) && "You must use unit vector. If you wan't disable assert for unit vector guard. Please define DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR");
+#endif
+
     *this = static_cast<TType>(2) * normalNormalized.dot(*this) * normalNormalized - (*this);
     return *this;
 }
@@ -249,6 +253,10 @@ template <size_t TLength, typename TType>
 inline constexpr
 Vector<TLength, TType> Vector<TLength, TType>::getReflection		 (const Vector& normalNormalized) const noexcept
 {
+#ifndef DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR
+    assert(normalNormalized == static_cast<TType>(1) && "You must use unit vector. If you wan't disable assert for unit vector guard. Please define DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR");
+#endif
+
     Vector<TLength, TType> rst;
     rst = static_cast<TType>(2) * normalNormalized.dot(*this) * normalNormalized - (*this);
     return rst;
@@ -267,6 +275,89 @@ Vector<TLength, TType>& Vector<TLength, TType>::setLength		     (TType newLength
     }
 
     return *this;
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+bool Vector<TLength, TType>::isColinearTo	(const Vector<TLength, TType>& other) noexcept
+{
+	return Numeric::isSameAsZero(getCross(other).squartLength()); //hack to avoid sqrt
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+bool Vector<TLength, TType>::isPerpendicularTo	(const Vector<TLength, TType>& other) noexcept
+{
+	return Numeric::isSameAsZero(getDot(other)); //hack to avoid sqrt
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+TType Vector<TLength, TType>::getParallelogramArea		(const Vector<TLength, TType>& other) const noexcept
+{
+	return getCross(other).length();
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+TType Vector<TLength, TType>::getTriangleArea		(const Vector<TLength, TType>& other) const noexcept
+{
+	return getParallelogramArea(other) / static_cast<TType>(2);
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+Vector<TLength, TType>& Vector<TLength, TType>::rotateAroundAxis (const Vector<TLength, TType>& unitAxis, TType angleRad) noexcept
+{
+#ifndef DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR
+    assert(unitAxis == static_cast<TType>(1) && "You must use unit vector. If you wan't disable assert for unit vector guard. Please define DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR");
+#endif
+
+	(*this) = getRotateArroundAxis(unitAxis, angleRad);
+    return *this;
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+Vector<TLength, TType> Vector<TLength, TType>::getRotationAroundAxis (const Vector<TLength, TType>& unitAxis, TType angleRad) const noexcept
+{
+#ifndef DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR
+    assert(unitAxis == static_cast<TType>(1) && "You must use unit vector. If you wan't disable assert for unit vector guard. Please define DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR");
+#endif
+
+	TType cosA = cos(angleRad);
+
+	//rodrigues rotation formula
+	return (*this) * cosA + unitAxis.getCross(*this) * sin(angleRad) + unitAxis * unitAxis.dotProduct(*this) * (static_cast<TType>(1) - cosA);
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+TType Vector<TLength, TType>::getScalarProjectionWith(const Vector& other) const noexcept
+{
+    return dot(*this, other.getNormalized());
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+TType Vector<TLength, TType>::getScalarRejectionWith(const Vector& other) const noexcept
+{
+    return cross(*this, other.getNormalized());
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+Vector<TLength, TType> Vector<TLength, TType>::getVectorProjectionWith(const Vector<TLength, TType>& other) const noexcept
+{
+    Vector normalizedOther = other.getNormalized();
+    return dot(*this, normalizedOther) * normalizedOther;
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+Vector<TLength, TType> Vector<TLength, TType>::getVectorRejectionWith(const Vector<TLength, TType>& other) const noexcept
+{
+    return (*this) - getVectorProjectionWith(other);
 }
 
 template <size_t TLength, typename TType>
@@ -986,14 +1077,14 @@ template <size_t TLength, typename TType>
 inline constexpr
 bool operator==(Vector<TLength, TType> const& vec, TType scalar) noexcept
 {
-    return Numeric::isSame<TType>(vec.squartLength(), scalar);
+    return Numeric::isSame<TType>(vec.squartLength(), scalar * scalar); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType>
 inline constexpr
 bool operator==(TType scalar, Vector<TLength, TType> const& vec) noexcept
 {
-    return Numeric::isSame<TType>(scalar, vec.squartLength());
+    return Numeric::isSame<TType>(scalar * scalar, vec.squartLength()); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType>
@@ -1028,14 +1119,14 @@ template <size_t TLength, typename TType>
 [[nodiscard]] inline constexpr
 bool operator<(Vector<TLength, TType> const& vec, TType scalar) noexcept
 {
-    return vec.squartLength() < scalar;
+    return vec.squartLength() < scalar * scalar; //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType>
 [[nodiscard]] inline constexpr
 bool operator<(TType scalar, Vector<TLength, TType> const& vec) noexcept
 {
-    return scalar < vec.squartLength();
+    return scalar * scalar < vec.squartLength(); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType>
@@ -1049,14 +1140,14 @@ template <size_t TLength, typename TType>
 [[nodiscard]] inline constexpr
 bool operator>(Vector<TLength, TType> const& vec, TType scalar) noexcept
 {
-    return vec.squartLength() > scalar;
+    return vec.squartLength() > scalar * scalar; //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType>
 [[nodiscard]] inline constexpr
 bool operator>(TType scalar, Vector<TLength, TType> const& vec) noexcept
 {
-    return scalar > vec.squartLength();
+    return scalar * scalar > vec.squartLength(); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType>
@@ -1070,14 +1161,14 @@ template <size_t TLength, typename TType>
 [[nodiscard]] inline constexpr
 bool operator<=(Vector<TLength, TType> const& vec, TType scalar) noexcept
 {
-    return vec.squartLength() <= scalar;
+    return vec.squartLength() <= scalar * scalar; //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType>
 [[nodiscard]] inline constexpr
 bool operator<=(TType scalar, Vector<TLength, TType> const& vec) noexcept
 {
-    return scalar <= vec.squartLength();
+    return scalar * scalar <= vec.squartLength(); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType>
@@ -1092,14 +1183,14 @@ template <size_t TLength, typename TType>
 [[nodiscard]] inline constexpr
 bool operator>=(Vector<TLength, TType> const& vec, TType scalar) noexcept
 {
-    return vec.squartLength() >= scalar;
+    return vec.squartLength() >= scalar * scalar; //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType>
 [[nodiscard]] inline constexpr
 bool operator>=(TType scalar, Vector<TLength, TType> const& vec) noexcept
 {
-    return scalar >= vec.squartLength();
+    return scalar * scalar >= vec.squartLength(); //hack to avoid sqrt
 }
 
 

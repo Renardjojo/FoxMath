@@ -36,9 +36,17 @@
 namespace FoxMath::Numeric
 {
     template<typename T, Type::IsArithmetic<T> = true>
+    inline constexpr
     bool isSame(T v1, T v2)
     {
-        return ::std::abs(v1 - v2) < std::numeric_limits<T>::epsilon(); 
+        return std::abs(v1 - v2) < std::numeric_limits<T>::epsilon(); 
+    }
+
+    template<typename T, Type::IsArithmetic<T> = true>
+    inline constexpr
+    bool isSameAsZero(T v1)
+    {
+        return std::abs(v1) < std::numeric_limits<T>::epsilon(); 
     }
 
 } /*namespace FoxMath::Numeric*/

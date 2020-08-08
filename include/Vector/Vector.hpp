@@ -241,11 +241,98 @@ namespace FoxMath::Vector
         inline constexpr
         Vector& 	    setLength		     (TType newLength) noexcept;
 
-        /*
-		static float dot(const Vec3& lhs, const Vec3& rhs) { return lhs.dotProduct(rhs); }
-		static Vec3 	cross		(const Vec3& lhs, const Vec3& rhs) { return lhs.getCross(rhs); }
-		static Vec3 	lerp		(const Vec3& lhs, const Vec3& rhs, float t);
-        */
+        /**
+         * @brief return true if vector is colineaire this other vector. Comput cross product. If cross product is near of zero, vectors is colinear
+         * 
+         * @param other 
+         * @return true 
+         * @return false 
+         */
+        [[nodiscard]] inline constexpr
+		bool 	isColinearTo	(const Vector& other) noexcept;
+
+        /**
+         * @brief return true if vector is perpendicular this other vector. Comput dot product. If dot product is near of zero, vectors is colinear
+         * 
+         * @param other 
+         * @return true 
+         * @return false 
+         */
+        [[nodiscard]] inline constexpr
+		bool 	isPerpendicularTo	(const Vector& other) noexcept;
+
+        /**
+         * @brief Area correspond to the ares of parralelogram formed by the two vectors.
+         * 
+         * @param other 
+         * @return TType 
+         */
+        [[nodiscard]] inline constexpr
+		TType getParallelogramArea		(const Vector& other) const noexcept;
+
+        /**
+         * @brief Comput aera of triangle in function of 3 points
+         * 
+         * @param other 
+         * @return TType 
+         */
+        [[nodiscard]] inline constexpr
+		TType getTriangleArea		(const Vector& other) const noexcept;
+
+        /**
+         * @brief rotate vector around another unit vector. This function assert if axis is not unit
+         * 
+         * @param unitAxis 
+         * @param angleRad 
+         */
+        inline constexpr
+		Vector& rotateAroundAxis (const Vector& unitAxis, TType angleRad) noexcept;
+
+        /**
+         * @brief Get the Rotation Around Axis object
+         * 
+         * @param unitAxis 
+         * @param angleRad 
+         * @return Vector 
+         */
+        [[nodiscard]] inline constexpr
+		Vector getRotationAroundAxis (const Vector& unitAxis, TType angleRad) const noexcept;
+
+        /**
+         * @brief Get the projection with another vector
+         * 
+         * @param other 
+         * @return constexpr TType 
+         */
+        [[nodiscard]] inline constexpr
+        TType getScalarProjectionWith(const Vector& other) const noexcept;
+
+        /**
+         * @brief Get the rejection with another vector
+         * 
+         * @param other 
+         * @return constexpr TType 
+         */
+        [[nodiscard]] inline constexpr
+        TType getScalarRejectionWith(const Vector& other) const noexcept;
+
+        /**
+         * @brief Get the Vector projection with another
+         * 
+         * @param other 
+         * @return constexpr Vector 
+         */
+        [[nodiscard]] inline constexpr
+		Vector getVectorProjectionWith(const Vector& other) const noexcept;
+
+        /**
+         * @brief Get the Vector rejection with another
+         * 
+         * @param other 
+         * @return constexpr Vector 
+         */
+        [[nodiscard]] inline constexpr
+		Vector getVectorRejectionWith(const Vector& other) const noexcept;
 
         #pragma endregion //!methods
     
@@ -269,7 +356,7 @@ namespace FoxMath::Vector
          * 
          * @param lhs 
          * @param rhs 
-         * @return constexpr Vector 
+         * @return constexpr Vector
          */
         [[nodiscard]] static inline constexpr
         Vector         cross	            (const Vector& lhs, const Vector& rhs) noexcept
@@ -303,6 +390,34 @@ namespace FoxMath::Vector
         Vector         lerp	            (const Vector& vecStart, const Vector& vecEnd, TType t) noexcept
         {
             return vecStart.getLerp(vecEnd, t);
+        }
+
+        /**
+         * @brief Comput aera of parallelogram in function of 3 points
+         * 
+         * @param pt1 
+         * @param pt2 
+         * @param pt3 
+         * @return TType 
+         */
+        [[nodiscard]] static inline constexpr
+		TType parallelogramArea		(const Vector& pt1, const Vector& pt2, const Vector& pt3) noexcept
+        {
+            return (pt2 - pt1).getParallelogramArea(pt3 - pt1);
+        }
+
+        /**
+         * @brief Comput aera of triangle in function of 3 points
+         * 
+         * @param pt1 
+         * @param pt2 
+         * @param pt3 
+         * @return TType 
+         */
+        [[nodiscard]] static inline constexpr
+		TType triangleArea		(const Vector& pt1, const Vector& pt2, const Vector& pt3) noexcept
+        {
+            return (pt2 - pt1).getTriangleArea(pt3 - pt1);
         }
 
         #pragma endregion //!static methods
