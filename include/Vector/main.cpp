@@ -37,6 +37,6 @@ int main()
     static_assert(value.length(), "is_constexpr<true>(0)");
     
 
-    std::cout << value << std::endl;
-    std::cout << constVect2 << std::endl;
+    std::cout << FoxMath::Vector::Vector<3, float>::cross(value,constVect) << std::endl;
+    std::cout << value.getCross(constVect2) << std::endl;
 }

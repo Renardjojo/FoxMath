@@ -249,6 +249,64 @@ namespace FoxMath::Vector
 
         #pragma endregion //!methods
     
+        #pragma region static methods
+
+        /**
+         * @brief perform dot product with both vector
+         * 
+         * @param lhs 
+         * @param rhs 
+         * @return constexpr TType 
+         */
+        [[nodiscard]] static inline constexpr
+        TType           dot		            (const Vector& lhs, const Vector& rhs) noexcept
+        {
+            return lhs.dot(rhs); 
+        }
+
+        /**
+         * @brief perform cross product with both vector
+         * 
+         * @param lhs 
+         * @param rhs 
+         * @return constexpr Vector 
+         */
+        [[nodiscard]] static inline constexpr
+        Vector         cross	            (const Vector& lhs, const Vector& rhs) noexcept
+        {
+            return lhs.getCross(rhs); 
+        }
+
+
+        /**
+         * @brief 
+         * 
+         * @param lhs 
+         * @param rhs : normalize normal
+         * @return constexpr Vector 
+         */
+        [[nodiscard]] static inline constexpr
+        Vector         reflect	            (const Vector& vec, const Vector& normalizedNormal) noexcept
+        {
+            return vec.getReflection(normalizedNormal);
+        }
+
+
+        /**
+         * @brief 
+         * 
+         * @param lhs 
+         * @param rhs 
+         * @return constexpr Vector 
+         */
+        [[nodiscard]] static inline constexpr
+        Vector         lerp	            (const Vector& vecStart, const Vector& vecEnd, TType t) noexcept
+        {
+            return vecStart.getLerp(vecEnd, t);
+        }
+
+        #pragma endregion //!static methods
+
         #pragma region accessor
         #pragma endregion //!accessor
     

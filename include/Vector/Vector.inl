@@ -196,7 +196,7 @@ Vector<TLength, TType>         Vector<TLength, TType>::getCross	            (con
             rst[i] = m_data[i + 1] * other[TLength - 1] - other[i + 1] * m_data[TLength - 1];
             break;
         
-        case TLength:
+        case TLength - 1:
             rst[i] = m_data[0] * other[i - 1] - other[0] * m_data[i - 1];
             break;
 
