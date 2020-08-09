@@ -39,7 +39,14 @@ namespace FoxMath::Numeric
     inline constexpr
     bool isSame(T v1, T v2)
     {
-        return std::abs(v1 - v2) <= std::numeric_limits<T>::epsilon(); 
+        if constexpr (std::is_floating_point_v<T>)
+        {
+            return std::abs(v1 - v2) <= std::numeric_limits<T>::epsilon();
+        }
+        else
+        {
+            return v1 == v2; 
+        }
     }
 
     template<typename T, Type::IsArithmetic<T> = true>
