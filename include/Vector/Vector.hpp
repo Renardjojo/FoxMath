@@ -102,6 +102,7 @@ namespace FoxMath::Vector
 
         /**
          * @brief Variadic templated constructor to init member with vector and scalar
+         * @note Is use whene you try to upgrade vector with static cast like static_cast<Vec4f>(vec3f). Else use the convertor operator
          * @example `FoxMath::Vector::Vector<10, int> vect(FoxMath::Vector::Vector<5, int>(), 22, 31)`
          * @tparam TLengthOther 
          * @tparam TScalarArgs
@@ -744,14 +745,14 @@ namespace FoxMath::Vector
 
         /**
          * @brief Converte vector to another vector type
-         * @note use static_cast<> to call this function
+         * @note use static_cast<> to call this function. Is use only if you try to downgrade vector like static_cast<Vec3f>(vec4f). Else use the constructor
          * @example `FoxMath::Vector::Vector<2, float> rhs = static_cast<FoxMath::Vector::Vector<2, float>>(vec)`
          * @tparam TLengthOther 
          * @tparam TTypeOther 
          * @return Vector<TLengthOther, TTypeOther> 
          */
         template <size_t TLengthOther, typename TTypeOther>
-        constexpr inline explicit 
+        [[nodiscard]] constexpr inline 
         operator Vector<TLengthOther, TTypeOther>() const noexcept;
 
         #pragma endregion //!convertor
@@ -792,9 +793,9 @@ namespace FoxMath::Vector
      * @param scalar 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator+(Vector<TLength, TType> vec, TType scalar) noexcept;
+    Vector<TLength, TType> operator+(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief addition 
@@ -805,9 +806,9 @@ namespace FoxMath::Vector
      * @param vec 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator+(TType scalar, Vector<TLength, TType> vec) noexcept;
+    Vector<TLength, TType> operator+(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept;
 
     /**
      * @brief addition 
@@ -818,9 +819,9 @@ namespace FoxMath::Vector
      * @param rhs 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator+(Vector<TLength, TType> lhs, const Vector<TLength, TType>& rhs) noexcept;
+    Vector<TLength, TType> operator+(Vector<TLength, TType> lhs, const Vector< TLengthOther, TTypeOther>& rhs) noexcept;
 
     /**
      * @brief subtraction
@@ -831,9 +832,9 @@ namespace FoxMath::Vector
      * @param scalar 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator-(Vector<TLength, TType> vec, TType scalar) noexcept;
+    Vector<TLength, TType> operator-(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief subtraction
@@ -844,9 +845,9 @@ namespace FoxMath::Vector
      * @param vec 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator-(TType scalar, Vector<TLength, TType> vec) noexcept;
+    Vector<TLength, TType> operator-(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept;
 
     /**
      * @brief subtraction
@@ -857,9 +858,9 @@ namespace FoxMath::Vector
      * @param rhs 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator-(Vector<TLength, TType> lhs, const Vector<TLength, TType>& rhs) noexcept;
+    Vector<TLength, TType> operator-(Vector<TLength, TType> lhs, const Vector<TLengthOther, TTypeOther>& rhs) noexcept;
 
     /**
      * @brief multiplication
@@ -870,9 +871,9 @@ namespace FoxMath::Vector
      * @param scalar 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator*(Vector<TLength, TType> vec, TType scalar) noexcept;
+    Vector<TLength, TType> operator*(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief multiplication
@@ -883,9 +884,9 @@ namespace FoxMath::Vector
      * @param vec 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator*(TType scalar, Vector<TLength, TType> vec) noexcept;
+    Vector<TLength, TType> operator*(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept;
 
     /**
      * @brief multiplication
@@ -896,9 +897,9 @@ namespace FoxMath::Vector
      * @param rhs 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator*(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept;
+    Vector<TLength, TType> operator*(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief division
@@ -909,9 +910,9 @@ namespace FoxMath::Vector
      * @param scalar 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator/(Vector<TLength, TType> vec, TType scalar) noexcept;
+    Vector<TLength, TType> operator/(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief division
@@ -922,9 +923,9 @@ namespace FoxMath::Vector
      * @param vec 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator/(TType scalar, Vector<TLength, TType> vec) noexcept;
+    Vector<TLength, TType> operator/(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept;
 
     /**
      * @brief division
@@ -935,9 +936,9 @@ namespace FoxMath::Vector
      * @param rhs 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator/(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept;
+    Vector<TLength, TType> operator/(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief modulo
@@ -948,9 +949,9 @@ namespace FoxMath::Vector
      * @param scalar 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator%(Vector<TLength, TType> vec, TType scalar) noexcept;
+    Vector<TLength, TType> operator%(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief modulo
@@ -961,9 +962,9 @@ namespace FoxMath::Vector
      * @param vec 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator%(TType scalar, Vector<TLength, TType> vec) noexcept;
+    Vector<TLength, TType> operator%(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept;
 
     /**
      * @brief modulo
@@ -974,9 +975,9 @@ namespace FoxMath::Vector
      * @param rhs 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator%(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept;
+    Vector<TLength, TType> operator%(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief bitwise AND
@@ -987,9 +988,9 @@ namespace FoxMath::Vector
      * @param scalar 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator&(Vector<TLength, TType> lhs, TType scalar) noexcept;
+    Vector<TLength, TType> operator&(Vector<TLength, TType> lhs, TTypeScalar scalar) noexcept;
 
     /**
      * @brief bitwise AND
@@ -1000,9 +1001,9 @@ namespace FoxMath::Vector
      * @param vec 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator&(TType scalar, Vector<TLength, TType> vec) noexcept;
+    Vector<TLength, TType> operator&(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept;
 
     /**
      * @brief bitwise AND 
@@ -1013,9 +1014,9 @@ namespace FoxMath::Vector
      * @param rhs 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator&(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept;
+    Vector<TLength, TType> operator&(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief bitwise OR 
@@ -1026,9 +1027,9 @@ namespace FoxMath::Vector
      * @param scalar 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator|(Vector<TLength, TType> vec, TType scalar) noexcept;
+    Vector<TLength, TType> operator|(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief bitwise OR
@@ -1039,9 +1040,9 @@ namespace FoxMath::Vector
      * @param vec 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator|(TType scalar, Vector<TLength, TType> vec) noexcept;
+    Vector<TLength, TType> operator|(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept;
 
     /**
      * @brief bitwise OR 
@@ -1052,9 +1053,9 @@ namespace FoxMath::Vector
      * @param rhs 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator|(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept;
+    Vector<TLength, TType> operator|(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief bitwise XOR
@@ -1065,9 +1066,9 @@ namespace FoxMath::Vector
      * @param scalar 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator^(Vector<TLength, TType> vec, TType scalar) noexcept;
+    Vector<TLength, TType> operator^(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief bitwise XOR
@@ -1078,9 +1079,9 @@ namespace FoxMath::Vector
      * @param vec 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator^(TType scalar, Vector<TLength, TType> vec) noexcept;
+    Vector<TLength, TType> operator^(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept;
 
     /**
      * @brief bitwise XOR
@@ -1091,9 +1092,9 @@ namespace FoxMath::Vector
      * @param rhs 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator^(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept;
+    Vector<TLength, TType> operator^(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief bitwise left shift
@@ -1104,9 +1105,9 @@ namespace FoxMath::Vector
      * @param scalar 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator<<(Vector<TLength, TType> vec, TType scalar) noexcept;
+    Vector<TLength, TType> operator<<(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief bitwise left shift
@@ -1117,9 +1118,9 @@ namespace FoxMath::Vector
      * @param vec 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator<<(TType scalar, Vector<TLength, TType> vec) noexcept;
+    Vector<TLength, TType> operator<<(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept;
 
     /**
      * @brief bitwise left shift
@@ -1130,9 +1131,9 @@ namespace FoxMath::Vector
      * @param rhs 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator<<(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept;
+    Vector<TLength, TType> operator<<(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief bitwise right shift
@@ -1143,9 +1144,9 @@ namespace FoxMath::Vector
      * @param scalar 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator>>(Vector<TLength, TType> vec, TType scalar) noexcept;
+    Vector<TLength, TType> operator>>(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief bitwise right shift 
@@ -1156,9 +1157,9 @@ namespace FoxMath::Vector
      * @param vec 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator>>(TType scalar, Vector<TLength, TType> vec) noexcept;
+    Vector<TLength, TType> operator>>(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept;
 
     /**
      * @brief bitwise right shift 
@@ -1169,9 +1170,9 @@ namespace FoxMath::Vector
      * @param rhs 
      * @return constexpr Vector<TLength, TType> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator>>(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept;
+    Vector<TLength, TType> operator>>(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief bitwise NOT
@@ -1207,9 +1208,9 @@ namespace FoxMath::Vector
      * @param rhs 
      * @return constexpr Vector<TLength, bool> 
      */
-    template <size_t TLength>
+    template <size_t TLength, size_t TLengthOther>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, bool> operator&&(Vector<TLength, bool> lhs, Vector<TLength, bool> const& rhs) noexcept;
+    Vector<TLength, bool> operator&&(Vector<TLength, bool> lhs, Vector<TLengthOther, bool> const& rhs) noexcept;
 
     /**
      * @brief inclusive OR
@@ -1219,9 +1220,9 @@ namespace FoxMath::Vector
      * @param rhs 
      * @return constexpr Vector<TLength, bool> 
      */
-	template <size_t TLength>
+	template <size_t TLength, size_t TLengthOther>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, bool> operator||(Vector<TLength, bool> lhs, Vector<TLength, bool> const& rhs) noexcept;
+    Vector<TLength, bool> operator||(Vector<TLength, bool> lhs, Vector<TLengthOther, bool> const& rhs) noexcept;
     
     #pragma endregion //!logical operators
     #pragma region comparision operators
@@ -1237,9 +1238,9 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType>
+    template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
     [[nodiscard]] inline constexpr
-    bool operator==(Vector<TLength, TType> const& lhs, Vector<TLength, TType> const& rhs) noexcept;
+    bool operator==(Vector<TLength, TType> const& lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief equal to
@@ -1251,9 +1252,9 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType>
+    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator==(Vector<TLength, TType> const& vec, TType scalar) noexcept;
+    bool operator==(Vector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief equal to
@@ -1265,9 +1266,9 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType>
+    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator==(TType scalar, Vector<TLength, TType> const& vec) noexcept;
+    bool operator==(TTypeScalar scalar, Vector<TLength, TType> const& vec) noexcept;
 
     /**
      * @brief not equal to
@@ -1279,9 +1280,9 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType>
+    template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
     [[nodiscard]] inline constexpr
-    bool operator!=(Vector<TLength, TType> const& lhs, Vector<TLength, TType> const& rhs) noexcept;
+    bool operator!=(Vector<TLength, TType> const& lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief not equal to
@@ -1293,9 +1294,9 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType>
+    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator!=(Vector<TLength, TType> const& vec, TType scalar) noexcept;
+    bool operator!=(Vector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief not equal to
@@ -1307,9 +1308,9 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType>
+    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator!=(TType scalar, Vector<TLength, TType> const& vec) noexcept;
+    bool operator!=(TTypeScalar scalar, Vector<TLength, TType> const& vec) noexcept;
 
     /**
      * @brief less than
@@ -1321,9 +1322,9 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType>
+    template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
     [[nodiscard]] inline constexpr
-    bool operator<(Vector<TLength, TType> const& lhs, Vector<TLength, TType> const& rhs) noexcept;
+    bool operator<(Vector<TLength, TType> const& lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief less than
@@ -1335,9 +1336,9 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType>
+    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator<(Vector<TLength, TType> const& vec, TType scalar) noexcept;
+    bool operator<(Vector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief less than
@@ -1349,9 +1350,9 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType>
+    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator<(TType scalar, Vector<TLength, TType> const& vec) noexcept;
+    bool operator<(TTypeScalar scalar, Vector<TLength, TType> const& vec) noexcept;
 
     /**
      * @brief greater than
@@ -1363,9 +1364,9 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType>
+    template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
     [[nodiscard]] inline constexpr
-    bool operator>(Vector<TLength, TType> const& lhs, Vector<TLength, TType> const& rhs) noexcept;
+    bool operator>(Vector<TLength, TType> const& lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief greater than
@@ -1377,9 +1378,9 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType>
+    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator>(Vector<TLength, TType> const& vec, TType scalar) noexcept;
+    bool operator>(Vector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief greater than
@@ -1391,9 +1392,9 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType>
+    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator>(TType scalar, Vector<TLength, TType> const& vec) noexcept;
+    bool operator>(TTypeScalar scalar, Vector<TLength, TType> const& vec) noexcept;
 
     /**
      * @brief less than or equal to
@@ -1405,9 +1406,9 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType>
+    template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
     [[nodiscard]] inline constexpr
-    bool operator<=(Vector<TLength, TType> const& lhs, Vector<TLength, TType> const& rhs) noexcept;
+    bool operator<=(Vector<TLength, TType> const& lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief less than or equal to
@@ -1419,9 +1420,9 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType>
+    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator<=(Vector<TLength, TType> const& vec, TType scalar) noexcept;
+    bool operator<=(Vector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief less than or equal to
@@ -1433,9 +1434,9 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType>
+    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator<=(TType scalar, Vector<TLength, TType> const& vec) noexcept;
+    bool operator<=(TTypeScalar scalar, Vector<TLength, TType> const& vec) noexcept;
 
     /**
      * @brief greater than or equal to
@@ -1447,9 +1448,9 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType>
+    template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
     [[nodiscard]] inline constexpr
-    bool operator>=(Vector<TLength, TType> const& lhs, Vector<TLength, TType> const& rhs) noexcept;
+    bool operator>=(Vector<TLength, TType> const& lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief greater than or equal to
@@ -1461,9 +1462,9 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType>
+    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator>=(Vector<TLength, TType> const& vec, TType scalar) noexcept;
+    bool operator>=(Vector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief greater than or equal to
@@ -1475,9 +1476,9 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType>
+    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator>=(TType scalar, Vector<TLength, TType> const& vec) noexcept;
+    bool operator>=(TTypeScalar scalar, Vector<TLength, TType> const& vec) noexcept;
 
     #pragma endregion //!comparision operators
     #pragma region stream operators

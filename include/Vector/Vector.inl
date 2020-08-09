@@ -380,6 +380,15 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator=(const Vector<TLengthOt
     {
         m_data[i] = static_cast<TType>(other[i]);
     }
+
+    if (minLenght < TLength)
+    {
+        for (size_t i = minLenght; i < TLength; i++)
+        {
+            m_data[i] = static_cast<TType>(0);
+        }
+    }
+
     return *this;
 }
 
@@ -388,9 +397,9 @@ template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
 Vector<TLength, TType>& Vector<TLength, TType>::operator=(TscalarType scalar) noexcept
 {
-    for (const TType& data : m_data)
+    for (TType& data : m_data)
     {
-        data = scalar;
+        data = static_cast<TType>(scalar);
     }
     return *this;
 }
@@ -719,16 +728,11 @@ Vector<TLength, TType>::operator Vector<TLengthOther, TTypeOther>() const noexce
 {
     Vector<TLengthOther, TTypeOther> result;
 
-    for (size_t i = 0; i < TLengthOther; i++)
+    constexpr size_t minLenght = (TLengthOther < TLength) ? TLengthOther : TLength;
+
+    for (size_t i = 0; i < minLenght; i++)
     {
-        if (i < TLength)
-        {
-            result[i] = static_cast<TTypeOther>(m_data[i]);
-        }
-        else
-        {
-            result[i] = static_cast<TTypeOther>(0);
-        }   
+        result[i] = static_cast<TTypeOther>(m_data[i]);
     }
 
     return result;
@@ -749,16 +753,16 @@ Vector<TLength, TType> operator-(Vector<TLength, TType> vec) noexcept
     return vec *= static_cast<TType>(-1);
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator+(Vector<TLength, TType> vec, TType scalar) noexcept
+Vector<TLength, TType> operator+(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
-    return vec += scalar; 
+    return vec += static_cast<TType>(scalar); 
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator+(TType scalar, Vector<TLength, TType> vec) noexcept
+Vector<TLength, TType> operator+(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -768,23 +772,23 @@ Vector<TLength, TType> operator+(TType scalar, Vector<TLength, TType> vec) noexc
     return vec;
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType> operator+(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept
+Vector<TLength, TType> operator+(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
     return lhs += rhs;
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator-(Vector<TLength, TType> vec, TType scalar) noexcept
+Vector<TLength, TType> operator-(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
-    return vec -= scalar;
+    return vec -= static_cast<TType>(scalar);
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator-(TType scalar, Vector<TLength, TType> vec) noexcept
+Vector<TLength, TType> operator-(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -801,16 +805,16 @@ Vector<TLength, TType> operator-(Vector<TLength, TType> lhs, const Vector<TLengt
     return lhs -= rhs;
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator*(Vector<TLength, TType> vec, TType scalar) noexcept
+Vector<TLength, TType> operator*(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
-    return vec *= scalar;
+    return vec *= static_cast<TType>(scalar);
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator*(TType scalar, Vector<TLength, TType> vec) noexcept
+Vector<TLength, TType> operator*(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -820,23 +824,23 @@ Vector<TLength, TType> operator*(TType scalar, Vector<TLength, TType> vec) noexc
     return vec;
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType> operator*(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept
+Vector<TLength, TType> operator*(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
     return lhs *= rhs;
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator/(Vector<TLength, TType> vec, TType scalar) noexcept
+Vector<TLength, TType> operator/(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
-    return vec /= scalar;
+    return vec /= static_cast<TType>(scalar);
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator/(TType scalar, Vector<TLength, TType> vec) noexcept
+Vector<TLength, TType> operator/(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -846,23 +850,23 @@ Vector<TLength, TType> operator/(TType scalar, Vector<TLength, TType> vec) noexc
     return vec;
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType> operator/(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept
+Vector<TLength, TType> operator/(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
     return lhs /= rhs;
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator%(Vector<TLength, TType> vec, TType scalar) noexcept
+Vector<TLength, TType> operator%(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
-    return vec %= scalar;
+    return vec %= static_cast<TType>(scalar);
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator%(TType scalar, Vector<TLength, TType> vec) noexcept
+Vector<TLength, TType> operator%(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -872,23 +876,23 @@ Vector<TLength, TType> operator%(TType scalar, Vector<TLength, TType> vec) noexc
     return vec;
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType> operator%(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept
+Vector<TLength, TType> operator%(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
     return lhs %= rhs;
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator&(Vector<TLength, TType> vec, TType scalar) noexcept
+Vector<TLength, TType> operator&(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
-    return vec &= scalar;
+    return vec &= static_cast<TType>(scalar);
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator&(TType scalar, Vector<TLength, TType> vec) noexcept
+Vector<TLength, TType> operator&(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -898,23 +902,23 @@ Vector<TLength, TType> operator&(TType scalar, Vector<TLength, TType> vec) noexc
     return vec;
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType> operator&(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept
+Vector<TLength, TType> operator&(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
     return lhs &= rhs;
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator|(Vector<TLength, TType> vec, TType scalar) noexcept
+Vector<TLength, TType> operator|(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
-    return vec |= scalar;
+    return vec |= static_cast<TType>(scalar);
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator|(TType scalar, Vector<TLength, TType> vec) noexcept
+Vector<TLength, TType> operator|(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -924,23 +928,23 @@ Vector<TLength, TType> operator|(TType scalar, Vector<TLength, TType> vec) noexc
     return vec;
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType> operator|(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept
+Vector<TLength, TType> operator|(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
     return lhs |= rhs;
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator^(Vector<TLength, TType> vec, TType scalar) noexcept
+Vector<TLength, TType> operator^(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
-    return vec ^= scalar;
+    return vec ^= static_cast<TType>(scalar);
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator^(TType scalar, Vector<TLength, TType> vec) noexcept
+Vector<TLength, TType> operator^(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -950,24 +954,24 @@ Vector<TLength, TType> operator^(TType scalar, Vector<TLength, TType> vec) noexc
     return vec;
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType> operator^(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept
+Vector<TLength, TType> operator^(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
     return lhs ^= rhs;
 }
 
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator<<(Vector<TLength, TType> vec, TType scalar) noexcept
+Vector<TLength, TType> operator<<(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
-    return vec << scalar;
+    return vec << static_cast<TType>(scalar);
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator<<(TType scalar, Vector<TLength, TType> vec) noexcept
+Vector<TLength, TType> operator<<(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -977,24 +981,24 @@ Vector<TLength, TType> operator<<(TType scalar, Vector<TLength, TType> vec) noex
     return vec;
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType> operator<<(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept
+Vector<TLength, TType> operator<<(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
     return lhs << rhs;
 }
 
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator>>(Vector<TLength, TType> vec, TType scalar) noexcept
+Vector<TLength, TType> operator>>(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
-    return vec >> scalar;
+    return vec >> static_cast<TType>(scalar);
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator>>(TType scalar, Vector<TLength, TType> vec) noexcept
+Vector<TLength, TType> operator>>(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -1004,9 +1008,9 @@ Vector<TLength, TType> operator>>(TType scalar, Vector<TLength, TType> vec) noex
     return vec;
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType> operator>>(Vector<TLength, TType> lhs, Vector<TLength, TType> const& rhs) noexcept
+Vector<TLength, TType> operator>>(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
     return lhs >> rhs;
 }
@@ -1036,9 +1040,9 @@ Vector<TLength, bool> operator!(Vector<TLength, bool> vec) noexcept
     return vec;
 }
 
-template <size_t TLength>
+template <size_t TLength, size_t TLengthOther>
 inline constexpr
-Vector<TLength, bool> operator&&(Vector<TLength, bool> lhs, Vector<TLength, bool> const& rhs) noexcept
+Vector<TLength, bool> operator&&(Vector<TLength, bool> lhs, Vector<TLengthOther, bool> const& rhs) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -1048,9 +1052,9 @@ Vector<TLength, bool> operator&&(Vector<TLength, bool> lhs, Vector<TLength, bool
     return lhs;
 }
 
-template <size_t TLength>
+template <size_t TLength, size_t TLengthOther>
 inline constexpr
-Vector<TLength, bool> operator||(Vector<TLength, bool> lhs, Vector<TLength, bool> const& rhs) noexcept
+Vector<TLength, bool> operator||(Vector<TLength, bool> lhs, Vector<TLengthOther, bool> const& rhs) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -1060,13 +1064,13 @@ Vector<TLength, bool> operator||(Vector<TLength, bool> lhs, Vector<TLength, bool
     return lhs;
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 [[nodiscard]] inline constexpr
-bool operator==(Vector<TLength, TType> const& lhs, Vector<TLength, TType> const& rhs) noexcept
+bool operator==(Vector<TLength, TType> const& lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
 #ifdef VECTOR_OPERATOR_EGALE_COMPARE_LENGTH
 
-    return Numeric::isSame<TType>(lhs.squartLength(), rhs.squartLength());
+    return Numeric::isSame<TType>(lhs.squartLength(), static_cast<TType>(rhs.squartLength()));
 
 #else
 
@@ -1074,7 +1078,7 @@ bool operator==(Vector<TLength, TType> const& lhs, Vector<TLength, TType> const&
 
     for (size_t i = 0; i < TLength && rst; i++)
     {
-        rst &= lhs[i] == rhs[i];
+        rst &= lhs[i] == static_cast<TType>(rhs[i]);
     }
 
     return rst;
@@ -1082,124 +1086,124 @@ bool operator==(Vector<TLength, TType> const& lhs, Vector<TLength, TType> const&
 #endif
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-bool operator==(Vector<TLength, TType> const& vec, TType scalar) noexcept
+bool operator==(Vector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
 {
-    return Numeric::isSame<TType>(vec.squartLength(), scalar * scalar); //hack to avoid sqrt
+    return Numeric::isSame<TType>(vec.squartLength(), static_cast<TType>(scalar) * static_cast<TType>(scalar)); //hack to avoid sqrt
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-bool operator==(TType scalar, Vector<TLength, TType> const& vec) noexcept
+bool operator==(TTypeScalar scalar, Vector<TLength, TType> const& vec) noexcept
 {
-    return Numeric::isSame<TType>(scalar * scalar, vec.squartLength()); //hack to avoid sqrt
+    return Numeric::isSame<TType>(static_cast<TType>(scalar) * static_cast<TType>(scalar), vec.squartLength()); //hack to avoid sqrt
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 [[nodiscard]] inline constexpr
-bool operator!=(Vector<TLength, TType> const& lhs, Vector<TLength, TType> const& rhs) noexcept
+bool operator!=(Vector<TLength, TType> const& lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
     return !(lhs == rhs);
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
-bool operator!=(Vector<TLength, TType> const& vec, TType scalar) noexcept
+bool operator!=(Vector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
 {
-    return !(vec == scalar);
+    return !(vec == static_cast<TType>(scalar));
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
-bool operator!=(TType scalar, Vector<TLength, TType> const& vec) noexcept
+bool operator!=(TTypeScalar scalar, Vector<TLength, TType> const& vec) noexcept
 {
-    return !(scalar == vec);
+    return !(static_cast<TType>(scalar) == vec);
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 [[nodiscard]] inline constexpr
-bool operator<(Vector<TLength, TType> const& lhs, Vector<TLength, TType> const& rhs) noexcept
+bool operator<(Vector<TLength, TType> const& lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
-    return lhs.squartLength() < rhs.squartLength();
+    return lhs.squartLength() < static_cast<TType>(rhs.squartLength());
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
-bool operator<(Vector<TLength, TType> const& vec, TType scalar) noexcept
+bool operator<(Vector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
 {
-    return vec.squartLength() < scalar * scalar; //hack to avoid sqrt
+    return vec.squartLength() < static_cast<TType>(scalar) * static_cast<TType>(scalar); //hack to avoid sqrt
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
-bool operator<(TType scalar, Vector<TLength, TType> const& vec) noexcept
+bool operator<(TTypeScalar scalar, Vector<TLength, TType> const& vec) noexcept
 {
-    return scalar * scalar < vec.squartLength(); //hack to avoid sqrt
+    return static_cast<TType>(scalar) * static_cast<TType>(scalar) < vec.squartLength(); //hack to avoid sqrt
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 [[nodiscard]] inline constexpr
-bool operator>(Vector<TLength, TType> const& lhs, Vector<TLength, TType> const& rhs) noexcept
+bool operator>(Vector<TLength, TType> const& lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
-    return lhs.squartLength() > rhs.squartLength();
+    return lhs.squartLength() > static_cast<TType>(rhs.squartLength());
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
-bool operator>(Vector<TLength, TType> const& vec, TType scalar) noexcept
+bool operator>(Vector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
 {
-    return vec.squartLength() > scalar * scalar; //hack to avoid sqrt
+    return vec.squartLength() > static_cast<TType>(scalar) * static_cast<TType>(scalar); //hack to avoid sqrt
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
-bool operator>(TType scalar, Vector<TLength, TType> const& vec) noexcept
+bool operator>(TTypeScalar scalar, Vector<TLength, TType> const& vec) noexcept
 {
-    return scalar * scalar > vec.squartLength(); //hack to avoid sqrt
+    return static_cast<TType>(scalar) * static_cast<TType>(scalar) > vec.squartLength(); //hack to avoid sqrt
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 [[nodiscard]] inline constexpr
-bool operator<=(Vector<TLength, TType> const& lhs, Vector<TLength, TType> const& rhs) noexcept
+bool operator<=(Vector<TLength, TType> const& lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
-    return lhs.squartLength() <= rhs.squartLength();
+    return lhs.squartLength() <= static_cast<TType>(rhs.squartLength());
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
-bool operator<=(Vector<TLength, TType> const& vec, TType scalar) noexcept
+bool operator<=(Vector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
 {
-    return vec.squartLength() <= scalar * scalar; //hack to avoid sqrt
+    return vec.squartLength() <= static_cast<TType>(scalar) * static_cast<TType>(scalar); //hack to avoid sqrt
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
-bool operator<=(TType scalar, Vector<TLength, TType> const& vec) noexcept
+bool operator<=(TTypeScalar scalar, Vector<TLength, TType> const& vec) noexcept
 {
-    return scalar * scalar <= vec.squartLength(); //hack to avoid sqrt
+    return static_cast<TType>(scalar) * static_cast<TType>(scalar) <= vec.squartLength(); //hack to avoid sqrt
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 [[nodiscard]] inline constexpr
-bool operator>=(Vector<TLength, TType> const& lhs, Vector<TLength, TType> const& rhs) noexcept
+bool operator>=(Vector<TLength, TType> const& lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
-    return lhs.squartLength() >= rhs.squartLength();
+    return lhs.squartLength() >= static_cast<TType>(rhs.squartLength());
 }
 
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
-bool operator>=(Vector<TLength, TType> const& vec, TType scalar) noexcept
+bool operator>=(Vector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
 {
-    return vec.squartLength() >= scalar * scalar; //hack to avoid sqrt
+    return vec.squartLength() >= static_cast<TType>(scalar) * static_cast<TType>(scalar); //hack to avoid sqrt
 }
 
-template <size_t TLength, typename TType>
+template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
-bool operator>=(TType scalar, Vector<TLength, TType> const& vec) noexcept
+bool operator>=(TTypeScalar scalar, Vector<TLength, TType> const& vec) noexcept
 {
-    return scalar * scalar >= vec.squartLength(); //hack to avoid sqrt
+    return static_cast<TType>(scalar) * static_cast<TType>(scalar) >= vec.squartLength(); //hack to avoid sqrt
 }
 
 
