@@ -4,7 +4,7 @@
 #include <string>
 #include <math.h>
 #include <type_traits>
-#include "../Type/TypeTraitsAlias.hpp"
+#include "../Type/SFINAShorthand.hpp"
 
 //Engine::Core::Maths::[..]
 namespace RenardMath

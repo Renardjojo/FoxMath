@@ -31,7 +31,7 @@ template <size_t TLength, typename TType>
 template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>> = true,
 Type::IsLessThanOrEqualTo<sizeof...(T), TLength> = true>
 constexpr inline 
-Vector<TLength, TType>::Vector (T... args) noexcept
+GenericVector<TLength, TType>::GenericVector (T... args) noexcept
 {
     m_data = std::array<TType, TLength>{args...};
 }
@@ -42,9 +42,9 @@ Type::IsSame<Type::Pack<TType, TScalarArgs...>, Type::Pack<TScalarArgs..., TType
 Type::IsLessThanOrEqualTo<sizeof...(TScalarArgs) + TLengthOther, TLength> = true,
 Type::IsLessThan<TLengthOther, TLength> = true>
 inline constexpr
-Vector<TLength, TType>::Vector (const Vector<TLengthOther, TType>& other, TScalarArgs... args) noexcept
+GenericVector<TLength, TType>::GenericVector (const GenericVector<TLengthOther, TType>& other, TScalarArgs... args) noexcept
 {
-    /*Add vector*/
+    /*Add generic vector*/
     for (size_t i = 0; i < TLengthOther; i++)
     {
         m_data[i] = other[i];
@@ -68,7 +68,7 @@ Vector<TLength, TType>::Vector (const Vector<TLengthOther, TType>& other, TScala
 
 template <size_t TLength, typename TType>
 inline constexpr 
-void Vector<TLength, TType>::fill(const TType scalar) noexcept
+void GenericVector<TLength, TType>::fill(const TType scalar) noexcept
 {
     for (TType& data : m_data)
     {
@@ -78,7 +78,7 @@ void Vector<TLength, TType>::fill(const TType scalar) noexcept
 
 template <size_t TLength, typename TType>
 inline constexpr
-TType Vector<TLength, TType>::squartLength () const noexcept
+TType GenericVector<TLength, TType>::squartLength () const noexcept
 {
     TType sqrtLength {static_cast<TType>(0)};
 
@@ -93,14 +93,14 @@ TType Vector<TLength, TType>::squartLength () const noexcept
 
 template <size_t TLength, typename TType>
 inline constexpr
-TType Vector<TLength, TType>::length () const noexcept
+TType GenericVector<TLength, TType>::length () const noexcept
 {
     return std::sqrt(squartLength());
 }
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::normalize	    () noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::normalize	    () noexcept
 {
     const TType lengthRst = length();
 
@@ -115,14 +115,14 @@ Vector<TLength, TType>& Vector<TLength, TType>::normalize	    () noexcept
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType> Vector<TLength, TType>::getNormalized		() const noexcept
+GenericVector<TLength, TType> GenericVector<TLength, TType>::getNormalized		() const noexcept
 {
-    return Vector<TLength, TType>(*this).normalize();
+    return GenericVector<TLength, TType>(*this).normalize();
 }
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType>&         Vector<TLength, TType>::clampLength         (TType maxLength) noexcept
+GenericVector<TLength, TType>&         GenericVector<TLength, TType>::clampLength         (TType maxLength) noexcept
 {
 	TType magnitude {length()};
 
@@ -136,14 +136,14 @@ Vector<TLength, TType>&         Vector<TLength, TType>::clampLength         (TTy
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType>         Vector<TLength, TType>::getClampedLength         (TType maxLength) const noexcept
+GenericVector<TLength, TType>         GenericVector<TLength, TType>::getClampedLength         (TType maxLength) const noexcept
 {
-    return Vector<TLength, TType>(*this).clampLength(maxLength);
+    return GenericVector<TLength, TType>(*this).clampLength(maxLength);
 }
 
 template <size_t TLength, typename TType>
 inline constexpr
-TType           Vector<TLength, TType>::dot		            (const Vector& other) const noexcept
+TType           GenericVector<TLength, TType>::dot		            (const GenericVector& other) const noexcept
 {
     TType rst {static_cast<TType>(0)};
 
@@ -157,9 +157,9 @@ TType           Vector<TLength, TType>::dot		            (const Vector& other) c
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType>&         Vector<TLength, TType>::cross	            (const Vector& other) noexcept
+GenericVector<TLength, TType>&         GenericVector<TLength, TType>::cross	            (const GenericVector& other) noexcept
 {
-    Vector<TLength, TType> copyTemp {*this};
+    GenericVector<TLength, TType> copyTemp {*this};
 
     for (size_t i = 0; i < TLength; i++)
     {
@@ -184,9 +184,9 @@ Vector<TLength, TType>&         Vector<TLength, TType>::cross	            (const
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType>         Vector<TLength, TType>::getCross	            (const Vector& other) const noexcept
+GenericVector<TLength, TType>         GenericVector<TLength, TType>::getCross	            (const GenericVector& other) const noexcept
 {
-    Vector<TLength, TType> rst;
+    GenericVector<TLength, TType> rst;
 
     for (size_t i = 0; i < TLength; i++)
     {
@@ -211,9 +211,9 @@ Vector<TLength, TType>         Vector<TLength, TType>::getCross	            (con
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::lerp		        (const Vector& other, TType t) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::lerp		        (const GenericVector& other, TType t) noexcept
 {
-    Vector<TLength, TType> rst;
+    GenericVector<TLength, TType> rst;
 
     for (size_t i = 0; i < TLength; i++)
     {
@@ -230,9 +230,9 @@ Vector<TLength, TType>& Vector<TLength, TType>::lerp		        (const Vector& oth
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType> Vector<TLength, TType>::getLerp		        (const Vector& other, TType t) const noexcept
+GenericVector<TLength, TType> GenericVector<TLength, TType>::getLerp		        (const GenericVector& other, TType t) const noexcept
 {
-    Vector<TLength, TType> rst;
+    GenericVector<TLength, TType> rst;
 
     for (size_t i = 0; i < TLength; i++)
     {
@@ -248,10 +248,10 @@ Vector<TLength, TType> Vector<TLength, TType>::getLerp		        (const Vector& o
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::reflect		        (const Vector& normalNormalized) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::reflect		        (const GenericVector& normalNormalized) noexcept
 {
 #ifndef DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR
-    assert(normalNormalized == static_cast<TType>(1) && "You must use unit vector. If you want disable assert for unit vector guard, please define DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR");
+    assert(normalNormalized == static_cast<TType>(1) && "You must use unit generic vector. If you want disable assert for unit generic vector guard, please define DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR");
 #endif
 
     *this = static_cast<TType>(2) * normalNormalized.dot(*this) * normalNormalized - (*this);
@@ -260,20 +260,20 @@ Vector<TLength, TType>& Vector<TLength, TType>::reflect		        (const Vector& 
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType> Vector<TLength, TType>::getReflection		 (const Vector& normalNormalized) const noexcept
+GenericVector<TLength, TType> GenericVector<TLength, TType>::getReflection		 (const GenericVector& normalNormalized) const noexcept
 {
 #ifndef DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR
-    assert(normalNormalized == static_cast<TType>(1) && "You must use unit vector. If you want disable assert for unit vector guard, please define DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR");
+    assert(normalNormalized == static_cast<TType>(1) && "You must use unit generic vector. If you want disable assert for unit generic vector guard, please define DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR");
 #endif
 
-    Vector<TLength, TType> rst;
+    GenericVector<TLength, TType> rst;
     rst = static_cast<TType>(2) * normalNormalized.dot(*this) * normalNormalized - (*this);
     return rst;
 }
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::setLength		     (TType newLength) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::setLength		     (TType newLength) noexcept
 {
 	TType magnitude {length()};
 
@@ -288,38 +288,38 @@ Vector<TLength, TType>& Vector<TLength, TType>::setLength		     (TType newLength
 
 template <size_t TLength, typename TType>
 inline constexpr
-bool Vector<TLength, TType>::isColinearTo	(const Vector<TLength, TType>& other) const noexcept
+bool GenericVector<TLength, TType>::isColinearTo	(const GenericVector<TLength, TType>& other) const noexcept
 {
 	return Numeric::isSameAsZero(getCross(other).squartLength()); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType>
 inline constexpr
-bool Vector<TLength, TType>::isPerpendicularTo	(const Vector<TLength, TType>& other) const noexcept
+bool GenericVector<TLength, TType>::isPerpendicularTo	(const GenericVector<TLength, TType>& other) const noexcept
 {
 	return Numeric::isSameAsZero(dot(other)); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType>
 inline constexpr
-TType Vector<TLength, TType>::getParallelogramArea		(const Vector<TLength, TType>& other) const noexcept
+TType GenericVector<TLength, TType>::getParallelogramArea		(const GenericVector<TLength, TType>& other) const noexcept
 {
 	return getCross(other).length();
 }
 
 template <size_t TLength, typename TType>
 inline constexpr
-TType Vector<TLength, TType>::getTriangleArea		(const Vector<TLength, TType>& other) const noexcept
+TType GenericVector<TLength, TType>::getTriangleArea		(const GenericVector<TLength, TType>& other) const noexcept
 {
 	return getParallelogramArea(other) / static_cast<TType>(2);
 }
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::rotateAroundAxis (const Vector<TLength, TType>& unitAxis, TType angleRad) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::rotateAroundAxis (const GenericVector<TLength, TType>& unitAxis, TType angleRad) noexcept
 {
 #ifndef DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR
-    assert(unitAxis == static_cast<TType>(1) && "You must use unit vector. If you want disable assert for unit vector guard, please define DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR");
+    assert(unitAxis == static_cast<TType>(1) && "You must use unit generic vector. If you want disable assert for unit generic vector guard, please define DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR");
 #endif
 
 	(*this) = getRotationAroundAxis(unitAxis, angleRad);
@@ -328,10 +328,10 @@ Vector<TLength, TType>& Vector<TLength, TType>::rotateAroundAxis (const Vector<T
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType> Vector<TLength, TType>::getRotationAroundAxis (const Vector<TLength, TType>& unitAxis, TType angleRad) const noexcept
+GenericVector<TLength, TType> GenericVector<TLength, TType>::getRotationAroundAxis (const GenericVector<TLength, TType>& unitAxis, TType angleRad) const noexcept
 {
 #ifndef DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR
-    assert(unitAxis == static_cast<TType>(1) && "You must use unit vector. If you want disable assert for unit vector guard, please define DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR");
+    assert(unitAxis == static_cast<TType>(1) && "You must use unit generic vector. If you want disable assert for unit generic vector guard, please define DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR");
 #endif
 
 	TType cosA = std::cos(angleRad);
@@ -342,29 +342,29 @@ Vector<TLength, TType> Vector<TLength, TType>::getRotationAroundAxis (const Vect
 
 template <size_t TLength, typename TType>
 inline constexpr
-TType Vector<TLength, TType>::getScalarProjectionWith(const Vector& other) const noexcept
+TType GenericVector<TLength, TType>::getScalarProjectionWith(const GenericVector& other) const noexcept
 {
     return dot(*this, other.getNormalized());
 }
 
 template <size_t TLength, typename TType>
 inline constexpr
-TType Vector<TLength, TType>::getScalarRejectionWith(const Vector& other) const noexcept
+TType GenericVector<TLength, TType>::getScalarRejectionWith(const GenericVector& other) const noexcept
 {
     return cross(*this, other.getNormalized()).length();
 }
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType> Vector<TLength, TType>::getVectorProjectionWith(const Vector<TLength, TType>& other) const noexcept
+GenericVector<TLength, TType> GenericVector<TLength, TType>::getVectorProjectionWith(const GenericVector<TLength, TType>& other) const noexcept
 {
-    Vector normalizedOther = other.getNormalized();
+    GenericVector normalizedOther = other.getNormalized();
     return dot(*this, normalizedOther) * normalizedOther;
 }
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType> Vector<TLength, TType>::getVectorRejectionWith(const Vector<TLength, TType>& other) const noexcept
+GenericVector<TLength, TType> GenericVector<TLength, TType>::getVectorRejectionWith(const GenericVector<TLength, TType>& other) const noexcept
 {
     return (*this) - getVectorProjectionWith(other);
 }
@@ -372,7 +372,7 @@ Vector<TLength, TType> Vector<TLength, TType>::getVectorRejectionWith(const Vect
 template <size_t TLength, typename TType>
 template <size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator=(const Vector<TLengthOther, TTypeOther>& other) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept
 {
     constexpr size_t minLenght = (TLengthOther < TLength) ? TLengthOther : TLength;
 
@@ -395,7 +395,7 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator=(const Vector<TLengthOt
 template <size_t TLength, typename TType>
 template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator=(TscalarType scalar) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator=(TscalarType scalar) noexcept
 {
     for (TType& data : m_data)
     {
@@ -406,7 +406,7 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator=(TscalarType scalar) no
 
 template <size_t TLength, typename TType>
 inline constexpr
-TType&  Vector<TLength, TType>::operator[]	(size_t index) noexcept
+TType&  GenericVector<TLength, TType>::operator[]	(size_t index) noexcept
 {
     assert(index >= 0 && index < TLength);
     return m_data[index];
@@ -414,7 +414,7 @@ TType&  Vector<TLength, TType>::operator[]	(size_t index) noexcept
 
 template <size_t TLength, typename TType>
 inline constexpr
-const TType&    Vector<TLength, TType>::operator[]	(size_t index) const noexcept
+const TType&    GenericVector<TLength, TType>::operator[]	(size_t index) const noexcept
 {
     assert(index >= 0 && index < TLength);
     return m_data[index];
@@ -423,7 +423,7 @@ const TType&    Vector<TLength, TType>::operator[]	(size_t index) const noexcept
 template <size_t TLength, typename TType>
 template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator+=(TscalarType scalar) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator+=(TscalarType scalar) noexcept
 {
     for (TType& data : m_data)
     {
@@ -435,7 +435,7 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator+=(TscalarType scalar) n
 template <size_t TLength, typename TType>
 template <size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator+=(const Vector<TLengthOther, TTypeOther>& other) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator+=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept
 {
     constexpr size_t minLenght = (TLengthOther < TLength) ? TLengthOther : TLength;
 
@@ -449,7 +449,7 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator+=(const Vector<TLengthO
 template <size_t TLength, typename TType>
 template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator-=(TscalarType scalar) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator-=(TscalarType scalar) noexcept
 {
     for (TType& data : m_data)
     {
@@ -461,7 +461,7 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator-=(TscalarType scalar) n
 template <size_t TLength, typename TType>
 template <size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator-=(const Vector<TLengthOther, TTypeOther>& other) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator-=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept
 {
     constexpr size_t minLenght = (TLengthOther < TLength) ? TLengthOther : TLength;
 
@@ -475,7 +475,7 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator-=(const Vector<TLengthO
 template <size_t TLength, typename TType>
 template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator*=(TscalarType scalar) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator*=(TscalarType scalar) noexcept
 {
     for (TType& data : m_data)
     {
@@ -487,7 +487,7 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator*=(TscalarType scalar) n
 template <size_t TLength, typename TType>
 template <size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator*=(const Vector<TLengthOther, TTypeOther>& other) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator*=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept
 {
     constexpr size_t minLenght = (TLengthOther < TLength) ? TLengthOther : TLength;
 
@@ -501,7 +501,7 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator*=(const Vector<TLengthO
 template <size_t TLength, typename TType>
 template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator/=(TscalarType scalar) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator/=(TscalarType scalar) noexcept
 {
     for (TType& data : m_data)
     {
@@ -513,7 +513,7 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator/=(TscalarType scalar) n
 template <size_t TLength, typename TType>
 template <size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator/=(const Vector<TLengthOther, TTypeOther>& other) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator/=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept
 {
     constexpr size_t minLenght = (TLengthOther < TLength) ? TLengthOther : TLength;
 
@@ -527,7 +527,7 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator/=(const Vector<TLengthO
 template <size_t TLength, typename TType>
 template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator%=(TscalarType scalar) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator%=(TscalarType scalar) noexcept
 {
     for (TType& data : m_data)
     {
@@ -539,7 +539,7 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator%=(TscalarType scalar) n
 template <size_t TLength, typename TType>
 template <size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator%=(const Vector<TLengthOther, TTypeOther>& other) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator%=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept
 {
     constexpr size_t minLenght = (TLengthOther < TLength) ? TLengthOther : TLength;
 
@@ -553,7 +553,7 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator%=(const Vector<TLengthO
 template <size_t TLength, typename TType>
 template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator&=(TscalarType scalar) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator&=(TscalarType scalar) noexcept
 {
     for (TType& data : m_data)
     {
@@ -565,7 +565,7 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator&=(TscalarType scalar) n
 template <size_t TLength, typename TType>
 template <size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator&=(const Vector<TLengthOther, TTypeOther>& other) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator&=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept
 {
     constexpr size_t minLenght = (TLengthOther < TLength) ? TLengthOther : TLength;
 
@@ -579,7 +579,7 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator&=(const Vector<TLengthO
 template <size_t TLength, typename TType>
 template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator|=(TscalarType scalar) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator|=(TscalarType scalar) noexcept
 {
     for (TType& data : m_data)
     {
@@ -591,7 +591,7 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator|=(TscalarType scalar) n
 template <size_t TLength, typename TType>
 template <size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator|=(const Vector<TLengthOther, TTypeOther>& other) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator|=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept
 {
     constexpr size_t minLenght = (TLengthOther < TLength) ? TLengthOther : TLength;
 
@@ -605,7 +605,7 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator|=(const Vector<TLengthO
 template <size_t TLength, typename TType>
 template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator^=(TscalarType scalar) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator^=(TscalarType scalar) noexcept
 {
     for (TType& data : m_data)
     {
@@ -617,7 +617,7 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator^=(TscalarType scalar) n
 template <size_t TLength, typename TType>
 template <size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator^=(const Vector<TLengthOther, TTypeOther>& other) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator^=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept
 {
     constexpr size_t minLenght = (TLengthOther < TLength) ? TLengthOther : TLength;
 
@@ -631,7 +631,7 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator^=(const Vector<TLengthO
 template <size_t TLength, typename TType>
 template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator<<=(TscalarType scalar) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator<<=(TscalarType scalar) noexcept
 {
     for (TType& data : m_data)
     {
@@ -643,7 +643,7 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator<<=(TscalarType scalar) 
 template <size_t TLength, typename TType>
 template <size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator<<=(const Vector<TLengthOther, TTypeOther>& other) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator<<=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept
 {
     constexpr size_t minLenght = (TLengthOther < TLength) ? TLengthOther : TLength;
 
@@ -657,7 +657,7 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator<<=(const Vector<TLength
 template <size_t TLength, typename TType>
 template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator>>=(TscalarType scalar) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator>>=(TscalarType scalar) noexcept
 {
     for (TType& data : m_data)
     {
@@ -669,7 +669,7 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator>>=(TscalarType scalar) 
 template <size_t TLength, typename TType>
 template <size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator>>=(const Vector<TLengthOther, TTypeOther>& other) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator>>=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept
 {
     constexpr size_t minLenght = (TLengthOther < TLength) ? TLengthOther : TLength;
 
@@ -682,7 +682,7 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator>>=(const Vector<TLength
 
 template <size_t TLength, typename TType>
 inline constexpr 
-Vector<TLength, TType>& 	Vector<TLength, TType>::operator++	() noexcept
+GenericVector<TLength, TType>& 	GenericVector<TLength, TType>::operator++	() noexcept
 {
     for (TType& data : m_data)
     {
@@ -693,7 +693,7 @@ Vector<TLength, TType>& 	Vector<TLength, TType>::operator++	() noexcept
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType>& Vector<TLength, TType>::operator--	() noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator--	() noexcept
 {
     for (TType& data : m_data)
     {
@@ -704,9 +704,9 @@ Vector<TLength, TType>& Vector<TLength, TType>::operator--	() noexcept
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType> Vector<TLength, TType>::operator++	(int) noexcept
+GenericVector<TLength, TType> GenericVector<TLength, TType>::operator++	(int) noexcept
 {
-	Vector<TLength, TType> result(*this);
+	GenericVector<TLength, TType> result(*this);
 	++*this;
 	return result;
 }
@@ -714,9 +714,9 @@ Vector<TLength, TType> Vector<TLength, TType>::operator++	(int) noexcept
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType> Vector<TLength, TType>::operator--	(int) noexcept
+GenericVector<TLength, TType> GenericVector<TLength, TType>::operator--	(int) noexcept
 {
-	Vector<TLength, TType> result(*this);
+	GenericVector<TLength, TType> result(*this);
 	--*this;
 	return result;
 }
@@ -724,9 +724,9 @@ Vector<TLength, TType> Vector<TLength, TType>::operator--	(int) noexcept
 template <size_t TLength, typename TType>
 template <size_t TLengthOther, typename TTypeOther>
 constexpr inline 
-Vector<TLength, TType>::operator Vector<TLengthOther, TTypeOther>() const noexcept
+GenericVector<TLength, TType>::operator GenericVector<TLengthOther, TTypeOther>() const noexcept
 {
-    Vector<TLengthOther, TTypeOther> result;
+    GenericVector<TLengthOther, TTypeOther> result;
 
     constexpr size_t minLenght = (TLengthOther < TLength) ? TLengthOther : TLength;
 
@@ -741,28 +741,28 @@ Vector<TLength, TType>::operator Vector<TLengthOther, TTypeOther>() const noexce
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType> operator+(Vector<TLength, TType> const& vec) noexcept
+GenericVector<TLength, TType> operator+(GenericVector<TLength, TType> const& vec) noexcept
 {
     return vec;
 }
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType> operator-(Vector<TLength, TType> vec) noexcept
+GenericVector<TLength, TType> operator-(GenericVector<TLength, TType> vec) noexcept
 {
     return vec *= static_cast<TType>(-1);
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator+(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept
+GenericVector<TLength, TType> operator+(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
     return vec += static_cast<TType>(scalar); 
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator+(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept
+GenericVector<TLength, TType> operator+(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -774,21 +774,21 @@ Vector<TLength, TType> operator+(TTypeScalar scalar, Vector<TLength, TType> vec)
 
 template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType> operator+(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
+GenericVector<TLength, TType> operator+(GenericVector<TLength, TType> lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
     return lhs += rhs;
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator-(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept
+GenericVector<TLength, TType> operator-(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
     return vec -= static_cast<TType>(scalar);
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator-(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept
+GenericVector<TLength, TType> operator-(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -800,21 +800,21 @@ Vector<TLength, TType> operator-(TTypeScalar scalar, Vector<TLength, TType> vec)
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType> operator-(Vector<TLength, TType> lhs, const Vector<TLength, TType>& rhs) noexcept
+GenericVector<TLength, TType> operator-(GenericVector<TLength, TType> lhs, const GenericVector<TLength, TType>& rhs) noexcept
 {
     return lhs -= rhs;
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator*(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept
+GenericVector<TLength, TType> operator*(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
     return vec *= static_cast<TType>(scalar);
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator*(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept
+GenericVector<TLength, TType> operator*(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -826,21 +826,21 @@ Vector<TLength, TType> operator*(TTypeScalar scalar, Vector<TLength, TType> vec)
 
 template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType> operator*(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
+GenericVector<TLength, TType> operator*(GenericVector<TLength, TType> lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
     return lhs *= rhs;
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator/(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept
+GenericVector<TLength, TType> operator/(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
     return vec /= static_cast<TType>(scalar);
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator/(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept
+GenericVector<TLength, TType> operator/(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -852,21 +852,21 @@ Vector<TLength, TType> operator/(TTypeScalar scalar, Vector<TLength, TType> vec)
 
 template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType> operator/(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
+GenericVector<TLength, TType> operator/(GenericVector<TLength, TType> lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
     return lhs /= rhs;
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator%(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept
+GenericVector<TLength, TType> operator%(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
     return vec %= static_cast<TType>(scalar);
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator%(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept
+GenericVector<TLength, TType> operator%(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -878,21 +878,21 @@ Vector<TLength, TType> operator%(TTypeScalar scalar, Vector<TLength, TType> vec)
 
 template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType> operator%(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
+GenericVector<TLength, TType> operator%(GenericVector<TLength, TType> lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
     return lhs %= rhs;
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator&(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept
+GenericVector<TLength, TType> operator&(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
     return vec &= static_cast<TType>(scalar);
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator&(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept
+GenericVector<TLength, TType> operator&(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -904,21 +904,21 @@ Vector<TLength, TType> operator&(TTypeScalar scalar, Vector<TLength, TType> vec)
 
 template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType> operator&(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
+GenericVector<TLength, TType> operator&(GenericVector<TLength, TType> lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
     return lhs &= rhs;
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator|(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept
+GenericVector<TLength, TType> operator|(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
     return vec |= static_cast<TType>(scalar);
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator|(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept
+GenericVector<TLength, TType> operator|(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -930,21 +930,21 @@ Vector<TLength, TType> operator|(TTypeScalar scalar, Vector<TLength, TType> vec)
 
 template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType> operator|(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
+GenericVector<TLength, TType> operator|(GenericVector<TLength, TType> lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
     return lhs |= rhs;
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator^(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept
+GenericVector<TLength, TType> operator^(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
     return vec ^= static_cast<TType>(scalar);
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator^(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept
+GenericVector<TLength, TType> operator^(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -956,7 +956,7 @@ Vector<TLength, TType> operator^(TTypeScalar scalar, Vector<TLength, TType> vec)
 
 template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType> operator^(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
+GenericVector<TLength, TType> operator^(GenericVector<TLength, TType> lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
     return lhs ^= rhs;
 }
@@ -964,14 +964,14 @@ Vector<TLength, TType> operator^(Vector<TLength, TType> lhs, Vector<TLengthOther
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator<<(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept
+GenericVector<TLength, TType> operator<<(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
     return vec << static_cast<TType>(scalar);
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator<<(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept
+GenericVector<TLength, TType> operator<<(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -983,7 +983,7 @@ Vector<TLength, TType> operator<<(TTypeScalar scalar, Vector<TLength, TType> vec
 
 template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType> operator<<(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
+GenericVector<TLength, TType> operator<<(GenericVector<TLength, TType> lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
     return lhs << rhs;
 }
@@ -991,14 +991,14 @@ Vector<TLength, TType> operator<<(Vector<TLength, TType> lhs, Vector<TLengthOthe
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator>>(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept
+GenericVector<TLength, TType> operator>>(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
     return vec >> static_cast<TType>(scalar);
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Vector<TLength, TType> operator>>(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept
+GenericVector<TLength, TType> operator>>(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -1010,7 +1010,7 @@ Vector<TLength, TType> operator>>(TTypeScalar scalar, Vector<TLength, TType> vec
 
 template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 inline constexpr
-Vector<TLength, TType> operator>>(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
+GenericVector<TLength, TType> operator>>(GenericVector<TLength, TType> lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
     return lhs >> rhs;
 }
@@ -1018,7 +1018,7 @@ Vector<TLength, TType> operator>>(Vector<TLength, TType> lhs, Vector<TLengthOthe
 
 template <size_t TLength, typename TType>
 inline constexpr
-Vector<TLength, TType> operator~(Vector<TLength, TType> vec) noexcept
+GenericVector<TLength, TType> operator~(GenericVector<TLength, TType> vec) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -1030,7 +1030,7 @@ Vector<TLength, TType> operator~(Vector<TLength, TType> vec) noexcept
 
 template <size_t TLength>
 inline constexpr
-Vector<TLength, bool> operator!(Vector<TLength, bool> vec) noexcept
+GenericVector<TLength, bool> operator!(GenericVector<TLength, bool> vec) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -1042,7 +1042,7 @@ Vector<TLength, bool> operator!(Vector<TLength, bool> vec) noexcept
 
 template <size_t TLength, size_t TLengthOther>
 inline constexpr
-Vector<TLength, bool> operator&&(Vector<TLength, bool> lhs, Vector<TLengthOther, bool> const& rhs) noexcept
+GenericVector<TLength, bool> operator&&(GenericVector<TLength, bool> lhs, GenericVector<TLengthOther, bool> const& rhs) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -1054,7 +1054,7 @@ Vector<TLength, bool> operator&&(Vector<TLength, bool> lhs, Vector<TLengthOther,
 
 template <size_t TLength, size_t TLengthOther>
 inline constexpr
-Vector<TLength, bool> operator||(Vector<TLength, bool> lhs, Vector<TLengthOther, bool> const& rhs) noexcept
+GenericVector<TLength, bool> operator||(GenericVector<TLength, bool> lhs, GenericVector<TLengthOther, bool> const& rhs) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -1066,7 +1066,7 @@ Vector<TLength, bool> operator||(Vector<TLength, bool> lhs, Vector<TLengthOther,
 
 template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 [[nodiscard]] inline constexpr
-bool operator==(Vector<TLength, TType> const& lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
+bool operator==(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
 #ifdef VECTOR_OPERATOR_EGALE_COMPARE_LENGTH
 
@@ -1088,105 +1088,105 @@ bool operator==(Vector<TLength, TType> const& lhs, Vector<TLengthOther, TTypeOth
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-bool operator==(Vector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
+bool operator==(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
 {
     return Numeric::isSame<TType>(vec.squartLength(), static_cast<TType>(scalar) * static_cast<TType>(scalar)); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-bool operator==(TTypeScalar scalar, Vector<TLength, TType> const& vec) noexcept
+bool operator==(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept
 {
     return Numeric::isSame<TType>(static_cast<TType>(scalar) * static_cast<TType>(scalar), vec.squartLength()); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 [[nodiscard]] inline constexpr
-bool operator!=(Vector<TLength, TType> const& lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
+bool operator!=(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
     return !(lhs == rhs);
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
-bool operator!=(Vector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
+bool operator!=(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
 {
     return !(vec == static_cast<TType>(scalar));
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
-bool operator!=(TTypeScalar scalar, Vector<TLength, TType> const& vec) noexcept
+bool operator!=(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept
 {
     return !(static_cast<TType>(scalar) == vec);
 }
 
 template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 [[nodiscard]] inline constexpr
-bool operator<(Vector<TLength, TType> const& lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
+bool operator<(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
     return lhs.squartLength() < static_cast<TType>(rhs.squartLength());
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
-bool operator<(Vector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
+bool operator<(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
 {
     return vec.squartLength() < static_cast<TType>(scalar) * static_cast<TType>(scalar); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
-bool operator<(TTypeScalar scalar, Vector<TLength, TType> const& vec) noexcept
+bool operator<(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept
 {
     return static_cast<TType>(scalar) * static_cast<TType>(scalar) < vec.squartLength(); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 [[nodiscard]] inline constexpr
-bool operator>(Vector<TLength, TType> const& lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
+bool operator>(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
     return lhs.squartLength() > static_cast<TType>(rhs.squartLength());
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
-bool operator>(Vector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
+bool operator>(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
 {
     return vec.squartLength() > static_cast<TType>(scalar) * static_cast<TType>(scalar); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
-bool operator>(TTypeScalar scalar, Vector<TLength, TType> const& vec) noexcept
+bool operator>(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept
 {
     return static_cast<TType>(scalar) * static_cast<TType>(scalar) > vec.squartLength(); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 [[nodiscard]] inline constexpr
-bool operator<=(Vector<TLength, TType> const& lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
+bool operator<=(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
     return lhs.squartLength() <= static_cast<TType>(rhs.squartLength());
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
-bool operator<=(Vector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
+bool operator<=(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
 {
     return vec.squartLength() <= static_cast<TType>(scalar) * static_cast<TType>(scalar); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
-bool operator<=(TTypeScalar scalar, Vector<TLength, TType> const& vec) noexcept
+bool operator<=(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept
 {
     return static_cast<TType>(scalar) * static_cast<TType>(scalar) <= vec.squartLength(); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 [[nodiscard]] inline constexpr
-bool operator>=(Vector<TLength, TType> const& lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept
+bool operator>=(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
     return lhs.squartLength() >= static_cast<TType>(rhs.squartLength());
 }
@@ -1194,14 +1194,14 @@ bool operator>=(Vector<TLength, TType> const& lhs, Vector<TLengthOther, TTypeOth
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
-bool operator>=(Vector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
+bool operator>=(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
 {
     return vec.squartLength() >= static_cast<TType>(scalar) * static_cast<TType>(scalar); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
-bool operator>=(TTypeScalar scalar, Vector<TLength, TType> const& vec) noexcept
+bool operator>=(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept
 {
     return static_cast<TType>(scalar) * static_cast<TType>(scalar) >= vec.squartLength(); //hack to avoid sqrt
 }
@@ -1209,7 +1209,7 @@ bool operator>=(TTypeScalar scalar, Vector<TLength, TType> const& vec) noexcept
 
 template <size_t TLength, typename TType>
 inline constexpr
-std::ostream& 	operator<<		(std::ostream& out, const Vector<TLength, TType>& vec) noexcept
+std::ostream& 	operator<<		(std::ostream& out, const GenericVector<TLength, TType>& vec) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {
@@ -1221,7 +1221,7 @@ std::ostream& 	operator<<		(std::ostream& out, const Vector<TLength, TType>& vec
 
 template <size_t TLength, typename TType>
 inline constexpr
-std::istream& 	operator>>		(std::istream& in, const Vector<TLength, TType>& vec) noexcept
+std::istream& 	operator>>		(std::istream& in, const GenericVector<TLength, TType>& vec) noexcept
 {
     for (size_t i = 0; i < TLength; i++)
     {

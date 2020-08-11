@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "Vector.hpp"
+#include "GenericVector.hpp"
 
 namespace FoxMath::Vector
 {

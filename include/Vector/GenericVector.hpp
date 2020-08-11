@@ -43,12 +43,13 @@ namespace FoxMath::Vector
 {
     /*Use of IsArithmetic*/
     template <size_t TLength, typename TType = float, Type::IsArithmetic<TType> = true>
-    class Vector;
+    class GenericVector;
 
-    /*Specilisation of Vector class*/
+    /*Specilisation of GenericVector class*/
     template <size_t TLength, typename TType>
-    class Vector<TLength, TType>
+    class GenericVector<TLength, TType>
     {
+        
         private:
     
         protected:
@@ -70,25 +71,25 @@ namespace FoxMath::Vector
         #pragma region constructor/destructor
     
         /**
-         * @brief Default constructor, doesn't init the vector's member at zero to optimize class
+         * @brief Default constructor, doesn't init the generic vector's member at zero to optimize class
          * 
          */
         constexpr inline 
-        Vector () noexcept                          = default;
+        GenericVector () noexcept                          = default;
 
         constexpr inline
-        Vector (const Vector& other)			    = default;
+        GenericVector (const GenericVector& other)			    = default;
         
         constexpr inline 
-        Vector (Vector&& other)				        = default;
+        GenericVector (GenericVector&& other)				        = default;
         
-        ~Vector ()				                    = default;
-        
-        constexpr inline 
-        Vector& operator=(Vector const& other)		= default;
+        ~GenericVector ()				                    = default;
         
         constexpr inline 
-        Vector& operator=(Vector && other)			= default;
+        GenericVector& operator=(GenericVector const& other)		= default;
+        
+        constexpr inline 
+        GenericVector& operator=(GenericVector && other)			= default;
     
         /**
          * @brief Variadic templated constructor to init member
@@ -99,11 +100,11 @@ namespace FoxMath::Vector
         template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>> = true,
         Type::IsLessThanOrEqualTo<sizeof...(T), TLength> = true>
         explicit inline constexpr
-        Vector (T... args) noexcept;
+        GenericVector (T... args) noexcept;
 
         /**
-         * @brief Variadic templated constructor to init member with vector and scalar
-         * @note Is use whene you try to upgrade vector with static cast like static_cast<Vec4f>(vec3f). Else use the convertor operator
+         * @brief Variadic templated constructor to init member with generic vector and scalar
+         * @note Is use whene you try to upgrade generic vector with static cast like static_cast<Vec4f>(vec3f). Else use the convertor operator
          * @example `FoxMath::Vector::Vector<10, int> vect(FoxMath::Vector::Vector<5, int>(), 22, 31)`
          * @tparam TLengthOther 
          * @tparam TScalarArgs
@@ -113,21 +114,21 @@ namespace FoxMath::Vector
         Type::IsLessThanOrEqualTo<sizeof...(TScalarArgs) + TLengthOther, TLength> = true,
         Type::IsLessThan<TLengthOther, TLength> = true>
         explicit inline constexpr
-        Vector (const Vector<TLengthOther, TType>& other, TScalarArgs... args) noexcept;
+        GenericVector (const GenericVector<TLengthOther, TType>& other, TScalarArgs... args) noexcept;
 
         #pragma endregion //!constructor/destructor
     
         #pragma region methods
 
         /**
-         * @brief Fill vector's member with scalar value
+         * @brief Fill generic vector's member with scalar value
          * 
          */
         inline constexpr  
         void fill (const TType scalar) noexcept;
 
         /**
-         * @brief Return squartLength of vector. More optimize to compare distance than length
+         * @brief Return squartLength of generic vector. More optimize to compare distance than length
          * 
          * @return constexpr TType 
          */
@@ -135,7 +136,7 @@ namespace FoxMath::Vector
         TType squartLength () const noexcept;
 
         /**
-         * @brief return magnitude of the vector 
+         * @brief return magnitude of the generic vector 
          * 
          * @return constexpr TType 
          */
@@ -143,134 +144,134 @@ namespace FoxMath::Vector
         TType length () const noexcept;
         
         /**
-         * @brief Normalize the vector. If the vector is null (all components are set to 0), nothing is done.
+         * @brief Normalize the generic vector. If the generic vector is null (all components are set to 0), nothing is done.
          * 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         inline constexpr
-		Vector& 	    normalize	        () noexcept;
+		GenericVector& 	    normalize	        () noexcept;
 
         /**
-         * @brief  Returns the normalized vector. If the vector is null (all components are set to 0), then vector zero is returned.
+         * @brief  Returns the normalized generic vector. If the generic vector is null (all components are set to 0), then generic vector zero is returned.
          * 
-         * @return constexpr const Vector& 
+         * @return constexpr const GenericVector& 
          */
         [[nodiscard]] inline constexpr
-        Vector      getNormalized		() const noexcept;
+        GenericVector      getNormalized		() const noexcept;
 
         /**
-         * @brief Clamp the vector's length to max value
+         * @brief Clamp the generic vector's length to max value
          * 
          * @param maxLength 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         inline constexpr
-        Vector&         clampLength         (TType maxLength) noexcept;
+        GenericVector&         clampLength         (TType maxLength) noexcept;
 
         /**
          * @brief Get the Clamped Length object
          * 
          * @param maxLength 
-         * @return constexpr Vector 
+         * @return constexpr GenericVector 
          */
         [[nodiscard]] inline constexpr
-        Vector         getClampedLength         (TType maxLength) const noexcept;
+        GenericVector         getClampedLength         (TType maxLength) const noexcept;
 
         /**
-         * @brief Perform dot product with another vector
+         * @brief Perform dot product with another generic vector
          * 
          * @param other 
          * @return constexpr TType 
          */
         [[nodiscard]] inline constexpr
-        TType           dot		            (const Vector& other) const noexcept;
+        TType           dot		            (const GenericVector& other) const noexcept;
 
         /**
-         * @brief perform cross product with another vector
+         * @brief perform cross product with another generic vector
          * 
          * @param other 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         inline constexpr
-        Vector&         cross	            (const Vector& other) noexcept;
+        GenericVector&         cross	            (const GenericVector& other) noexcept;
 
         /**
          * @brief Get the Cross object
          * 
          * @param other 
-         * @return constexpr Vector 
+         * @return constexpr GenericVector 
          */
         [[nodiscard]] inline constexpr
-        Vector         getCross	            (const Vector& other) const noexcept;
+        GenericVector         getCross	            (const GenericVector& other) const noexcept;
 
         /**
-         * @brief Performs a linear interpolation between 2 vectors of the same type.
+         * @brief Performs a linear interpolation between 2 generic vectors of the same type.
          * 
          * @param other 
          * @param t 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         inline constexpr
-        Vector& 	    lerp		        (const Vector& other, TType t) noexcept;
+        GenericVector& 	    lerp		        (const GenericVector& other, TType t) noexcept;
 
         [[nodiscard]] inline constexpr
-        Vector 	        getLerp		        (const Vector& other, TType t) const noexcept;
+        GenericVector 	        getLerp		        (const GenericVector& other, TType t) const noexcept;
 
         /**
-         * @brief Performs a reflection with a normal vector
+         * @brief Performs a reflection with a normal generic vector
          * 
          * @param normalNormalized : Normal must be normalized
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         inline constexpr
-        Vector&         reflect		        (const Vector& normalNormalized) noexcept;
+        GenericVector&         reflect		        (const GenericVector& normalNormalized) noexcept;
 
         /**
          * @brief Get the Reflection object
          * 
          * @param normalNormalized 
-         * @return constexpr Vector 
+         * @return constexpr GenericVector 
          */
         [[nodiscard]] inline constexpr
-        Vector 	        getReflection		 (const Vector& normalNormalized) const noexcept;
+        GenericVector 	        getReflection		 (const GenericVector& normalNormalized) const noexcept;
 
         /**
-         * @brief Set the magnitude of the current vector
+         * @brief Set the magnitude of the current generic vector
          * 
          * @param newLength 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         inline constexpr
-        Vector& 	    setLength		     (TType newLength) noexcept;
+        GenericVector& 	    setLength		     (TType newLength) noexcept;
 
         /**
-         * @brief return true if vector is colineaire this other vector. Comput cross product. If cross product is near of zero, vectors is colinear
+         * @brief return true if generic vector is colineaire this other generic vector. Comput cross product. If cross product is near of zero, generic vectors is colinear
          * 
          * @param other 
          * @return true 
          * @return false 
          */
         [[nodiscard]] inline constexpr
-		bool 	isColinearTo	(const Vector& other) const noexcept;
+		bool 	isColinearTo	(const GenericVector& other) const noexcept;
 
         /**
-         * @brief return true if vector is perpendicular this other vector. Comput dot product. If dot product is near of zero, vectors is colinear
+         * @brief return true if generic vector is perpendicular this other generic vector. Comput dot product. If dot product is near of zero, generic vectors is colinear
          * 
          * @param other 
          * @return true 
          * @return false 
          */
         [[nodiscard]] inline constexpr
-		bool 	isPerpendicularTo	(const Vector& other) const noexcept;
+		bool 	isPerpendicularTo	(const GenericVector& other) const noexcept;
 
         /**
-         * @brief Area correspond to the ares of parralelogram formed by the two vectors.
+         * @brief Area correspond to the ares of parralelogram formed by the two generic vectors.
          * 
          * @param other 
          * @return TType 
          */
         [[nodiscard]] inline constexpr
-		TType getParallelogramArea		(const Vector& other) const noexcept;
+		TType getParallelogramArea		(const GenericVector& other) const noexcept;
 
         /**
          * @brief Comput aera of triangle in function of 3 points
@@ -279,89 +280,89 @@ namespace FoxMath::Vector
          * @return TType 
          */
         [[nodiscard]] inline constexpr
-		TType getTriangleArea		(const Vector& other) const noexcept;
+		TType getTriangleArea		(const GenericVector& other) const noexcept;
 
         /**
-         * @brief rotate vector around another unit vector. This function assert if axis is not unit
+         * @brief rotate generic vector around another unit generic vector. This function assert if axis is not unit
          * 
          * @param unitAxis 
          * @param angleRad 
          */
         inline constexpr
-		Vector& rotateAroundAxis (const Vector& unitAxis, TType angleRad) noexcept;
+		GenericVector& rotateAroundAxis (const GenericVector& unitAxis, TType angleRad) noexcept;
 
         /**
          * @brief Get the Rotation Around Axis object
          * 
          * @param unitAxis 
          * @param angleRad 
-         * @return Vector 
+         * @return GenericVector 
          */
         [[nodiscard]] inline constexpr
-		Vector getRotationAroundAxis (const Vector& unitAxis, TType angleRad) const noexcept;
+		GenericVector getRotationAroundAxis (const GenericVector& unitAxis, TType angleRad) const noexcept;
 
         /**
-         * @brief Get the projection with another vector
+         * @brief Get the projection with another generic vector
          * 
          * @param other 
          * @return constexpr TType 
          */
         [[nodiscard]] inline constexpr
-        TType getScalarProjectionWith(const Vector& other) const noexcept;
+        TType getScalarProjectionWith(const GenericVector& other) const noexcept;
 
         /**
-         * @brief Get the rejection with another vector
+         * @brief Get the rejection with another generic vector
          * 
          * @param other 
          * @return constexpr TType 
          */
         [[nodiscard]] inline constexpr
-        TType getScalarRejectionWith(const Vector& other) const noexcept;
+        TType getScalarRejectionWith(const GenericVector& other) const noexcept;
 
         /**
-         * @brief Get the Vector projection with another
+         * @brief Get the GenericVector projection with another
          * 
          * @param other 
-         * @return constexpr Vector 
+         * @return constexpr GenericVector 
          */
         [[nodiscard]] inline constexpr
-		Vector getVectorProjectionWith(const Vector& other) const noexcept;
+		GenericVector getVectorProjectionWith(const GenericVector& other) const noexcept;
 
         /**
-         * @brief Get the Vector rejection with another
+         * @brief Get the GenericVector rejection with another
          * 
          * @param other 
-         * @return constexpr Vector 
+         * @return constexpr GenericVector 
          */
         [[nodiscard]] inline constexpr
-		Vector getVectorRejectionWith(const Vector& other) const noexcept;
+		GenericVector getVectorRejectionWith(const GenericVector& other) const noexcept;
 
         #pragma endregion //!methods
     
         #pragma region static methods
 
         /**
-         * @brief perform dot product with both vector
+         * @brief perform dot product with both generic vector
          * 
          * @param lhs 
          * @param rhs 
          * @return constexpr TType 
          */
         [[nodiscard]] static inline constexpr
-        TType           dot		            (const Vector& lhs, const Vector& rhs) noexcept
+        TType           dot		            (const GenericVector& lhs, const GenericVector& rhs) noexcept
         {
             return lhs.dot(rhs); 
         }
 
         /**
-         * @brief perform cross product with both vector
+         * @brief perform cross product with both generic vector
          * 
          * @param lhs 
          * @param rhs 
-         * @return constexpr Vector
+         * @return constexpr GenericVector
          */
         [[nodiscard]] static inline constexpr
-        Vector         cross	            (const Vector& lhs, const Vector& rhs) noexcept
+        GenericVector         cross	            (const GenericVector& lhs, const GenericVector& rhs) noexcept
         {
             return lhs.getCross(rhs); 
         }
@@ -372,10 +373,10 @@ namespace FoxMath::Vector
          * 
          * @param lhs 
          * @param rhs : normalize normal
-         * @return constexpr Vector 
+         * @return constexpr GenericVector 
          */
         [[nodiscard]] static inline constexpr
-        Vector         reflect	            (const Vector& vec, const Vector& normalizedNormal) noexcept
+        GenericVector         reflect	            (const GenericVector& vec, const GenericVector& normalizedNormal) noexcept
         {
             return vec.getReflection(normalizedNormal);
         }
@@ -386,10 +387,10 @@ namespace FoxMath::Vector
          * 
          * @param lhs 
          * @param rhs 
-         * @return constexpr Vector 
+         * @return constexpr GenericVector 
          */
         [[nodiscard]] static inline constexpr
-        Vector         lerp	            (const Vector& vecStart, const Vector& vecEnd, TType t) noexcept
+        GenericVector         lerp	            (const GenericVector& vecStart, const GenericVector& vecEnd, TType t) noexcept
         {
             return vecStart.getLerp(vecEnd, t);
         }
@@ -403,7 +404,7 @@ namespace FoxMath::Vector
          * @return TType 
          */
         [[nodiscard]] static inline constexpr
-		TType parallelogramArea		(const Vector& pt1, const Vector& pt2, const Vector& pt3) noexcept
+		TType parallelogramArea		(const GenericVector& pt1, const GenericVector& pt2, const GenericVector& pt3) noexcept
         {
             return (pt2 - pt1).getParallelogramArea(pt3 - pt1);
         }
@@ -417,7 +418,7 @@ namespace FoxMath::Vector
          * @return TType 
          */
         [[nodiscard]] static inline constexpr
-		TType triangleArea		(const Vector& pt1, const Vector& pt2, const Vector& pt3) noexcept
+		TType triangleArea		(const GenericVector& pt1, const GenericVector& pt2, const GenericVector& pt3) noexcept
         {
             return (pt2 - pt1).getTriangleArea(pt3 - pt1);
         }
@@ -448,11 +449,11 @@ namespace FoxMath::Vector
          * @tparam TLengthOther 
          * @tparam TType 
          * @param other 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         template <size_t TLengthOther, typename TTypeOther>
 		inline constexpr
-		Vector& operator=(const Vector<TLengthOther, TTypeOther>& other) noexcept;
+		GenericVector& operator=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept;
 
         /**
          * @brief simple assignment
@@ -460,11 +461,11 @@ namespace FoxMath::Vector
          * @tparam TLengthOther 
          * @tparam TType 
          * @param other 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		Vector& operator=(TscalarType scalar) noexcept;
+		GenericVector& operator=(TscalarType scalar) noexcept;
 
         /**
          * @brief addition assignment 
@@ -472,11 +473,11 @@ namespace FoxMath::Vector
          * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		Vector& operator+=(TscalarType scalar) noexcept;
+		GenericVector& operator+=(TscalarType scalar) noexcept;
 
         /**
          * @brief addition assignment 
@@ -484,11 +485,11 @@ namespace FoxMath::Vector
          * @tparam TLengthOther 
          * @tparam TType 
          * @param other 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         template <size_t TLengthOther, typename TTypeOther>
 		inline constexpr
-		Vector& operator+=(const Vector<TLengthOther, TTypeOther>& other) noexcept;
+		GenericVector& operator+=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept;
 
         /**
          * @brief subtraction assignment 
@@ -496,11 +497,11 @@ namespace FoxMath::Vector
          * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		Vector& operator-=(TscalarType scalar) noexcept;
+		GenericVector& operator-=(TscalarType scalar) noexcept;
 
         /**
          * @brief subtraction assignment 
@@ -508,11 +509,11 @@ namespace FoxMath::Vector
          * @tparam TLengthOther 
          * @tparam TType 
          * @param other 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         template <size_t TLengthOther, typename TTypeOther>
 		inline constexpr
-		Vector& operator-=(const Vector<TLengthOther, TTypeOther>& other) noexcept;
+		GenericVector& operator-=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept;
 
         /**
          * @brief multiplication assignment 
@@ -520,11 +521,11 @@ namespace FoxMath::Vector
          * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		Vector& operator*=(TscalarType scalar) noexcept;
+		GenericVector& operator*=(TscalarType scalar) noexcept;
 
         /**
          * @brief multiplication assignment 
@@ -532,11 +533,11 @@ namespace FoxMath::Vector
          * @tparam TLengthOther 
          * @tparam TType 
          * @param other 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         template <size_t TLengthOther, typename TTypeOther>
 		inline constexpr
-		Vector& operator*=(const Vector<TLengthOther, TTypeOther>& other) noexcept;
+		GenericVector& operator*=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept;
 
         /**
          * @brief division assignment
@@ -544,11 +545,11 @@ namespace FoxMath::Vector
          * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		Vector& operator/=(TscalarType scalar) noexcept;
+		GenericVector& operator/=(TscalarType scalar) noexcept;
 
         /**
          * @brief division assignment
@@ -556,11 +557,11 @@ namespace FoxMath::Vector
          * @tparam TLengthOther 
          * @tparam TType 
          * @param other 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         template <size_t TLengthOther, typename TTypeOther>
 		inline constexpr
-		Vector& operator/=(const Vector<TLengthOther, TTypeOther>& other) noexcept;
+		GenericVector& operator/=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept;
 
         /**
          * @brief modulo assignment
@@ -568,11 +569,11 @@ namespace FoxMath::Vector
          * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		Vector& operator%=(TscalarType scalar) noexcept;
+		GenericVector& operator%=(TscalarType scalar) noexcept;
 
         /**
          * @brief modulo assignment
@@ -580,11 +581,11 @@ namespace FoxMath::Vector
          * @tparam TLengthOther 
          * @tparam TType 
          * @param other 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         template <size_t TLengthOther, typename TTypeOther>
 		inline constexpr
-		Vector& operator%=(const Vector<TLengthOther, TTypeOther>& other) noexcept;
+		GenericVector& operator%=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept;
 
         /**
          * @brief bitwise AND assignment 
@@ -592,11 +593,11 @@ namespace FoxMath::Vector
          * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		Vector& operator&=(TscalarType scalar) noexcept;
+		GenericVector& operator&=(TscalarType scalar) noexcept;
 
         /**
          * @brief bitwise AND assignment 
@@ -604,11 +605,11 @@ namespace FoxMath::Vector
          * @tparam TLengthOther 
          * @tparam TType 
          * @param other 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         template <size_t TLengthOther, typename TTypeOther>
 		inline constexpr
-		Vector& operator&=(const Vector<TLengthOther, TTypeOther>& other) noexcept;
+		GenericVector& operator&=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept;
 
         /**
          * @brief bitwise OR assignment 
@@ -616,11 +617,11 @@ namespace FoxMath::Vector
          * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		Vector& operator|=(TscalarType scalar) noexcept;
+		GenericVector& operator|=(TscalarType scalar) noexcept;
 
         /**
          * @brief bitwise OR assignment 
@@ -628,11 +629,11 @@ namespace FoxMath::Vector
          * @tparam TLengthOther 
          * @tparam TType 
          * @param other 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         template <size_t TLengthOther, typename TTypeOther>
 		inline constexpr
-		Vector& operator|=(const Vector<TLengthOther, TTypeOther>& other) noexcept;
+		GenericVector& operator|=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept;
 
         /**
          * @brief bitwise XOR assignment 
@@ -640,11 +641,11 @@ namespace FoxMath::Vector
          * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		Vector& operator^=(TscalarType scalar) noexcept;
+		GenericVector& operator^=(TscalarType scalar) noexcept;
 
         /**
          * @brief bitwise XOR assignment 
@@ -652,11 +653,11 @@ namespace FoxMath::Vector
          * @tparam TLengthOther 
          * @tparam TType 
          * @param other 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         template <size_t TLengthOther, typename TTypeOther>
 		inline constexpr
-		Vector& operator^=(const Vector<TLengthOther, TTypeOther>& other) noexcept;
+		GenericVector& operator^=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept;
 
         /**
          * @brief bitwise left shift assignment 
@@ -664,11 +665,11 @@ namespace FoxMath::Vector
          * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		Vector& operator<<=(TscalarType scalar) noexcept;
+		GenericVector& operator<<=(TscalarType scalar) noexcept;
 
         /**
          * @brief bitwise left shift assignment 
@@ -676,11 +677,11 @@ namespace FoxMath::Vector
          * @tparam TLengthOther 
          * @tparam TType 
          * @param other 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         template <size_t TLengthOther, typename TTypeOther>
 		inline constexpr
-		Vector& operator<<=(const Vector<TLengthOther, TTypeOther>& other) noexcept;
+		GenericVector& operator<<=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept;
 
         /**
          * @brief bitwise right shift assignment 
@@ -688,11 +689,11 @@ namespace FoxMath::Vector
          * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		Vector& operator>>=(TscalarType scalar) noexcept;
+		GenericVector& operator>>=(TscalarType scalar) noexcept;
 
         /**
          * @brief bitwise right shift assignment 
@@ -700,11 +701,11 @@ namespace FoxMath::Vector
          * @tparam TLengthOther 
          * @tparam TType 
          * @param other 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         template <size_t TLengthOther, typename TTypeOther>
 		inline constexpr
-		Vector& operator>>=(const Vector<TLengthOther, TTypeOther>& other) noexcept;
+		GenericVector& operator>>=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept;
 
         #pragma endregion //!region assignment operators
         #pragma region increment decrement operators
@@ -712,49 +713,49 @@ namespace FoxMath::Vector
         /**
          * @brief  pre-increment operator
          * 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         inline constexpr
-		Vector& 	operator++	() noexcept;
+		GenericVector& 	operator++	() noexcept;
 
         /**
          * @brief pre-decrement operator
          * 
-         * @return constexpr Vector& 
+         * @return constexpr GenericVector& 
          */
         inline constexpr
-		Vector& 	operator--	() noexcept;
+		GenericVector& 	operator--	() noexcept;
         
         /**
          * @brief post-increment  operator
          * 
-         * @return constexpr Vector 
+         * @return constexpr GenericVector 
          */
         inline constexpr
-		Vector 	    operator++	(int) noexcept;
+		GenericVector 	    operator++	(int) noexcept;
 
         /**
          * @brief post-decrement operator
          * 
-         * @return constexpr Vector 
+         * @return constexpr GenericVector 
          */
         inline constexpr
-		Vector 	    operator--	(int) noexcept;
+		GenericVector 	    operator--	(int) noexcept;
 
         #pragma endregion //!increment decrement operators
         #pragma region convertor
 
         /**
-         * @brief Converte vector to another vector type
-         * @note use static_cast<> to call this function. Is use only if you try to downgrade vector like static_cast<Vec3f>(vec4f). Else use the constructor
+         * @brief Converte generic vector to another generic vector type
+         * @note use static_cast<> to call this function. Is use only if you try to downgrade generic vector like static_cast<Vec3f>(vec4f). Else use the constructor
          * @example `FoxMath::Vector::Vector<2, float> rhs = static_cast<FoxMath::Vector::Vector<2, float>>(vec)`
          * @tparam TLengthOther 
          * @tparam TTypeOther 
-         * @return Vector<TLengthOther, TTypeOther> 
+         * @return GenericVector<TLengthOther, TTypeOther> 
          */
         template <size_t TLengthOther, typename TTypeOther>
         [[nodiscard]] constexpr inline 
-        operator Vector<TLengthOther, TTypeOther>() const noexcept;
+        operator GenericVector<TLengthOther, TTypeOther>() const noexcept;
 
         #pragma endregion //!convertor
     };
@@ -767,11 +768,11 @@ namespace FoxMath::Vector
      * @tparam TLength 
      * @tparam TType 
      * @param vec 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator+(Vector<TLength, TType> const& vec) noexcept;
+    GenericVector<TLength, TType> operator+(GenericVector<TLength, TType> const& vec) noexcept;
 
     /**
      * @brief unary minus 
@@ -779,11 +780,11 @@ namespace FoxMath::Vector
      * @tparam TLength 
      * @tparam TType 
      * @param vec 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator-(Vector<TLength, TType> vec) noexcept;
+    GenericVector<TLength, TType> operator-(GenericVector<TLength, TType> vec) noexcept;
 
     /**
      * @brief addition 
@@ -792,11 +793,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param vec 
      * @param scalar 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator+(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept;
+    GenericVector<TLength, TType> operator+(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief addition 
@@ -805,11 +806,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param scalar 
      * @param vec 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator+(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept;
+    GenericVector<TLength, TType> operator+(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
 
     /**
      * @brief addition 
@@ -818,11 +819,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param lhs 
      * @param rhs 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator+(Vector<TLength, TType> lhs, const Vector< TLengthOther, TTypeOther>& rhs) noexcept;
+    GenericVector<TLength, TType> operator+(GenericVector<TLength, TType> lhs, const GenericVector< TLengthOther, TTypeOther>& rhs) noexcept;
 
     /**
      * @brief subtraction
@@ -831,11 +832,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param vec 
      * @param scalar 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator-(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept;
+    GenericVector<TLength, TType> operator-(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief subtraction
@@ -844,11 +845,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param scalar 
      * @param vec 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator-(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept;
+    GenericVector<TLength, TType> operator-(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
 
     /**
      * @brief subtraction
@@ -857,11 +858,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param lhs 
      * @param rhs 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator-(Vector<TLength, TType> lhs, const Vector<TLengthOther, TTypeOther>& rhs) noexcept;
+    GenericVector<TLength, TType> operator-(GenericVector<TLength, TType> lhs, const GenericVector<TLengthOther, TTypeOther>& rhs) noexcept;
 
     /**
      * @brief multiplication
@@ -870,11 +871,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param vec 
      * @param scalar 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator*(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept;
+    GenericVector<TLength, TType> operator*(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief multiplication
@@ -883,11 +884,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param scalar 
      * @param vec 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator*(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept;
+    GenericVector<TLength, TType> operator*(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
 
     /**
      * @brief multiplication
@@ -896,11 +897,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param lhs 
      * @param rhs 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator*(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    GenericVector<TLength, TType> operator*(GenericVector<TLength, TType> lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief division
@@ -909,11 +910,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param vec 
      * @param scalar 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator/(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept;
+    GenericVector<TLength, TType> operator/(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief division
@@ -922,11 +923,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param scalar 
      * @param vec 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator/(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept;
+    GenericVector<TLength, TType> operator/(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
 
     /**
      * @brief division
@@ -935,11 +936,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param lhs 
      * @param rhs 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator/(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    GenericVector<TLength, TType> operator/(GenericVector<TLength, TType> lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief modulo
@@ -948,11 +949,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param vec 
      * @param scalar 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator%(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept;
+    GenericVector<TLength, TType> operator%(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief modulo
@@ -961,11 +962,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param scalar 
      * @param vec 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator%(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept;
+    GenericVector<TLength, TType> operator%(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
 
     /**
      * @brief modulo
@@ -974,11 +975,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param lhs 
      * @param rhs 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator%(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    GenericVector<TLength, TType> operator%(GenericVector<TLength, TType> lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief bitwise AND
@@ -987,11 +988,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param lhs 
      * @param scalar 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator&(Vector<TLength, TType> lhs, TTypeScalar scalar) noexcept;
+    GenericVector<TLength, TType> operator&(GenericVector<TLength, TType> lhs, TTypeScalar scalar) noexcept;
 
     /**
      * @brief bitwise AND
@@ -1000,11 +1001,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param scalar 
      * @param vec 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator&(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept;
+    GenericVector<TLength, TType> operator&(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
 
     /**
      * @brief bitwise AND 
@@ -1013,11 +1014,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param lhs 
      * @param rhs 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator&(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    GenericVector<TLength, TType> operator&(GenericVector<TLength, TType> lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief bitwise OR 
@@ -1026,11 +1027,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param vec 
      * @param scalar 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator|(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept;
+    GenericVector<TLength, TType> operator|(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief bitwise OR
@@ -1039,11 +1040,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param scalar 
      * @param vec 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator|(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept;
+    GenericVector<TLength, TType> operator|(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
 
     /**
      * @brief bitwise OR 
@@ -1052,11 +1053,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param lhs 
      * @param rhs 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator|(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    GenericVector<TLength, TType> operator|(GenericVector<TLength, TType> lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief bitwise XOR
@@ -1065,11 +1066,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param vec 
      * @param scalar 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator^(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept;
+    GenericVector<TLength, TType> operator^(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief bitwise XOR
@@ -1078,11 +1079,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param scalar 
      * @param vec 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator^(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept;
+    GenericVector<TLength, TType> operator^(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
 
     /**
      * @brief bitwise XOR
@@ -1091,11 +1092,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param lhs 
      * @param rhs 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator^(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    GenericVector<TLength, TType> operator^(GenericVector<TLength, TType> lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief bitwise left shift
@@ -1104,11 +1105,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param vec 
      * @param scalar 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator<<(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept;
+    GenericVector<TLength, TType> operator<<(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief bitwise left shift
@@ -1117,11 +1118,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param scalar 
      * @param vec 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator<<(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept;
+    GenericVector<TLength, TType> operator<<(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
 
     /**
      * @brief bitwise left shift
@@ -1130,11 +1131,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param lhs 
      * @param rhs 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator<<(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    GenericVector<TLength, TType> operator<<(GenericVector<TLength, TType> lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief bitwise right shift
@@ -1143,11 +1144,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param vec 
      * @param scalar 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator>>(Vector<TLength, TType> vec, TTypeScalar scalar) noexcept;
+    GenericVector<TLength, TType> operator>>(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief bitwise right shift 
@@ -1156,11 +1157,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param scalar 
      * @param vec 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator>>(TTypeScalar scalar, Vector<TLength, TType> vec) noexcept;
+    GenericVector<TLength, TType> operator>>(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
 
     /**
      * @brief bitwise right shift 
@@ -1169,11 +1170,11 @@ namespace FoxMath::Vector
      * @tparam TType 
      * @param lhs 
      * @param rhs 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator>>(Vector<TLength, TType> lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    GenericVector<TLength, TType> operator>>(GenericVector<TLength, TType> lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief bitwise NOT
@@ -1181,11 +1182,11 @@ namespace FoxMath::Vector
      * @tparam TLength 
      * @tparam TType 
      * @param vec 
-     * @return constexpr Vector<TLength, TType> 
+     * @return constexpr GenericVector<TLength, TType> 
      */
 	template <size_t TLength, typename TType>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, TType> operator~(Vector<TLength, TType> vec) noexcept;
+    GenericVector<TLength, TType> operator~(GenericVector<TLength, TType> vec) noexcept;
 
     #pragma endregion //!logical operators
     #pragma region logical operators
@@ -1195,11 +1196,11 @@ namespace FoxMath::Vector
      * 
      * @tparam TLength 
      * @param vec 
-     * @return constexpr Vector<TLength, bool> 
+     * @return constexpr GenericVector<TLength, bool> 
      */
     template <size_t TLength>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, bool> operator!(Vector<TLength, bool> vec) noexcept;
+    GenericVector<TLength, bool> operator!(GenericVector<TLength, bool> vec) noexcept;
 	
     /**
      * @brief AND
@@ -1207,11 +1208,11 @@ namespace FoxMath::Vector
      * @tparam TLength 
      * @param lhs 
      * @param rhs 
-     * @return constexpr Vector<TLength, bool> 
+     * @return constexpr GenericVector<TLength, bool> 
      */
     template <size_t TLength, size_t TLengthOther>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, bool> operator&&(Vector<TLength, bool> lhs, Vector<TLengthOther, bool> const& rhs) noexcept;
+    GenericVector<TLength, bool> operator&&(GenericVector<TLength, bool> lhs, GenericVector<TLengthOther, bool> const& rhs) noexcept;
 
     /**
      * @brief inclusive OR
@@ -1219,18 +1220,18 @@ namespace FoxMath::Vector
      * @tparam TLength 
      * @param lhs 
      * @param rhs 
-     * @return constexpr Vector<TLength, bool> 
+     * @return constexpr GenericVector<TLength, bool> 
      */
 	template <size_t TLength, size_t TLengthOther>
 	[[nodiscard]] inline constexpr
-    Vector<TLength, bool> operator||(Vector<TLength, bool> lhs, Vector<TLengthOther, bool> const& rhs) noexcept;
+    GenericVector<TLength, bool> operator||(GenericVector<TLength, bool> lhs, GenericVector<TLengthOther, bool> const& rhs) noexcept;
     
     #pragma endregion //!logical operators
     #pragma region comparision operators
 
     /**
      * @brief equal to
-     * @note    if VECTOR_OPERATOR_EGALE_COMPARE_LENGTH is define, this function compare length of the both vector. Else it compare the both member.
+     * @note    if VECTOR_OPERATOR_EGALE_COMPARE_LENGTH is define, this function compare length of the both generic vector. Else it compare the both member.
      *          By default, VECTOR_OPERATOR_EGALE_COMPARE_LENGTH is not define
      * @tparam TLength 
      * @tparam TType 
@@ -1241,7 +1242,7 @@ namespace FoxMath::Vector
      */
     template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
     [[nodiscard]] inline constexpr
-    bool operator==(Vector<TLength, TType> const& lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    bool operator==(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief equal to
@@ -1255,7 +1256,7 @@ namespace FoxMath::Vector
      */
     template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator==(Vector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
+    bool operator==(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief equal to
@@ -1269,7 +1270,7 @@ namespace FoxMath::Vector
      */
     template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator==(TTypeScalar scalar, Vector<TLength, TType> const& vec) noexcept;
+    bool operator==(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept;
 
     /**
      * @brief not equal to
@@ -1283,7 +1284,7 @@ namespace FoxMath::Vector
      */
     template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
     [[nodiscard]] inline constexpr
-    bool operator!=(Vector<TLength, TType> const& lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    bool operator!=(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief not equal to
@@ -1297,7 +1298,7 @@ namespace FoxMath::Vector
      */
     template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator!=(Vector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
+    bool operator!=(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief not equal to
@@ -1311,7 +1312,7 @@ namespace FoxMath::Vector
      */
     template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator!=(TTypeScalar scalar, Vector<TLength, TType> const& vec) noexcept;
+    bool operator!=(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept;
 
     /**
      * @brief less than
@@ -1325,7 +1326,7 @@ namespace FoxMath::Vector
      */
     template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
     [[nodiscard]] inline constexpr
-    bool operator<(Vector<TLength, TType> const& lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    bool operator<(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief less than
@@ -1339,7 +1340,7 @@ namespace FoxMath::Vector
      */
     template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator<(Vector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
+    bool operator<(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief less than
@@ -1353,7 +1354,7 @@ namespace FoxMath::Vector
      */
     template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator<(TTypeScalar scalar, Vector<TLength, TType> const& vec) noexcept;
+    bool operator<(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept;
 
     /**
      * @brief greater than
@@ -1367,7 +1368,7 @@ namespace FoxMath::Vector
      */
     template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
     [[nodiscard]] inline constexpr
-    bool operator>(Vector<TLength, TType> const& lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    bool operator>(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief greater than
@@ -1381,7 +1382,7 @@ namespace FoxMath::Vector
      */
     template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator>(Vector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
+    bool operator>(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief greater than
@@ -1395,7 +1396,7 @@ namespace FoxMath::Vector
      */
     template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator>(TTypeScalar scalar, Vector<TLength, TType> const& vec) noexcept;
+    bool operator>(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept;
 
     /**
      * @brief less than or equal to
@@ -1409,7 +1410,7 @@ namespace FoxMath::Vector
      */
     template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
     [[nodiscard]] inline constexpr
-    bool operator<=(Vector<TLength, TType> const& lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    bool operator<=(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief less than or equal to
@@ -1423,7 +1424,7 @@ namespace FoxMath::Vector
      */
     template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator<=(Vector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
+    bool operator<=(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief less than or equal to
@@ -1437,7 +1438,7 @@ namespace FoxMath::Vector
      */
     template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator<=(TTypeScalar scalar, Vector<TLength, TType> const& vec) noexcept;
+    bool operator<=(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept;
 
     /**
      * @brief greater than or equal to
@@ -1451,7 +1452,7 @@ namespace FoxMath::Vector
      */
     template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
     [[nodiscard]] inline constexpr
-    bool operator>=(Vector<TLength, TType> const& lhs, Vector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    bool operator>=(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
     /**
      * @brief greater than or equal to
@@ -1465,7 +1466,7 @@ namespace FoxMath::Vector
      */
     template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator>=(Vector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
+    bool operator>=(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief greater than or equal to
@@ -1479,7 +1480,7 @@ namespace FoxMath::Vector
      */
     template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator>=(TTypeScalar scalar, Vector<TLength, TType> const& vec) noexcept;
+    bool operator>=(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept;
 
     #pragma endregion //!comparision operators
     #pragma region stream operators
@@ -1495,7 +1496,7 @@ namespace FoxMath::Vector
      */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
-    std::ostream& 	operator<<		(std::ostream& out, const Vector<TLength, TType>& vec) noexcept;
+    std::ostream& 	operator<<		(std::ostream& out, const GenericVector<TLength, TType>& vec) noexcept;
 
     /**
      * @brief input stream
@@ -1508,10 +1509,13 @@ namespace FoxMath::Vector
      */
     template <size_t TLength, typename TType>
     [[nodiscard]] inline constexpr
-    std::istream& 	operator>>		(std::istream& in, const Vector<TLength, TType>& vec) noexcept;
+    std::istream& 	operator>>		(std::istream& in, const GenericVector<TLength, TType>& vec) noexcept;
 
     #pragma endregion //!stream operators
 
-    #include "Vector.inl"
+    #include "GenericVector.inl"
+
+    template <size_t TLength, typename TType>
+    using Vector = GenericVector<TLength, TType>;
 
 } /*namespace FoxMath::Vector*/
