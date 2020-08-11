@@ -1,7 +1,7 @@
 /*
  * Project : FoxMath
  * Editing by Six Jonathan
- * Date : 2020-08-06 - 22 h 09
+ * Date : 2020-08-11 - 10 h 36
  * 
  * 
  * MIT License
@@ -29,38 +29,58 @@
 
 #pragma once
 
-#include <limits> //std::numeric_limits<T>::espilon()
-#include <cmath> //abs
-#include "../Type/SFINAEShorthand.hpp" // Type::IsArithmetic<T>
+#include <string>
 
-namespace FoxMath::Numeric
+namespace FoxMath::Angle
 {
-    template<typename T, Type::IsArithmetic<T> = true>
-    inline constexpr
-    bool isSame(T v1, T v2)
+    class AngleType
     {
-        if constexpr (std::is_floating_point_v<T>)
-        {
-            return std::abs(v1 - v2) <= std::numeric_limits<T>::epsilon();
-        }
-        else
-        {
-            return v1 == v2; 
-        }
-    }
+        public :
 
-    template<typename T, Type::IsArithmetic<T> = true>
-    inline constexpr
-    bool isSameAsZero(T v1)
-    {
-        if constexpr (std::is_floating_point_v<T>)
+        enum EAngleType
         {
-            return std::abs(v1) <= std::numeric_limits<T>::epsilon(); 
-        }
-        else
-        {
-            return v1 == static_cast<T>(0); 
-        }
-    }
+            Degres,
+            Radian
+        };
 
-} /*namespace FoxMath::Numeric*/
+        protected : 
+
+        EAngleType m_value;
+
+        public :
+
+        AngleType ()					                = default;
+        AngleType (const AngleType& other)			    = default;
+        AngleType (AngleType&& other)				    = default;
+        virtual ~AngleType ()				            = default;
+        AngleType& operator=(AngleType const& other)	= default;
+        AngleType& operator=(AngleType && other)		= default;
+
+        inline constexpr AngleType(EAngleType angleType) 
+            : m_value {angleType}
+        {}
+
+        inline
+        std::string to_string()
+        {
+            switch (m_value)
+            {
+            case EAngleType::Degres:
+                return "Degres";
+
+            case EAngleType::Radian:
+                return "Radian";
+            
+            default:
+                return "Unknow";
+            }
+        }
+
+        inline constexpr
+        operator std::string()
+        {
+            return to_string();
+        }
+    };
+
+} /*namespace FoxMath::Angle*/

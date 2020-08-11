@@ -30,6 +30,7 @@
 #pragma once
 
 #include "GenericVector.hpp"
+#include "../Type/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
 
 namespace FoxMath::Vector
 {

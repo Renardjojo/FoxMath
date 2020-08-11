@@ -27,6 +27,8 @@
  * SOFTWARE.
  */
 
+#pragma once
+
 template <size_t TLength, typename TType>
 template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>> = true,
 Type::IsLessThanOrEqualTo<sizeof...(T), TLength> = true>

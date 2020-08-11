@@ -1,7 +1,7 @@
 /*
  * Project : FoxMath
  * Editing by Six Jonathan
- * Date : 2020-08-06 - 22 h 09
+ * Date : 2020-08-11 - 10 h 14
  * 
  * 
  * MIT License
@@ -29,38 +29,9 @@
 
 #pragma once
 
-#include <limits> //std::numeric_limits<T>::espilon()
-#include <cmath> //abs
-#include "../Type/SFINAEShorthand.hpp" // Type::IsArithmetic<T>
-
-namespace FoxMath::Numeric
+namespace FoxMath::Angle
 {
-    template<typename T, Type::IsArithmetic<T> = true>
-    inline constexpr
-    bool isSame(T v1, T v2)
-    {
-        if constexpr (std::is_floating_point_v<T>)
-        {
-            return std::abs(v1 - v2) <= std::numeric_limits<T>::epsilon();
-        }
-        else
-        {
-            return v1 == v2; 
-        }
-    }
 
-    template<typename T, Type::IsArithmetic<T> = true>
-    inline constexpr
-    bool isSameAsZero(T v1)
-    {
-        if constexpr (std::is_floating_point_v<T>)
-        {
-            return std::abs(v1) <= std::numeric_limits<T>::epsilon(); 
-        }
-        else
-        {
-            return v1 == static_cast<T>(0); 
-        }
-    }
 
-} /*namespace FoxMath::Numeric*/
+
+} /*namespace FoxMath::Angle*/

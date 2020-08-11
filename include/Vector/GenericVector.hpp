@@ -36,7 +36,7 @@
 #include <cstring> //memset
 #include <cmath> //sqrt, lerp (if c++ 2020)
 
-#include "../Type/SFINAShorthand.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
+#include "../Type/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
 #include "../Numeric/Limits.hpp" //isSame
 
 namespace FoxMath::Vector
@@ -75,15 +75,15 @@ namespace FoxMath::Vector
          * 
          */
         constexpr inline 
-        GenericVector () noexcept                          = default;
+        GenericVector () noexcept                                   = default;
 
         constexpr inline
-        GenericVector (const GenericVector& other)			    = default;
+        GenericVector (const GenericVector& other)			        = default;
         
         constexpr inline 
         GenericVector (GenericVector&& other)				        = default;
         
-        ~GenericVector ()				                    = default;
+        ~GenericVector ()				                            = default;
         
         constexpr inline 
         GenericVector& operator=(GenericVector const& other)		= default;
