@@ -1518,4 +1518,7 @@ namespace FoxMath::Vector
     template <size_t TLength, typename TType>
     using Vector = GenericVector<TLength, TType>;
 
+    template <size_t TLength, typename TType>
+    using Vec = Vector<TLength, TType>;
+
 } /*namespace FoxMath::Vector*/
