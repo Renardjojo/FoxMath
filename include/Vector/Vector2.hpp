@@ -76,7 +76,8 @@ namespace FoxMath::Vector
          * @tparam T 
          * @tparam Sfinae IsSame 
          */
-        template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>> = true>
+        template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>> = true,
+        Type::IsLessThanOrEqualTo<sizeof...(T), 2> = true>
         explicit inline constexpr
         Vector2 (T... args) noexcept
             : Vector<2, TType>(args...) {}
@@ -98,6 +99,25 @@ namespace FoxMath::Vector
         #pragma endregion //!constructor/destructor
     
         #pragma region methods
+
+        // /**
+        //  * @brief turn Vec2 in counterclockwise
+        //  * 
+        //  * @param angleDeg 
+        //  * @return Vec2& 
+        //  */
+		// Vec2& 		rotate			(float angleDeg);
+		// Vec2  		getRotate 		(float angleDeg) const;
+
+		// Vec2&  		rotated90 		();
+		// Vec2  		getRotated90 	() const;
+
+		// Vec2&  		rotated180 		(); 
+		// Vec2  		getRotated180	() const;
+
+		// Vec2&  		rotated270 		();
+		// Vec2  		getRotated270 	() const;
+
         #pragma endregion //!methods
     
         #pragma region accessor

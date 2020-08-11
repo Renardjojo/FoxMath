@@ -77,7 +77,8 @@ namespace FoxMath::Vector
          * @tparam T 
          * @tparam Sfinae IsSame 
          */
-        template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>> = true>
+        template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>> = true,
+        Type::IsLessThanOrEqualTo<sizeof...(T), 3> = true>
         explicit inline constexpr
         Vector3 (T... args) noexcept
             : Vector<3, TType>(args...) {}

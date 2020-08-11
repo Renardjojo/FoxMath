@@ -36,7 +36,7 @@
 #include <cstring> //memset
 #include <cmath> //sqrt, lerp (if c++ 2020)
 
-#include "../Type/TypeTraitsAlias.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
+#include "../Type/SFINAShorthand.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
 #include "../Numeric/Limits.hpp" //isSame
 
 namespace FoxMath::Vector
@@ -96,7 +96,8 @@ namespace FoxMath::Vector
          * @tparam T 
          * @tparam Sfinae IsSame 
          */
-        template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>> = true>
+        template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>> = true,
+        Type::IsLessThanOrEqualTo<sizeof...(T), TLength> = true>
         explicit inline constexpr
         Vector (T... args) noexcept;
 

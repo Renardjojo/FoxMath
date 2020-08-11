@@ -28,11 +28,11 @@
  */
 
 template <size_t TLength, typename TType>
-template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>> = true>
+template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>> = true,
+Type::IsLessThanOrEqualTo<sizeof...(T), TLength> = true>
 constexpr inline 
 Vector<TLength, TType>::Vector (T... args) noexcept
 {
-    static_assert(sizeof...(T) <= TLength, "Too many initializer for Vector");
     m_data = std::array<TType, TLength>{args...};
 }
 
@@ -251,7 +251,7 @@ inline constexpr
 Vector<TLength, TType>& Vector<TLength, TType>::reflect		        (const Vector& normalNormalized) noexcept
 {
 #ifndef DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR
-    assert(normalNormalized == static_cast<TType>(1) && "You must use unit vector. If you wan't disable assert for unit vector guard. Please define DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR");
+    assert(normalNormalized == static_cast<TType>(1) && "You must use unit vector. If you want disable assert for unit vector guard, please define DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR");
 #endif
 
     *this = static_cast<TType>(2) * normalNormalized.dot(*this) * normalNormalized - (*this);
@@ -263,7 +263,7 @@ inline constexpr
 Vector<TLength, TType> Vector<TLength, TType>::getReflection		 (const Vector& normalNormalized) const noexcept
 {
 #ifndef DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR
-    assert(normalNormalized == static_cast<TType>(1) && "You must use unit vector. If you wan't disable assert for unit vector guard. Please define DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR");
+    assert(normalNormalized == static_cast<TType>(1) && "You must use unit vector. If you want disable assert for unit vector guard, please define DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR");
 #endif
 
     Vector<TLength, TType> rst;
@@ -319,7 +319,7 @@ inline constexpr
 Vector<TLength, TType>& Vector<TLength, TType>::rotateAroundAxis (const Vector<TLength, TType>& unitAxis, TType angleRad) noexcept
 {
 #ifndef DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR
-    assert(unitAxis == static_cast<TType>(1) && "You must use unit vector. If you wan't disable assert for unit vector guard. Please define DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR");
+    assert(unitAxis == static_cast<TType>(1) && "You must use unit vector. If you want disable assert for unit vector guard, please define DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR");
 #endif
 
 	(*this) = getRotationAroundAxis(unitAxis, angleRad);
@@ -331,7 +331,7 @@ inline constexpr
 Vector<TLength, TType> Vector<TLength, TType>::getRotationAroundAxis (const Vector<TLength, TType>& unitAxis, TType angleRad) const noexcept
 {
 #ifndef DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR
-    assert(unitAxis == static_cast<TType>(1) && "You must use unit vector. If you wan't disable assert for unit vector guard. Please define DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR");
+    assert(unitAxis == static_cast<TType>(1) && "You must use unit vector. If you want disable assert for unit vector guard, please define DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR");
 #endif
 
 	TType cosA = std::cos(angleRad);
