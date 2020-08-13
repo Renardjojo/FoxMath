@@ -6,6 +6,15 @@ Project run with C++ 2017 - 2020
 c++ 2017 : g++ -std=gnu++17 -Werror -Wno-unknown-pragmas main.cpp -o exe && ./exe
 c++ 2020 : g++ -std=gnu++2a -Werror -Wno-unknown-pragmas main.cpp -o exe && ./exe
 
+## TODO:
+
+- [x] GenericVector
+- [x] Vector2, 3 and 4
+- [ ] strong_type implementation
+- [ ] Angle inherance of strong type
+- [ ] add angle to vector
+- [ ] create floating point and integral unlimited type
+
 ## License
 MIT License
 
