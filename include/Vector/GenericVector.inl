@@ -219,7 +219,7 @@ GenericVector<TLength, TType>& GenericVector<TLength, TType>::lerp		        (con
 
     for (size_t i = 0; i < TLength; i++)
     {
-#if __cplusplus == 201709L //Constexpr std::lerp
+#if __cplusplus >= 201709L //Constexpr std::lerp
         m_data[i] = std::lerp(m_data[i], other[i], t);
 #else
         m_data[i] = m_data[i] + t * (other[i] - m_data[i]);

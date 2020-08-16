@@ -54,12 +54,23 @@ namespace FoxMath::Vector
     
         #pragma region constructor/destructor
     
-        Vector4 ()					                = default;
-        Vector4 (const Vector4& other)			    = default;
-        Vector4 (Vector4&& other)				    = default;
-        virtual ~Vector4 ()				            = default;
-        Vector4& operator=(Vector4 const& other)    = default;
-        Vector4& operator=(Vector4 && other)		= default;
+        constexpr inline
+        Vector4 () noexcept			                = default;
+
+        constexpr inline  
+        Vector4 (const Vector4& other) noexcept     = default;
+
+        constexpr inline
+        Vector4 (Vector4&& other) noexcept				    = default;
+
+        inline
+        virtual ~Vector4 ()	noexcept			            = default;
+
+        constexpr inline
+        Vector4& operator=(Vector4 const& other) noexcept   = default;
+
+        constexpr inline
+        Vector4& operator=(Vector4 && other) noexcept		= default;
 
         /**
          * @brief Construct a new vector with it's base type

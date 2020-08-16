@@ -54,12 +54,23 @@ namespace FoxMath::Vector
     
         #pragma region constructor/destructor
     
-        Vector2 ()					                = default;
-        Vector2 (const Vector2& other)			    = default;
-        Vector2 (Vector2&& other)				    = default;
-        virtual ~Vector2 ()				            = default;
-        Vector2& operator=(Vector2 const& other)    = default;
-        Vector2& operator=(Vector2 && other)		= default;
+        constexpr inline
+        Vector2 () noexcept			                = default;
+
+        constexpr inline  
+        Vector2 (const Vector2& other) noexcept     = default;
+
+        constexpr inline
+        Vector2 (Vector2&& other) noexcept				    = default;
+
+        inline
+        virtual ~Vector2 ()	noexcept			            = default;
+
+        constexpr inline
+        Vector2& operator=(Vector2 const& other) noexcept   = default;
+
+        constexpr inline
+        Vector2& operator=(Vector2 && other) noexcept		= default;
 
         /**
          * @brief Construct a new vector with it's base type
@@ -68,6 +79,7 @@ namespace FoxMath::Vector
          * @param other 
          */
         template <size_t TTlengthOther>
+        explicit inline constexpr
         Vector2 (const Vector<TTlengthOther, TType>& other)
             : Vector<2, TType>(other) {}
 
