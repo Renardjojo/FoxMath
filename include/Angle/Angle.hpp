@@ -29,16 +29,16 @@
 
 #pragma once
 
-#include "../Type/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>
-#include "AngleType.hpp" // EAngleType
+#include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>
+#include "Angle/EAngleType.hpp" // EAngleType
 
 namespace FoxMath::Angle
 {
     /*Use of IsArithmetic*/
-    template <AngleType::EAngleType TAngleType, typename TType, Type::IsArithmetic<TType> = true>
+    template <EAngleType TAngleType, typename TType, Type::IsArithmetic<TType> = true>
     class Angle;
 
-    template <AngleType::EAngleType TAngleType, typename TType>
+    template <EAngleType TAngleType, typename TType>
     class Angle<TAngleType, TType>
     {
         private:
@@ -57,10 +57,10 @@ namespace FoxMath::Angle
         #pragma region methods
 
         [[nodiscard]] inline constexpr
-        Angle<AngleType::Degres, TType> convertFromRadianToDegres() const noexcept;
+        Angle<EAngleType::Degres, TType> convertFromRadianToDegres() const noexcept;
 
         [[nodiscard]] inline constexpr
-        Angle<AngleType::Radian, TType> convertFromDegresToRadian() const noexcept;
+        Angle<EAngleType::Radian, TType> convertFromDegresToRadian() const noexcept;
 
         #pragma endregion //!methods
     
@@ -86,18 +86,18 @@ namespace FoxMath::Angle
         /**
          * @brief return degres angle
          * 
-         * @return constexpr Angle<AngleType::Radian, TType> 
+         * @return constexpr Angle<EAngleType::Radian, TType> 
          */
         [[nodiscard]] inline constexpr
-        Angle<AngleType::Degres, TType> toDegres() const noexcept;
+        Angle<EAngleType::Degres, TType> toDegres() const noexcept;
 
         /**
          * @brief return radian angle
          * 
-         * @return constexpr Angle<AngleType::Radian, TType> 
+         * @return constexpr Angle<EAngleType::Radian, TType> 
          */
         [[nodiscard]] inline constexpr
-        Angle<AngleType::Radian, TType> toRadian() const noexcept;
+        Angle<EAngleType::Radian, TType> toRadian() const noexcept;
 
         #pragma endregion //!methods
     
@@ -107,7 +107,7 @@ namespace FoxMath::Angle
         const TType& getAngle() const noexcept;
 
         [[nodiscard]] inline constexpr
-        AngleType getType() const noexcept;
+        EAngleType getType() const noexcept;
 
         #pragma endregion //!accessor
     
@@ -115,7 +115,7 @@ namespace FoxMath::Angle
 
         template<typename TTypeScalar, Type::IsArithmetic<TType> = true>
         inline constexpr
-        Angle<AngleType::Degres, TType>& setAngle(TTypeScalar newAngle) noexcept;
+        Angle<EAngleType::Degres, TType>& setAngle(TTypeScalar newAngle) noexcept;
 
         #pragma endregion //!mutator
     
@@ -135,7 +135,7 @@ namespace FoxMath::Angle
      * 
      */
     [[nodiscard]] inline constexpr
-    Angle<AngleType::Degres, float> operator"" _deg(long double angleDeg) noexcept;
+    Angle<EAngleType::Degres, float> operator"" _deg(long double angleDeg) noexcept;
     
     /**
      * @brief litteral convertion for degres
@@ -143,7 +143,7 @@ namespace FoxMath::Angle
      * 
      */
     [[nodiscard]] inline constexpr
-    Angle<AngleType::Degres, float> operator"" _deg(unsigned long long int      angleDeg) noexcept;
+    Angle<EAngleType::Degres, float> operator"" _deg(unsigned long long int      angleDeg) noexcept;
 
     /**
      * @brief litteral convertion for rad
@@ -151,7 +151,7 @@ namespace FoxMath::Angle
      * 
      */
     [[nodiscard]] inline constexpr
-    Angle<AngleType::Radian, float> operator"" _rad(long double angleRad) noexcept;
+    Angle<EAngleType::Radian, float> operator"" _rad(long double angleRad) noexcept;
     
     /**
      * @brief litteral convertion for rad
@@ -159,7 +159,7 @@ namespace FoxMath::Angle
      * 
      */
     [[nodiscard]] inline constexpr
-    Angle<AngleType::Radian, float> operator"" _rad(unsigned long long int      angleRad) noexcept;
+    Angle<EAngleType::Radian, float> operator"" _rad(unsigned long long int      angleRad) noexcept;
 
     #pragma endregion //!litteral conversion 
 
@@ -176,7 +176,7 @@ namespace FoxMath::Angle
      * @param angle 
      * @return constexpr std::ostream& 
      */
-    template <AngleType::EAngleType TAngleType, typename TType>
+    template <EAngleType TAngleType, typename TType>
     [[nodiscard]] inline constexpr
     std::ostream& 	operator<<		(std::ostream& out, const Angle<TAngleType, TType>& angle) noexcept;
 
@@ -189,11 +189,13 @@ namespace FoxMath::Angle
      * @param angle 
      * @return constexpr std::istream& 
      */
-    template <AngleType::EAngleType TAngleType, typename TType>
+    template <EAngleType TAngleType, typename TType>
     [[nodiscard]] inline constexpr
     std::istream& 	operator>>		(std::istream& in, const Angle<TAngleType, TType>& angle) noexcept;
 
     #pragma endregion //!stream operators
 
+    template <typename TType>
+    using Degres = Angle<EAngleType::Degres, TType>;
 
 } /*namespace FoxMath::Angle*/

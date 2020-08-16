@@ -29,58 +29,28 @@
 
 #pragma once
 
-#include <string>
-
 namespace FoxMath::Angle
 {
-    class AngleType
+    enum class EAngleType
     {
-        public :
-
-        enum EAngleType
-        {
-            Degres,
-            Radian
-        };
-
-        protected : 
-
-        EAngleType m_value;
-
-        public :
-
-        AngleType ()					                = default;
-        AngleType (const AngleType& other)			    = default;
-        AngleType (AngleType&& other)				    = default;
-        virtual ~AngleType ()				            = default;
-        AngleType& operator=(AngleType const& other)	= default;
-        AngleType& operator=(AngleType && other)		= default;
-
-        inline constexpr AngleType(EAngleType angleType) 
-            : m_value {angleType}
-        {}
-
-        inline
-        std::string to_string()
-        {
-            switch (m_value)
-            {
-            case EAngleType::Degres:
-                return "Degres";
-
-            case EAngleType::Radian:
-                return "Radian";
-            
-            default:
-                return "Unknow";
-            }
-        }
-
-        inline constexpr
-        operator std::string()
-        {
-            return to_string();
-        }
+        Degres,
+        Radian
     };
+
+    [[nodiscard]] constexpr inline
+    const char* angleTypeToString (EAngleType angleType) noexcept
+    {
+        switch (angleType)
+        {
+        case EAngleType::Degres:
+            return "Degres";
+
+        case EAngleType::Radian:
+            return "Radian";
+        
+        default:
+            return "Unknow";
+        }
+    }
 
 } /*namespace FoxMath::Angle*/
