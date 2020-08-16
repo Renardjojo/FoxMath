@@ -31,7 +31,7 @@
 
 #include <limits> //std::numeric_limits<T>::espilon()
 #include <cmath> //abs
-#include "Type/SFINAEShorthand.hpp" // Type::IsArithmetic<T>
+#include "Types/SFINAEShorthand.hpp" // Type::IsArithmetic<T>
 
 namespace FoxMath::Numeric
 {
