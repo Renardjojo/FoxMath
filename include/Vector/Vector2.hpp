@@ -79,8 +79,8 @@ namespace FoxMath::Vector
          * @param other 
          */
         template <size_t TTlengthOther>
-        explicit inline constexpr
-        Vector2 (const Vector<TTlengthOther, TType>& other)
+        inline constexpr
+        Vector2 (const Vector<TTlengthOther, TType>& other) noexcept
             : Vector<2, TType>(other) {}
 
         /**
