@@ -13,7 +13,9 @@ c++ 2020 : g++ -std=gnu++2a -Werror -Wno-unknown-pragmas main.cpp -o exe && ./ex
 - [ ] strong_type implementation
 - [ ] Angle inherance of strong type
 - [ ] add angle to vector
+- [ ] add differente space unit like distance (meter, cm...), wigth (kg), volume...
 - [ ] create floating point and integral unlimited type
+- [ ] possibity to select random algorythm
 
 ## License
 MIT License
