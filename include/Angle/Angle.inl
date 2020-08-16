@@ -29,36 +29,35 @@
 
 #pragma once
 
-
 template <EAngleType TAngleType, typename TType>
 template<typename TTypeScalar, Type::IsArithmetic<TType> = true>
 inline constexpr
 Angle<TAngleType, TType>::Angle (TTypeScalar angle) noexcept
-    : m_angle {static_cast<TType>(angle)}
+    :   Type::StrongType <TType, AnglePhantom> {angle}
 {}
 
 template <EAngleType TAngleType, typename TType>
 inline constexpr
-Angle<EAngleType::Degres, TType> Angle<TAngleType, TType>::convertFromRadianToDegres() const noexcept
+Angle<EAngleType::Degree, TType> Angle<TAngleType, TType>::convertFromRadianToDegree() const noexcept
 {
-    return Angle<EAngleType::Radian, TType>(m_angle * static_cast<TType>(180) / static_cast<TType>(3.14159265358979323846264L));
+    return Angle<EAngleType::Degree, TType>(Base::m_value * static_cast<TType>(180) / static_cast<TType>(3.14159265358979323846264L));
 }
 
 template <EAngleType TAngleType, typename TType>
 inline constexpr
-Angle<EAngleType::Radian, TType> Angle<TAngleType, TType>::convertFromDegresToRadian() const noexcept
+Angle<EAngleType::Radian, TType> Angle<TAngleType, TType>::convertFromDegreeToRadian() const noexcept
 {
-    return Angle<EAngleType::Degres, TType>(m_angle * static_cast<TType>(3.14159265358979323846264L) / static_cast<TType>(180));
+    return Angle<EAngleType::Radian, TType>(Base::m_value * static_cast<TType>(3.14159265358979323846264L) / static_cast<TType>(180));
 }
 
 template <EAngleType TAngleType, typename TType>
 inline constexpr
-Angle<EAngleType::Degres, TType> Angle<TAngleType, TType>::toDegres() const noexcept
+Angle<EAngleType::Degree, TType> Angle<TAngleType, TType>::toDegree() const noexcept
 {
-    if constexpr (TAngleType == EAngleType::Degres)
-        return m_angle;
+    if constexpr (TAngleType == EAngleType::Degree)
+        return Base::m_value;
 
-    return  convertFromRadianToDegres();
+    return  convertFromRadianToDegree();
 }
 
 template <EAngleType TAngleType, typename TType>
@@ -66,16 +65,16 @@ inline constexpr
 Angle<EAngleType::Radian, TType> Angle<TAngleType, TType>::toRadian() const noexcept
 {
     if constexpr (TAngleType == EAngleType::Radian)
-        return m_angle;
+        return Base::m_value;
         
-    return  convertFromDegresToRadian();
+    return  convertFromDegreeToRadian();
 }
 
 template <EAngleType TAngleType, typename TType>
 inline constexpr
 const TType& Angle<TAngleType, TType>::getAngle() const noexcept
 {
-    return m_angle;
+    return Base::m_value;
 }
 
 template <EAngleType TAngleType, typename TType>
@@ -88,22 +87,38 @@ EAngleType Angle<TAngleType, TType>::getType() const noexcept
 template <EAngleType TAngleType, typename TType>
 template<typename TTypeScalar, Type::IsArithmetic<TType> = true>
 inline constexpr
-Angle<EAngleType::Degres, TType>& Angle<TAngleType, TType>::setAngle(TTypeScalar newAngle) noexcept
+Angle<EAngleType::Degree, TType>& Angle<TAngleType, TType>::setAngle(TTypeScalar newAngle) noexcept
 {
-    m_angle = newAngle;
+    Base::m_value = newAngle;
     return *this;
 }
 
-inline constexpr
-Angle<EAngleType::Degres, float> operator"" _deg(long double angleDeg) noexcept
+template <EAngleType TAngleType, typename TType>
+template <typename TOtherType>
+constexpr inline
+Angle<TAngleType, TType>::operator Angle<EAngleType::Degree, TOtherType>() const noexcept
 {
-    return Angle<EAngleType::Degres, float>(angleDeg);
+    return toDegree();
+}
+
+template <EAngleType TAngleType, typename TType>
+template <typename TOtherType>
+constexpr inline 
+Angle<TAngleType, TType>::operator Angle<EAngleType::Radian, TOtherType>() const noexcept
+{
+    return toRadian();
 }
 
 inline constexpr
-Angle<EAngleType::Degres, float> operator"" _deg(unsigned long long int      angleDeg) noexcept
+Angle<EAngleType::Degree, float> operator"" _deg(long double angleDeg) noexcept
 {
-    return Angle<EAngleType::Degres, float>(angleDeg);
+    return Angle<EAngleType::Degree, float>(angleDeg);
+}
+
+inline constexpr
+Angle<EAngleType::Degree, float> operator"" _deg(unsigned long long int      angleDeg) noexcept
+{
+    return Angle<EAngleType::Degree, float>(angleDeg);
 }
 
 inline constexpr

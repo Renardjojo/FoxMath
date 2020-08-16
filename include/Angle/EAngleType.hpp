@@ -33,7 +33,7 @@ namespace FoxMath::Angle
 {
     enum class EAngleType
     {
-        Degres,
+        Degree,
         Radian
     };
 
@@ -42,8 +42,8 @@ namespace FoxMath::Angle
     {
         switch (angleType)
         {
-        case EAngleType::Degres:
-            return "Degres";
+        case EAngleType::Degree:
+            return "Degree";
 
         case EAngleType::Radian:
             return "Radian";
