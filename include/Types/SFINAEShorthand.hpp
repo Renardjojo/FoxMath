@@ -80,7 +80,16 @@ namespace FoxMath::Type
      * @tparam TType2 to test
      */
     template<typename TType1, typename TType2>
-    using IsSame = std::enable_if_t<std::is_same<TType1, TType2>::value, bool>;
+    using IsSame = std::enable_if_t<std::is_same_v<TType1, TType2>, bool>;
+
+    /**
+     * @brief Sfinae shorthand for std::is_constructible_v
+     * 
+     * @tparam TBase 
+     * @tparam TArgs 
+     */
+    template<typename TBase, typename ...TArgs>
+    using IsConstructible = std::enable_if_t<std::is_constructible_v<TBase, TArgs...>, bool>;
 
     /**
      * @brief Sfinae shorthand for operator==
