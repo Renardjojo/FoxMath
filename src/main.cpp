@@ -3,8 +3,10 @@
 #include "Vector/Vector2.hpp"
 #include "Vector/Vector3.hpp"
 #include "Vector/Vector4.hpp"
+#include "Angle/Angle.hpp"
 
 using namespace FoxMath::Vector;
+using namespace FoxMath::Angle;
 
 int main() 
 {
@@ -135,6 +137,18 @@ int main()
 
     /*Specifique Vector2 methode sandbox*/
     {
+
+    }
+
+    /*Angle sandbox*/
+    {
+        int a = 5;
+        auto angle = 90_deg;
+        angle += 3.14_rad;
+        angle -= 3_rad;
+        angle += 50.6_deg;
+        angle += Angle<EAngleType::Radian, float>(a);
+        std::cout << angle << std::endl;
 
     }
 }
