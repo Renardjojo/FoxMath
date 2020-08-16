@@ -36,8 +36,8 @@
 #include <cstring> //memset
 #include <cmath> //sqrt, lerp (if c++ 2020)
 
-#include "../Type/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
-#include "../Numeric/Limits.hpp" //isSame
+#include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
+#include "Numeric/Limits.hpp" //isSame
 
 namespace FoxMath::Vector
 {
