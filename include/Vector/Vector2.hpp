@@ -31,7 +31,6 @@
 
 #include "Vector/GenericVector.hpp"
 #include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
-#include "Angle/Angle.hpp" //Angle
 
 namespace FoxMath::Vector
 {
