@@ -224,7 +224,4 @@ namespace FoxMath::Angle
 
     #pragma endregion //!stream operators
 
-    template <typename TType>
-    using Degree = Angle<EAngleType::Degree, TType>;
-
 } /*namespace FoxMath::Angle*/
