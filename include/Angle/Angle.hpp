@@ -35,6 +35,7 @@
 #include "Types/Operators/Arithmetic.hpp"
 #include "Types/Operators/Comparison.hpp"
 #include "Angle/EAngleType.hpp"
+#include "Types/Implicit.hpp"
 
 namespace FoxMath::Angle
 {
@@ -66,11 +67,25 @@ namespace FoxMath::Angle
     
         #pragma region methods
 
+        /**
+         * @brief Force conversion from radian to degree
+         * 
+         * @tparam TOtherType 
+         * @return constexpr Angle<EAngleType::Degree, TOtherType> 
+         */
+        template <typename TOtherType = TType>
         [[nodiscard]] inline constexpr
-        Angle<EAngleType::Degree, TType> convertFromRadianToDegree() const noexcept;
+        Angle<EAngleType::Degree, TOtherType> convertFromRadianToDegree() const noexcept;
 
+        /**
+         * @brief Force conversion from degree to radian
+         * 
+         * @tparam TOtherType 
+         * @return constexpr Angle<EAngleType::Radian, TOtherType> 
+         */
+        template <typename TOtherType = TType>
         [[nodiscard]] inline constexpr
-        Angle<EAngleType::Radian, TType> convertFromDegreeToRadian() const noexcept;
+        Angle<EAngleType::Radian, TOtherType> convertFromDegreeToRadian() const noexcept;
 
         #pragma endregion //!methods
     
@@ -96,18 +111,22 @@ namespace FoxMath::Angle
         /**
          * @brief return degree angle
          * 
-         * @return constexpr Angle<EAngleType::Radian, TType> 
+         * @tparam TOtherType 
+         * @return constexpr Angle<EAngleType::Degree, TOtherType> 
          */
+        template <typename TOtherType = TType>
         [[nodiscard]] inline constexpr
-        Angle<EAngleType::Degree, TType> toDegree() const noexcept;
+        Angle<EAngleType::Degree, TOtherType> toDegree() const noexcept;
 
         /**
          * @brief return radian angle
          * 
-         * @return constexpr Angle<EAngleType::Radian, TType> 
+         * @tparam TOtherType 
+         * @return constexpr Angle<EAngleType::Radian, TOtherType> 
          */
+        template <typename TOtherType = TType>
         [[nodiscard]] inline constexpr
-        Angle<EAngleType::Radian, TType> toRadian() const noexcept;
+        Angle<EAngleType::Radian, TOtherType> toRadian() const noexcept;
 
         #pragma endregion //!methods
     
@@ -135,22 +154,13 @@ namespace FoxMath::Angle
         #pragma region convertor
 
         /**
-         * @brief Degree angle conversion
+         * @brief Degree/Radian angle conversion and type conversion
          * @tparam TOtherType New precision
          */
-        template <typename TOtherType>
+        template <EAngleType TOtherAngleType, typename TOtherType>
         [[nodiscard]]
-        constexpr inline
-        operator Angle<EAngleType::Degree, TOtherType>() const noexcept;
-
-        /**
-         * @brief Radian angle conversion
-         * @tparam TOtherType New precision
-         */
-        template <typename TOtherType>
-        [[nodiscard]]
-        constexpr inline 
-        operator Angle<EAngleType::Radian, TOtherType>() const noexcept;
+        implicit constexpr inline
+        operator Angle<TOtherAngleType, TOtherType>() const noexcept;
 
         #pragma endregion //!convertor
     
@@ -164,7 +174,7 @@ namespace FoxMath::Angle
      * 
      */
     [[nodiscard]] inline constexpr
-    Angle<EAngleType::Degree, float> operator"" _deg(long double angleDeg) noexcept;
+    Angle<EAngleType::Degree, long double> operator"" _deg(long double angleDeg) noexcept;
     
     /**
      * @brief litteral convertion for degree
@@ -172,7 +182,7 @@ namespace FoxMath::Angle
      * 
      */
     [[nodiscard]] inline constexpr
-    Angle<EAngleType::Degree, float> operator"" _deg(unsigned long long int      angleDeg) noexcept;
+    Angle<EAngleType::Degree, unsigned long long int> operator"" _deg(unsigned long long int      angleDeg) noexcept;
 
     /**
      * @brief litteral convertion for rad
@@ -180,7 +190,7 @@ namespace FoxMath::Angle
      * 
      */
     [[nodiscard]] inline constexpr
-    Angle<EAngleType::Radian, float> operator"" _rad(long double angleRad) noexcept;
+    Angle<EAngleType::Radian, long double> operator"" _rad(long double angleRad) noexcept;
     
     /**
      * @brief litteral convertion for rad
@@ -188,7 +198,7 @@ namespace FoxMath::Angle
      * 
      */
     [[nodiscard]] inline constexpr
-    Angle<EAngleType::Radian, float> operator"" _rad(unsigned long long int      angleRad) noexcept;
+    Angle<EAngleType::Radian, unsigned long long int> operator"" _rad(unsigned long long int      angleRad) noexcept;
 
     #pragma endregion //!litteral conversion 
 

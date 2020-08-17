@@ -341,28 +341,24 @@ TType GenericVector<TLength, TType>::getTriangleArea		(const GenericVector<TLeng
 
 template <size_t TLength, typename TType>
 inline constexpr
-GenericVector<TLength, TType>& GenericVector<TLength, TType>::rotateAroundAxis (const GenericVector<TLength, TType>& unitAxis, TType angleRad) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::rotateAroundAxis (const GenericVector<TLength, TType>& unitAxis, const Angle::Angle<Angle::EAngleType::Radian, TType>& angle) noexcept
 {
-#ifndef DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR
-    assert(unitAxis == static_cast<TType>(1) && "You must use unit generic vector. If you want disable assert for unit generic vector guard, please define DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR");
-#endif
-
-	(*this) = getRotationAroundAxis(unitAxis, angleRad);
+	(*this) = getRotationAroundAxis(unitAxis, angle);
     return *this;
 }
 
 template <size_t TLength, typename TType>
 inline constexpr
-GenericVector<TLength, TType> GenericVector<TLength, TType>::getRotationAroundAxis (const GenericVector<TLength, TType>& unitAxis, TType angleRad) const noexcept
+GenericVector<TLength, TType> GenericVector<TLength, TType>::getRotationAroundAxis (const GenericVector<TLength, TType>& unitAxis, const Angle::Angle<Angle::EAngleType::Radian, TType>& angle) const noexcept
 {
 #ifndef DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR
     assert(unitAxis == static_cast<TType>(1) && "You must use unit generic vector. If you want disable assert for unit generic vector guard, please define DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR");
 #endif
 
-	TType cosA = std::cos(angleRad);
+	TType cosA = std::cos(static_cast<TType>(angle));
 
 	//rodrigues rotation formula
-	return (*this) * cosA + unitAxis.getCross(*this) * std::sin(angleRad) + unitAxis * unitAxis.dot(*this) * (static_cast<TType>(1) - cosA);
+	return (*this) * cosA + unitAxis.getCross(*this) * std::sin(static_cast<TType>(angle)) + unitAxis * unitAxis.dot(*this) * (static_cast<TType>(1) - cosA);
 }
 
 template <size_t TLength, typename TType>

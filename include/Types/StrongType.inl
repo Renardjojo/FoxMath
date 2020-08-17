@@ -40,6 +40,13 @@ constexpr StrongType<TBase, TPhantom>::StrongType(TBase const& in_base) noexcept
 
 
 template <typename TBase, typename TPhantom>
+template<typename TOtherType>
+constexpr StrongType<TBase, TPhantom>::operator TOtherType() noexcept
+{
+	return static_cast<TOtherType>(m_value);
+}
+
+template <typename TBase, typename TPhantom>
 constexpr StrongType<TBase, TPhantom>::operator TBase&() noexcept
 {
 	return m_value;
@@ -48,5 +55,6 @@ constexpr StrongType<TBase, TPhantom>::operator TBase&() noexcept
 template <typename TBase, typename TPhantom>
 constexpr StrongType<TBase, TPhantom>::operator TBase const& () const noexcept
 {
+	
 	return m_value;	
 }

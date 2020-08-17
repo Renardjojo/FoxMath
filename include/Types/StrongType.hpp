@@ -130,6 +130,10 @@ namespace FoxMath::Type
 
         #pragma region convertor
 
+        template <typename TOtherType>
+		explicit constexpr inline 
+        operator TOtherType       ()	noexcept;
+
 		explicit constexpr inline 
         operator TBase&       ()	    noexcept;
 		

@@ -38,6 +38,7 @@
 
 #include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
 #include "Numeric/Limits.hpp" //isSame
+#include "Angle/Angle.hpp" //Angle
 
 namespace FoxMath::Vector
 {
@@ -309,7 +310,7 @@ namespace FoxMath::Vector
          * @param angleRad 
          */
         inline constexpr
-		GenericVector& rotateAroundAxis (const GenericVector& unitAxis, TType angleRad) noexcept;
+		GenericVector& rotateAroundAxis (const GenericVector& unitAxis, const Angle::Angle<Angle::EAngleType::Radian, TType>& angle) noexcept;
 
         /**
          * @brief Get the Rotation Around Axis object
@@ -319,7 +320,7 @@ namespace FoxMath::Vector
          * @return GenericVector 
          */
         [[nodiscard]] inline constexpr
-		GenericVector getRotationAroundAxis (const GenericVector& unitAxis, TType angleRad) const noexcept;
+		GenericVector getRotationAroundAxis (const GenericVector& unitAxis, const Angle::Angle<Angle::EAngleType::Radian, TType>& angle) const noexcept;
 
         /**
          * @brief Get the projection with another generic vector
