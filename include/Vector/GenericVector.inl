@@ -102,6 +102,25 @@ TType GenericVector<TLength, TType>::length () const noexcept
 
 template <size_t TLength, typename TType>
 inline constexpr
+GenericVector<TLength, TType>& 	    GenericVector<TLength, TType>::homogenize	        () noexcept
+{
+	if (m_data[TLength - 1] != static_cast<TType>(0))
+	    (*this) /= m_data[TLength - 1];
+
+    return (*this);
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+GenericVector<TLength, TType> 	    GenericVector<TLength, TType>::getHomogenized	        () const noexcept
+{
+    GenericVector<TLength, TType> rst (*this);
+    rst.homogenize();
+    return rst;
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
 GenericVector<TLength, TType>& GenericVector<TLength, TType>::normalize	    () noexcept
 {
     const TType lengthRst = length();
@@ -119,7 +138,9 @@ template <size_t TLength, typename TType>
 inline constexpr
 GenericVector<TLength, TType> GenericVector<TLength, TType>::getNormalized		() const noexcept
 {
-    return GenericVector<TLength, TType>(*this).normalize();
+    GenericVector<TLength, TType> rst (*this);
+    rst.normalize();
+    return rst;
 }
 
 template <size_t TLength, typename TType>
@@ -140,7 +161,9 @@ template <size_t TLength, typename TType>
 inline constexpr
 GenericVector<TLength, TType>         GenericVector<TLength, TType>::getClampedLength         (TType maxLength) const noexcept
 {
-    return GenericVector<TLength, TType>(*this).clampLength(maxLength);
+    GenericVector<TLength, TType> rst (*this);
+    rst.clampLength(maxLength);
+    return rst;
 }
 
 template <size_t TLength, typename TType>

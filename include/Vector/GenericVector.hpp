@@ -34,7 +34,7 @@
 #include <iostream> //ostream, istream
 #include <cassert> //assert
 #include <cstring> //memset
-#include <cmath> //sqrt, lerp (if c++ 2020)
+#include <math.h> //sqrt, lerp (if c++ 2020)
 
 #include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
 #include "Numeric/Limits.hpp" //isSame
@@ -142,7 +142,27 @@ namespace FoxMath::Vector
          */
         [[nodiscard]] inline constexpr
         TType length () const noexcept;
-        
+
+        /**
+         * @brief Homogenize vector to the lower dimension
+         * @note devise each component by the last
+         * @example to convert vector 4 to vector 3 it must be homogenize to lose it fourth dimension
+         * 
+         * @return constexpr GenericVector& 
+         */
+        inline constexpr
+		GenericVector& 	    homogenize	        () noexcept;
+
+        /**
+         * @brief Homogenize vector to the lower dimension
+         * @note devise each component by the last
+         * @example to convert vector 4 to vector 3 it must be homogenize to lose it fourth dimension
+         * 
+         * @return constexpr GenericVector& 
+         */
+        [[nodiscard]] inline constexpr
+		GenericVector 	    getHomogenized	        () const noexcept;
+
         /**
          * @brief Normalize the generic vector. If the generic vector is null (all components are set to 0), nothing is done.
          * 
