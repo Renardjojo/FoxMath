@@ -116,10 +116,90 @@ namespace FoxMath::Vector
         #pragma endregion //!methods
     
         #pragma region accessor
+
+        /**
+         * @brief get member X
+         * 
+         * @return constexpr TType 
+         */
+        [[nodiscard]] inline constexpr
+        TType getX() const noexcept { return Vector<4, TType>::m_data[0];}
+
+        /**
+         * @brief get member Y
+         * 
+         * @return constexpr TType 
+         */
+        [[nodiscard]] inline constexpr
+        TType getY() const noexcept { return Vector<4, TType>::m_data[1];}
+
+        /**
+         * @brief get member Z
+         * 
+         * @return constexpr TType 
+         */
+        [[nodiscard]] inline constexpr
+        TType getZ() const noexcept { return Vector<4, TType>::m_data[2];}
+
+        /**
+         * @brief get member X
+         * 
+         * @return constexpr TType 
+         */
+        [[nodiscard]] inline constexpr
+        TType getW() const noexcept { return Vector<4, TType>::m_data[3];}
+
         #pragma endregion //!accessor
+
+        /**
+         * @brief Set member X
+         * 
+         * @tparam TscalarType 
+         * @tparam true 
+         * @param newX 
+         * @return constexpr Vector4& 
+         */
+        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        inline constexpr
+        Vector4& setX(TscalarType newX) noexcept { Vector<4, TType>::m_data[0] = static_cast<TType>(newX);}
+
+        /**
+         * @brief Set member Y
+         * 
+         * @tparam TscalarType 
+         * @tparam true 
+         * @param newY 
+         * @return constexpr Vector4& 
+         */
+        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        inline constexpr
+        Vector4& setY(TscalarType newY) noexcept { Vector<4, TType>::m_data[1] = static_cast<TType>(newY);}
+
+        /**
+         * @brief Set member Z
+         * 
+         * @tparam TscalarType 
+         * @tparam true 
+         * @param newZ 
+         * @return constexpr Vector4& 
+         */
+        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        inline constexpr
+        Vector4& setZ(TscalarType newZ) noexcept { Vector<4, TType>::m_data[2] = static_cast<TType>(newZ);}
+
+        /**
+         * @brief Set member W
+         * 
+         * @tparam TscalarType 
+         * @tparam true 
+         * @param newW 
+         * @return constexpr Vector4& 
+         */
+        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        inline constexpr
+        Vector4& set(TscalarType newW) noexcept { Vector<4, TType>::m_data[3] = static_cast<TType>(newW);}
     
         #pragma region mutator
-        #pragma endregion //!mutator
     
         #pragma region operator
 

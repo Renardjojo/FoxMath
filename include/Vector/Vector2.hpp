@@ -31,6 +31,7 @@
 
 #include "Vector/GenericVector.hpp"
 #include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
+#include "Angle/Angle.hpp" //Angle
 
 namespace FoxMath::Vector
 {
@@ -113,30 +114,85 @@ namespace FoxMath::Vector
     
         #pragma region methods
 
+
         // /**
         //  * @brief turn Vec2 in counterclockwise
         //  * 
         //  * @param angleDeg 
         //  * @return Vec2& 
         //  */
-		// Vec2& 		rotate			(float angleDeg);
-		// Vec2  		getRotate 		(float angleDeg) const;
+        // inline constexpr
+        // Vec2& 	rotate			(const Angle::Angle<Angle::EAngleType::Radian, TType>& angle) noexcept;
 
-		// Vec2&  		rotated90 		();
-		// Vec2  		getRotated90 	() const;
+        // [[nodiscard]] inline constexpr
+        // Vec2  	getRotate 		(const Angle::Angle<Angle::EAngleType::Radian, TType>& angle) const noexcept;
 
-		// Vec2&  		rotated180 		(); 
-		// Vec2  		getRotated180	() const;
+        // inline constexpr
+        // Vec2&  	rotated90 		() noexcept;
+    
+        // [[nodiscard]] inline constexpr
+        // Vec2  	getRotated90 	() const noexcept;
 
-		// Vec2&  		rotated270 		();
-		// Vec2  		getRotated270 	() const;
+        // inline constexpr
+        // Vec2&  	rotated180 		() noexcept;
+
+        // [[nodiscard]] inline constexpr
+        // Vec2  	getRotated180	() const noexcept;
+
+        // inline constexpr
+        // Vec2&  	rotated270 		() noexcept;
+
+        // [[nodiscard]] inline constexpr
+        // Vec2  	getRotated270 	() const noexcept;
 
         #pragma endregion //!methods
     
         #pragma region accessor
+
+        /**
+         * @brief get member X
+         * 
+         * @return constexpr TType 
+         */
+        [[nodiscard]] inline constexpr
+        TType getX() const noexcept { return Vector<2, TType>::m_data[0];}
+
+        /**
+         * @brief get member Y
+         * 
+         * @return constexpr TType 
+         */
+        [[nodiscard]] inline constexpr
+        TType getY() const noexcept { return Vector<2, TType>::m_data[1];}
+
         #pragma endregion //!accessor
+
+        /**
+         * @brief Set member X
+         * 
+         * @tparam TscalarType 
+         * @tparam true 
+         * @param newX 
+         * @return constexpr Vector2& 
+         */
+        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        inline constexpr
+        Vector2& setX(TscalarType newX) noexcept { Vector<2, TType>::m_data[0] = static_cast<TType>(newX);}
+
+        /**
+         * @brief Set member Y
+         * 
+         * @tparam TscalarType 
+         * @tparam true 
+         * @param newY 
+         * @return constexpr Vector2& 
+         */
+        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        inline constexpr
+        Vector2& setY(TscalarType newY) noexcept { Vector<2, TType>::m_data[1] = static_cast<TType>(newY);}
     
         #pragma region mutator
+
         #pragma endregion //!mutator
     
         #pragma region operator

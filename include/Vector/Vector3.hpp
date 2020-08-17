@@ -116,10 +116,70 @@ namespace FoxMath::Vector
         #pragma endregion //!methods
     
         #pragma region accessor
+
+        /**
+         * @brief get member X
+         * 
+         * @return constexpr TType 
+         */
+        [[nodiscard]] inline constexpr
+        TType getX() const noexcept { return Vector<3, TType>::m_data[0];}
+
+        /**
+         * @brief get member Y
+         * 
+         * @return constexpr TType 
+         */
+        [[nodiscard]] inline constexpr
+        TType getY() const noexcept { return Vector<3, TType>::m_data[1];}
+
+        /**
+         * @brief get member Z
+         * 
+         * @return constexpr TType 
+         */
+        [[nodiscard]] inline constexpr
+        TType getZ() const noexcept { return Vector<3, TType>::m_data[2];}
+
         #pragma endregion //!accessor
+
+        /**
+         * @brief Set member X
+         * 
+         * @tparam TscalarType 
+         * @tparam true 
+         * @param newX 
+         * @return constexpr Vector3& 
+         */
+        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        inline constexpr
+        Vector3& setX(TscalarType newX) noexcept { Vector<3, TType>::m_data[0] = static_cast<TType>(newX);}
+
+        /**
+         * @brief Set member Y
+         * 
+         * @tparam TscalarType 
+         * @tparam true 
+         * @param newY 
+         * @return constexpr Vector3& 
+         */
+        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        inline constexpr
+        Vector3& setY(TscalarType newY) noexcept { Vector<3, TType>::m_data[1] = static_cast<TType>(newY);}
+
+        /**
+         * @brief Set member Z
+         * 
+         * @tparam TscalarType 
+         * @tparam true 
+         * @param newZ 
+         * @return constexpr Vector3& 
+         */
+        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        inline constexpr
+        Vector3& setZ(TscalarType newZ) noexcept { Vector<3, TType>::m_data[2] = static_cast<TType>(newZ);}
     
         #pragma region mutator
-        #pragma endregion //!mutator
     
         #pragma region operator
 
