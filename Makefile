@@ -7,9 +7,12 @@ IDIR=-Iinclude
 #exclude from clean
 EXCLUDE=
 
+#Cpp version
+CPP_VERSION=-std=gnu++17
+
 #Relase or debug option
-CXX_DEBUG=-Og -std=gnu++17 -g -pg -no-pie -MMD -Wno-unknown-pragmas $(IDIR)
-CXX_BUILD=-O3 -std=gnu++17 -DNDEBUG -MMD -Wno-unknown-pragmas $(IDIR)
+CXX_DEBUG=-Og $(CPP_VERSION) -g -W -Wall -pg -no-pie -MMD -Wno-unknown-pragmas $(IDIR)
+CXX_BUILD=-O3 $(CPP_VERSION) -DNDEBUG -MMD -Wno-unknown-pragmas $(IDIR)
 
 C_DEBUG=-Og -g -pg -no-pie -MMD -W -Wall -Wno-unknown-pragmas $(IDIR)
 C_BUILD=-O3 -DNDEBUG -MMD -Wno-unknown-pragmas $(IDIR)
