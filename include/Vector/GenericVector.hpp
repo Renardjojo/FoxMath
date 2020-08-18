@@ -29,6 +29,11 @@
 
 #pragma once
 
+#include "Types/Implicit.hpp" //implicit
+#include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
+#include "Numeric/Limits.hpp" //isSame
+#include "Angle/Angle.hpp" //Angle
+
 #include <array> //std::array
 #include <stddef.h> //sizt_t
 #include <iostream> //ostream, istream
@@ -36,15 +41,10 @@
 #include <cstring> //memset
 #include <math.h> //sqrt, lerp (if c++ 2020)
 
-#include "Types/Implicit.hpp" //implicit
-#include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
-#include "Numeric/Limits.hpp" //isSame
-#include "Angle/Angle.hpp" //Angle
-
 namespace FoxMath::Vector
 {
     /*Use of IsArithmetic*/
-    template <size_t TLength, typename TType = float, Type::IsArithmetic<TType> = true>
+    template <size_t TLength, typename TType, Type::IsArithmetic<TType> = true>
     class GenericVector;
 
     /*Specilisation of GenericVector class*/
