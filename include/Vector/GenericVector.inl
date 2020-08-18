@@ -439,6 +439,13 @@ const TType&    GenericVector<TLength, TType>::at (size_t index) const throw ()
 }
 
 template <size_t TLength, typename TType>
+inline constexpr
+const size_t& 	GenericVector<TLength, TType>::getDimension () const noexcept
+{
+    return TLength;
+}
+
+template <size_t TLength, typename TType>
 template <size_t TLengthOther, typename TTypeOther>
 inline constexpr
 GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept

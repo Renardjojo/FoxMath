@@ -478,7 +478,15 @@ namespace FoxMath::Vector
          * @return constexpr const TType& 
          */
         [[nodiscard]] inline constexpr
-		const TType& 	at (size_t index) const throw ();  
+		const TType& 	at (size_t index) const throw ();
+
+        /**
+         * @brief Get the vector dimension
+         * 
+         * @return constexpr const size_t& 
+         */
+        [[nodiscard]] inline constexpr
+		const size_t& 	getDimension () const noexcept;    
 
         #pragma endregion //!accessor
     
