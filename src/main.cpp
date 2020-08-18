@@ -19,8 +19,11 @@ int main()
         
         constexpr auto value = constVect.getReflection(Vector<3, float>(0.f, 1.f, 0.f));
         static_assert(constVect.length(), "is_constexpr<true>(0)");
-        
-        std::cout << value.at(4) << std::endl;
+
+        //constexpr Vector<0, float> constVect3 (); Don't work, vector canno't be equal to zero
+
+        //std::cout << value.at(4) << std::endl; Do not compile
+        std::cout << value.at(2) << std::endl;
         std::cout << value[2] << std::endl;
         std::cout << Vector<3, float>::cross(value,constVect) << std::endl;
         std::cout << value.isPerpendicularTo(constVect2) << std::endl;
