@@ -50,7 +50,7 @@
 namespace FoxMath::Vector
 {
     /*Use of IsArithmetic*/
-    template <size_t TLength, typename TType, Type::IsArithmetic<TType> = true>
+    template <size_t TLength, typename TType, typename Type::IsNotEqualTo<TLength, 0> = true, Type::IsArithmetic<TType> = true>
     class GenericVector;
 
     /*Specilisation of GenericVector class*/
@@ -82,21 +82,22 @@ namespace FoxMath::Vector
          * @brief Default constructor, doesn't init the generic vector's member at zero to optimize class
          * 
          */
-        constexpr inline 
+        implicit constexpr inline 
         GenericVector () noexcept                                   = default;
 
-        constexpr inline
+        implicit constexpr inline
         GenericVector (const GenericVector& other)			        = default;
         
-        constexpr inline 
+        implicit constexpr inline 
         GenericVector (GenericVector&& other)				        = default;
         
+        implicit
         ~GenericVector ()				                            = default;
         
-        constexpr inline 
+        implicit constexpr inline 
         GenericVector& operator=(GenericVector const& other)		= default;
         
-        constexpr inline 
+        implicit constexpr inline 
         GenericVector& operator=(GenericVector && other)			= default;
     
         /**
@@ -538,7 +539,7 @@ namespace FoxMath::Vector
          * @return constexpr GenericVector& 
          */
         template <size_t TLengthOther, typename TTypeOther>
-		inline constexpr
+		implicit inline constexpr
 		GenericVector& operator=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept;
 
         /**
@@ -550,7 +551,7 @@ namespace FoxMath::Vector
          * @return constexpr GenericVector& 
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
-		inline constexpr
+		implicit inline constexpr
 		GenericVector& operator=(TscalarType scalar) noexcept;
 
         /**
