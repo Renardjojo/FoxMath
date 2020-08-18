@@ -104,7 +104,7 @@ template <size_t TLength, typename TType>
 inline constexpr
 GenericVector<TLength, TType>& 	    GenericVector<TLength, TType>::homogenize	        () noexcept
 {
-	if (m_data[TLength - 1] != static_cast<TType>(0))
+	if (m_data[TLength - 1] != static_cast<TType>(0)) [[likely]]
 	    (*this) /= m_data[TLength - 1];
 
     return (*this);
@@ -125,7 +125,7 @@ GenericVector<TLength, TType>& GenericVector<TLength, TType>::normalize	    () n
 {
     const TType lengthRst = length();
 
-    if (lengthRst)
+    if (lengthRst) [[likely]]
     {
         for (size_t i = 0; i < TLength; i++)
             m_data[i] /= lengthRst;
@@ -149,7 +149,7 @@ GenericVector<TLength, TType>&         GenericVector<TLength, TType>::clampLengt
 {
 	TType magnitude {length()};
 
-    if (magnitude && magnitude > maxLength)
+    if (magnitude > maxLength) [[likely]]
     {
 		*this /= magnitude;
 		*this *= maxLength;
@@ -302,7 +302,7 @@ GenericVector<TLength, TType>& GenericVector<TLength, TType>::setLength		     (T
 {
 	TType magnitude {length()};
 
-    if (magnitude)
+    if (magnitude) [[likely]]
     {
 		*this /= magnitude;
 		*this *= newLength;

@@ -36,6 +36,7 @@
 #include <cstring> //memset
 #include <math.h> //sqrt, lerp (if c++ 2020)
 
+#include "Types/Implicit.hpp" //implicit
 #include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
 #include "Numeric/Limits.hpp" //isSame
 #include "Angle/Angle.hpp" //Angle
@@ -775,7 +776,7 @@ namespace FoxMath::Vector
          * @return GenericVector<TLengthOther, TTypeOther> 
          */
         template <size_t TLengthOther, typename TTypeOther>
-        [[nodiscard]] constexpr inline 
+        [[nodiscard]] implicit constexpr inline
         operator GenericVector<TLengthOther, TTypeOther>() const noexcept;
 
         #pragma endregion //!convertor

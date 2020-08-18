@@ -29,6 +29,11 @@
 
 #pragma once
 
+/**
+ * @note : Always prefer include the type of vector used instead of all vector's include.
+ * 
+ */
+
 #include "Vector/GenericVector.hpp"
 #include "Vector2.hpp"
 #include "Vector3.hpp"
