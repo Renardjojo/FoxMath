@@ -457,8 +457,10 @@ namespace FoxMath::Vector
         #pragma region accessor
 
         /**
-         * @brief   The function automatically checks whether n is within the bounds of valid elements in the GenericVector, throwing an out_of_range exception if it is not (i.e., if n is greater than, or equal to, its size).
-         *          This is in contrast with member operator[], that does not check against bounds.
+         * @brief   Returns a reference to the data at index in the GenericVector
+         * 
+         * The function automatically checks whether index is within the bounds of valid elements in the GenericVector, throwing an out_of_range exception if it is not (i.e., if n is greater than, or equal to, its size).
+         * This is in contrast with member operator[], that does not check against bounds.
          * 
          * @param index 
          * @return constexpr TType& 
@@ -467,8 +469,10 @@ namespace FoxMath::Vector
 		TType& 	    at (size_t index) throw ();
 
         /**
-         * @brief   The function automatically checks whether n is within the bounds of valid elements in the GenericVector, throwing an out_of_range exception if it is not (i.e., if n is greater than, or equal to, its size).
-         *          This is in contrast with member operator[], that does not check against bounds.
+         * @brief   Returns a const reference to the data at index in the GenericVector
+         * 
+         * The function automatically checks whether index is within the bounds of valid elements in the GenericVector, throwing an out_of_range exception if it is not (i.e., if n is greater than, or equal to, its size).
+         * This is in contrast with member operator[], that does not check against bounds.
          * 
          * @param index 
          * @return constexpr const TType& 
