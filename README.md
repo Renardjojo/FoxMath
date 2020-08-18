@@ -20,6 +20,9 @@ c++ 2020 : g++ -std=gnu++2a -Werror -Wno-unknown-pragmas main.cpp -o exe && ./ex
 - [ ] possibity to select random algorythm
 - [ ] Create my own constexpr math library (sqrt, lerp.. is not constexpr on std). After that, rework class that uses them
 
+## Readability
+Program create on vscod with spaces of 4 for tabulation
+
 ## License
 MIT License
 
