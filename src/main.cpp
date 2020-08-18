@@ -18,8 +18,10 @@ int main()
         constexpr Vector<3, float> constVect2  (5.f, 5.f);
         
         constexpr auto value = constVect.getReflection(Vector<3, float>(0.f, 1.f, 0.f));
-        static_assert(value.length(), "is_constexpr<true>(0)");
+        static_assert(constVect.length(), "is_constexpr<true>(0)");
         
+        std::cout << value.at(4) << std::endl;
+        std::cout << value[2] << std::endl;
         std::cout << Vector<3, float>::cross(value,constVect) << std::endl;
         std::cout << value.isPerpendicularTo(constVect2) << std::endl;
         std::cout << value.length() << std::endl;
