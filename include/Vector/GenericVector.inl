@@ -65,7 +65,22 @@ GenericVector<TLength, TType>::GenericVector (const GenericVector<TLengthOther, 
     /*Init over value by zero*/
     constexpr size_t currentIndex = TLengthOther + sizeof...(TScalarArgs);
     constexpr size_t rest = TLength - currentIndex;
-    std::memset(&m_data[currentIndex], 0, sizeof(TType) * rest);
+
+#if __cplusplus >= 201709L
+    if (std::is_constant_evaluated())
+    {
+#endif
+        for (size_t i = 0; i < rest; i++)
+        {
+            m_data[currentIndex + i] = static_cast<TType>(0);
+        }
+#if __cplusplus >= 201709L 
+    }
+    else //memset optimization is not constexpr
+    {
+        std::memset(&m_data[currentIndex], 0, sizeof(TType) * rest);
+    }
+#endif
 }
 
 template <size_t TLength, typename TType>
@@ -93,6 +108,7 @@ TType GenericVector<TLength, TType>::squartLength () const noexcept
 	return sqrtLength;
 }
 
+//TODO: method not constexpr if it use std::sqrt. Replace it by my own function
 template <size_t TLength, typename TType>
 inline constexpr
 TType GenericVector<TLength, TType>::length () const noexcept
@@ -390,6 +406,38 @@ GenericVector<TLength, TType> GenericVector<TLength, TType>::getVectorRejectionW
     return (*this) - getVectorProjectionWith(other);
 }
 
+[[noreturn]] inline 
+void outOfRangeThrow()
+{
+    throw std::out_of_range("At() : index > vector length");
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+TType&  GenericVector<TLength, TType>::at (size_t index) throw ()
+{
+    if (index < TLength)
+        return m_data[index];
+
+    std::__throw_out_of_range_fmt(__N("GenericVector::at: index"
+				       "(which is %zu) >= TLength "
+				       "(which is %zu)"),
+				        index, TLength);
+}
+
+template <size_t TLength, typename TType>
+inline constexpr
+const TType&    GenericVector<TLength, TType>::at (size_t index) const throw ()
+{
+    if (index < TLength)
+        return m_data[index];
+
+    std::__throw_out_of_range_fmt(__N("GenericVector::at: index "
+				        "(which is %zu) >= TLength "
+				       "(which is %zu)"),
+				        index, TLength);
+}
+
 template <size_t TLength, typename TType>
 template <size_t TLengthOther, typename TTypeOther>
 inline constexpr
@@ -404,10 +452,21 @@ GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator=(const Ge
 
     if (minLenght < TLength)
     {
-        for (size_t i = minLenght; i < TLength; i++)
+#if __cplusplus >= 201709L
+        if (std::is_constant_evaluated())
         {
-            m_data[i] = static_cast<TType>(0);
+#endif
+            for (size_t i = minLenght; i < TLength; i++)
+            {
+                m_data[i] = static_cast<TType>(0);
+            }
+#if __cplusplus >= 201709L 
+    }
+        else //memset optimization is not constexpr
+        {
+            std::memset(&m_data[minLenght], 0, sizeof(TType) * TLength - minLenght);
         }
+#endif
     }
 
     return *this;
@@ -429,7 +488,7 @@ template <size_t TLength, typename TType>
 inline constexpr
 TType&  GenericVector<TLength, TType>::operator[]	(size_t index) noexcept
 {
-    assert(index >= 0 && index < TLength);
+    assert(index < TLength);
     return m_data[index];
 }
 
@@ -437,7 +496,7 @@ template <size_t TLength, typename TType>
 inline constexpr
 const TType&    GenericVector<TLength, TType>::operator[]	(size_t index) const noexcept
 {
-    assert(index >= 0 && index < TLength);
+    assert(index < TLength);
     return m_data[index];
 }
 

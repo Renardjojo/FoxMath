@@ -38,8 +38,14 @@
 #include <stddef.h> //sizt_t
 #include <iostream> //ostream, istream
 #include <cassert> //assert
-#include <cstring> //memset
-#include <math.h> //sqrt, lerp (if c++ 2020)
+#include <math.h> //sqrt, lerp (if c++ 2020) //TODO: only include if C++ 20 when own sqrt implemented
+#include <stdexcept> //std::out_of_range
+
+/*Only if c++ >= 2020*/
+#if __cplusplus >= 201709L
+#include <cstring> //std::memset
+#include <type_traits> //std::is_constant_evaluated
+#endif
 
 namespace FoxMath::Vector
 {
@@ -142,6 +148,7 @@ namespace FoxMath::Vector
          * 
          * @return constexpr TType 
          */
+        //TODO: method not constexpr because it use std::sqrt. Replace it by my own function
         [[nodiscard]] inline constexpr
         TType length () const noexcept;
 
@@ -448,6 +455,27 @@ namespace FoxMath::Vector
         #pragma endregion //!static methods
 
         #pragma region accessor
+
+        /**
+         * @brief   The function automatically checks whether n is within the bounds of valid elements in the vector, throwing an out_of_range exception if it is not (i.e., if n is greater than, or equal to, its size).
+         *          This is in contrast with member operator[], that does not check against bounds.
+         * 
+         * @param index 
+         * @return constexpr TType& 
+         */
+        [[nodiscard]] inline constexpr
+		TType& 	    at (size_t index) throw ();
+
+        /**
+         * @brief   The function automatically checks whether n is within the bounds of valid elements in the vector, throwing an out_of_range exception if it is not (i.e., if n is greater than, or equal to, its size).
+         *          This is in contrast with member operator[], that does not check against bounds.
+         * 
+         * @param index 
+         * @return constexpr const TType& 
+         */
+        [[nodiscard]] inline constexpr
+		const TType& 	at (size_t index) const throw ();  
+
         #pragma endregion //!accessor
     
         #pragma region mutator
@@ -780,6 +808,8 @@ namespace FoxMath::Vector
         operator GenericVector<TLengthOther, TTypeOther>() const noexcept;
 
         #pragma endregion //!convertor
+        #pragma endregion //!operators
+    
     };
 
     #pragma region arithmetic operators
