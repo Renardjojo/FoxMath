@@ -10,9 +10,11 @@ c++ 2020 : g++ -std=gnu++2a -Werror -Wno-unknown-pragmas main.cpp -o exe && ./ex
 
 - [x] GenericVector
 - [x] Vector2, 3 and 4
-- [ ] strong_type implementation
-- [ ] Angle inherance of strong type
-- [ ] add angle to vector
+- [x] strong_type implementation
+- [x] Angle inherance of strong type
+- [x] add angle to vector
+- [ ] rework matrix
+- [ ] add roate, translate and sclae function to generic vector
 - [ ] add differente space unit like distance (meter, cm...), wigth (kg), volume...
 - [ ] create floating point and integral unlimited type
 - [ ] possibity to select random algorythm
