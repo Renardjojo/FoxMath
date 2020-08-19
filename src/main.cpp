@@ -1,10 +1,9 @@
 #include <iostream>
-#include "Vector/GenericVector.hpp"
-#include "Vector/Vector2.hpp"
-#include "Vector/Vector3.hpp"
-#include "Vector/Vector4.hpp"
+#include "Vector/Vector.hpp"
+#include "Matrix/Matrix.hpp"
 #include "Angle/Angle.hpp"
 
+using namespace FoxMath::Matrix;
 using namespace FoxMath::Vector;
 using namespace FoxMath::Angle;
 
@@ -179,5 +178,14 @@ int main()
         
         angle += Angle<EAngleType::Radian, float>(a);
         std::cout << angle << std::endl;
+    }
+
+    /*Matrix sandbox*/
+    {
+        std::cout << std::endl << std::endl << "Matrix sandbox" << std::endl;
+
+        Matrix<3, 3, float> mat;
+
+        //std::cout << mat << std::endl;
     }
 }
