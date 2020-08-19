@@ -374,6 +374,17 @@ namespace FoxMath::Vector
         #pragma region static methods
 
         /**
+         * @brief Get the vector dimension
+         * 
+         * @return constexpr const size_t& 
+         */
+        [[nodiscard]] inline static constexpr
+		const size_t& 	getDimension () noexcept
+        {
+            return TLength;
+        }
+
+        /**
          * @brief perform dot product with both generic vector
          * 
          * @param lhs 
@@ -482,14 +493,6 @@ namespace FoxMath::Vector
          */
         [[nodiscard]] inline constexpr
 		const TType& 	at (size_t index) const throw ();
-
-        /**
-         * @brief Get the vector dimension
-         * 
-         * @return constexpr const size_t& 
-         */
-        [[nodiscard]] inline constexpr
-		const size_t& 	getDimension () const noexcept;    
 
         #pragma endregion //!accessor
     
