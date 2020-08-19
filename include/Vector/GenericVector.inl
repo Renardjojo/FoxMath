@@ -1304,7 +1304,7 @@ std::istream& 	operator>>		(std::istream& in, const GenericVector<TLength, TType
 {
     for (size_t i = 0; i < TLength; i++)
     {
-        in >> vec[i] >> "   ";
+        in >> vec[i];
     }
 
     return in;  
