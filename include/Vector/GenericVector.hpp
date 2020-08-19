@@ -379,7 +379,7 @@ namespace FoxMath::Vector
          * @return constexpr const size_t& 
          */
         [[nodiscard]] inline static constexpr
-		const size_t& 	getDimension () noexcept
+		size_t 	getDimension () noexcept
         {
             return TLength;
         }
@@ -1561,7 +1561,7 @@ namespace FoxMath::Vector
      * @return false 
      */
     template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
-    [[nodiscard]] inline constexpr
+    inline constexpr
     bool operator>=(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept;
 
     #pragma endregion //!comparision operators
@@ -1570,7 +1570,8 @@ namespace FoxMath::Vector
     /**
      * @brief output stream
      * 
-     * @note : define std::setprecision(n) before calling this operator to define floating point prescision like : std::cout << std::setprecision(4) << vec;
+     * @note : define std::setprecision(n) before calling this operator to define floating point prescision like : 
+     * i.e. : std::cout << std::setprecision(4) << std::fixed  << vec; (don't forgot to include <iomanip>)
      * 
      * @tparam TLength 
      * @tparam TType 
@@ -1579,13 +1580,11 @@ namespace FoxMath::Vector
      * @return constexpr std::ostream& 
      */
     template <size_t TLength, typename TType>
-    [[nodiscard]] inline constexpr
+    inline constexpr
     std::ostream& 	operator<<		(std::ostream& out, const GenericVector<TLength, TType>& vec) noexcept;
 
     /**
      * @brief input stream
-     * 
-     * @note : define std::setprecision(n) before calling this operator to define floating point prescision like : std::cin >> std::setprecision(4) >> vec;
      * 
      * @tparam TLength 
      * @tparam TType 

@@ -99,7 +99,7 @@ namespace FoxMath::Matrix
          * @return constexpr const EMatrixConvention&
          */
         [[nodiscard]] static inline constexpr
-		const EMatrixConvention& 	    getMatrixConvention	() noexcept
+		EMatrixConvention 	    getMatrixConvention	() noexcept
         {   
             return TMatrixConvention;
         }
@@ -110,7 +110,7 @@ namespace FoxMath::Matrix
          * @return constexpr const EMatrixConvention &
          */
         [[nodiscard]] static inline constexpr
-		const size_t& 	    getRowSize	() noexcept
+		size_t 	    getRowSize	() noexcept
         {
             return TRowSize;
         }
@@ -121,7 +121,7 @@ namespace FoxMath::Matrix
          * @return constexpr const EMatrixConvention&
          */
         [[nodiscard]] static inline constexpr
-		const size_t& 	    getColumnSize	() noexcept
+		size_t 	    getColumnSize	() noexcept
         {
             return TColumnSize;
         }
@@ -1323,7 +1323,10 @@ namespace FoxMath::Matrix
     /**
      * @brief output stream
      * 
-     * @note : define std::setprecision(n) before calling this operator to define floating point prescision like : std::cout << std::setprecision(4) << mat;
+     * @note : define std::setprecision(n) before calling this operator to define floating point prescision like : 
+     * i.e. : std::cout << std::setprecision(4) << std::fixed << << mat; (don't forgot to include <iomanip>)
+     * You can also display the convention of vector with function matrixConventionToString. 
+     * i.e. : std::cout << matrixConventionToString(mat.getMatrixConvention()) << std::endl << std::setprecision(4) << std::fixed << mat;
      * 
      * @tparam TLength 
      * @tparam TType 
@@ -1332,14 +1335,12 @@ namespace FoxMath::Matrix
      * @return constexpr std::ostream& 
      */
     template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
-    [[nodiscard]] inline constexpr
+    inline constexpr
     std::ostream& 	operator<<		(std::ostream& out, const GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& mat) noexcept;
 
     /**
      * @brief input stream
      * 
-     * @note : define std::setprecision(n) before calling this operator to define floating point prescision like : std::cin >> std::setprecision(4) >> mat;
-     * 
      * @tparam TLength 
      * @tparam TType 
      * @param out 
@@ -1347,7 +1348,7 @@ namespace FoxMath::Matrix
      * @return constexpr std::ostream& 
      */
     template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
-    [[nodiscard]] inline constexpr
+    inline constexpr
     std::istream& 	operator>>		(std::istream& in, const GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& mat) noexcept;
 
     #pragma endregion //!stream operators

@@ -1,7 +1,11 @@
 #include <iostream>
+#include <iomanip>
+
 #include "Vector/Vector.hpp"
 #include "Matrix/Matrix.hpp"
 #include "Angle/Angle.hpp"
+
+
 
 using namespace FoxMath::Matrix;
 using namespace FoxMath::Vector;
@@ -188,16 +192,16 @@ int main()
         Matrix<4, 2, float, EMatrixConvention::RowMajor> matRowMajor;
 
 
-        matRowMajor[0][0] = 2.f;
-        matRowMajor[0][1] = 2.f;
+        matRowMajor[0][0] = 2.588989f;
+        matRowMajor[0][1] = 2.987654321f;
         //matRowMajor[0][2] = 2.f;
         //matRowMajor.at(2).at(0) = 4.f;
 
-        std::cout << matRowMajor << std::endl;
-        std::cout << matRowMajor[0] << std::endl << std::endl;
+        std::cout << std::endl << matrixConventionToString(matRowMajor.getMatrixConvention()) << std::endl << std::setprecision(2) << std::fixed << matRowMajor;
+        std::cout << "First line : " << matRowMajor[0] << std::endl << std::endl;
 
         Matrix<2, 4, int, EMatrixConvention::ColumnMajor> matColumnMajor = matRowMajor;
-        std::cout << matColumnMajor << std::endl;
-        std::cout << matColumnMajor[0] << std::endl;
+        std::cout << matrixConventionToString(matColumnMajor.getMatrixConvention()) << std::endl << std::setprecision(2)  << std::fixed  << matColumnMajor;
+        std::cout << "First column : " << matColumnMajor[0] << std::endl;
     }
 }
