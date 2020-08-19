@@ -53,50 +53,60 @@ namespace FoxMath::Matrix
     
         protected:
 
-        using GenericMatrixSelfType = GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>;
-
-        #pragma region attribut/methods
+        #pragma region static attribut
 
         /**
          * @brief Return the length if internal vector
          * 
          * @return constexpr size_t 
          */
-        [[nodiscard]] constexpr inline
-        size_t vectorLength () const noexcept;
+        [[nodiscard]] constexpr static inline
+        size_t vectorLength () noexcept
+        {
+            if constexpr (TMatrixConvention == EMatrixConvention::ColumnMajor)
+                return TColumnSize;
+            else 
+                return TRowSize;
+        }
 
         /**
          * @brief Return the number of vector inside the matrix
          * 
          * @return constexpr size_t 
          */
-        [[nodiscard]] constexpr inline
-        size_t numberOfInternalVector () const noexcept;
+        [[nodiscard]] constexpr static inline
+        size_t numberOfInternalVector () noexcept
+        {
+            if constexpr (TMatrixConvention == EMatrixConvention::ColumnMajor)
+                return TRowSize;
+            else 
+                return TColumnSize;
+        }
 
         /**
          * @brief Return the number of data inside the matrix
          * 
          * @return constexpr size_t 
          */
-        [[nodiscard]] constexpr inline
-        size_t numberOfData () const noexcept;
+        [[nodiscard]] constexpr static inline
+        size_t numberOfData () noexcept
+        {
+            return TRowSize * TColumnSize;
+        }
 
-        #pragma endregion //!attribut/methods
+        #pragma endregion //! static attribut
 
         #pragma region attribut
 
-        using InternalVector = Vector::GenericVector<TType, vectorLength ()>;
+        using InternalVector = Vector::GenericVector<vectorLength (), TType>;
 
         union
         {
-            std::array<TType, TRowSize * TColumnSize> m_data {};
+            std::array<TType, numberOfData ()> m_data;
             std::array<InternalVector, numberOfInternalVector ()>  m_vector {};
         };
 
         #pragma endregion //!attribut
-    
-        #pragma region static attribut
-        #pragma endregion //! static attribut
     
         #pragma region methods
         #pragma endregion //!methods
@@ -250,16 +260,18 @@ namespace FoxMath::Matrix
         #pragma region  assignment operators
 
         /**
-         * @brief simple assignment
+         * @brief Assignment operator that assign any matrix in another
          * 
-         * @tparam TLengthOther 
-         * @tparam TType 
+         * @tparam TRowSizeOther 
+         * @tparam TColumnSizeOther 
+         * @tparam TTypeOther 
+         * @tparam TMatrixConventionOther 
          * @param other 
-         * @return constexpr GenericVector& 
+         * @return constexpr GenericMatrix& 
          */
-        template <size_t TLengthOther, typename TTypeOther>
-		inline constexpr
-		GenericVector& operator=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept;
+        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
+		implicit inline constexpr
+		GenericMatrix& operator=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>& other) noexcept;
 
         /**
          * @brief simple assignment
@@ -267,11 +279,11 @@ namespace FoxMath::Matrix
          * @tparam TLengthOther 
          * @tparam TType 
          * @param other 
-         * @return constexpr GenericVector& 
+         * @return constexpr GenericMatrix& 
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		GenericVector& operator=(TscalarType scalar) noexcept;
+		GenericMatrix& operator=(TscalarType scalar) noexcept;
 
         /**
          * @brief addition assignment 
@@ -279,11 +291,11 @@ namespace FoxMath::Matrix
          * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
-         * @return constexpr GenericVector& 
+         * @return constexpr GenericMatrix& 
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		GenericVector& operator+=(TscalarType scalar) noexcept;
+		GenericMatrix& operator+=(TscalarType scalar) noexcept;
 
         /**
          * @brief addition assignment 
@@ -291,11 +303,11 @@ namespace FoxMath::Matrix
          * @tparam TLengthOther 
          * @tparam TType 
          * @param other 
-         * @return constexpr GenericVector& 
+         * @return constexpr GenericMatrix& 
          */
-        template <size_t TLengthOther, typename TTypeOther>
+        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 		inline constexpr
-		GenericVector& operator+=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept;
+		GenericMatrix& operator+=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>& other) noexcept;
 
         /**
          * @brief subtraction assignment 
@@ -303,11 +315,11 @@ namespace FoxMath::Matrix
          * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
-         * @return constexpr GenericVector& 
+         * @return constexpr GenericMatrix& 
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		GenericVector& operator-=(TscalarType scalar) noexcept;
+		GenericMatrix& operator-=(TscalarType scalar) noexcept;
 
         /**
          * @brief subtraction assignment 
@@ -315,11 +327,11 @@ namespace FoxMath::Matrix
          * @tparam TLengthOther 
          * @tparam TType 
          * @param other 
-         * @return constexpr GenericVector& 
+         * @return constexpr GenericMatrix& 
          */
-        template <size_t TLengthOther, typename TTypeOther>
+        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 		inline constexpr
-		GenericVector& operator-=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept;
+		GenericMatrix& operator-=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>& other) noexcept;
 
         /**
          * @brief multiplication assignment 
@@ -327,11 +339,11 @@ namespace FoxMath::Matrix
          * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
-         * @return constexpr GenericVector& 
+         * @return constexpr GenericMatrix& 
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		GenericVector& operator*=(TscalarType scalar) noexcept;
+		GenericMatrix& operator*=(TscalarType scalar) noexcept;
 
         /**
          * @brief multiplication assignment 
@@ -339,11 +351,11 @@ namespace FoxMath::Matrix
          * @tparam TLengthOther 
          * @tparam TType 
          * @param other 
-         * @return constexpr GenericVector& 
+         * @return constexpr GenericMatrix& 
          */
-        template <size_t TLengthOther, typename TTypeOther>
+        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 		inline constexpr
-		GenericVector& operator*=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept;
+		GenericMatrix& operator*=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>& other) noexcept;
 
         /**
          * @brief division assignment
@@ -351,11 +363,11 @@ namespace FoxMath::Matrix
          * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
-         * @return constexpr GenericVector& 
+         * @return constexpr GenericMatrix& 
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		GenericVector& operator/=(TscalarType scalar) noexcept;
+		GenericMatrix& operator/=(TscalarType scalar) noexcept;
 
         /**
          * @brief division assignment
@@ -363,11 +375,11 @@ namespace FoxMath::Matrix
          * @tparam TLengthOther 
          * @tparam TType 
          * @param other 
-         * @return constexpr GenericVector& 
+         * @return constexpr GenericMatrix& 
          */
-        template <size_t TLengthOther, typename TTypeOther>
+        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 		inline constexpr
-		GenericVector& operator/=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept;
+		GenericMatrix& operator/=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>& other) noexcept;
 
         /**
          * @brief modulo assignment
@@ -375,11 +387,11 @@ namespace FoxMath::Matrix
          * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
-         * @return constexpr GenericVector& 
+         * @return constexpr GenericMatrix& 
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		GenericVector& operator%=(TscalarType scalar) noexcept;
+		GenericMatrix& operator%=(TscalarType scalar) noexcept;
 
         /**
          * @brief modulo assignment
@@ -387,11 +399,11 @@ namespace FoxMath::Matrix
          * @tparam TLengthOther 
          * @tparam TType 
          * @param other 
-         * @return constexpr GenericVector& 
+         * @return constexpr GenericMatrix& 
          */
-        template <size_t TLengthOther, typename TTypeOther>
+        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 		inline constexpr
-		GenericVector& operator%=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept;
+		GenericMatrix& operator%=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>& other) noexcept;
 
         /**
          * @brief bitwise AND assignment 
@@ -399,11 +411,11 @@ namespace FoxMath::Matrix
          * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
-         * @return constexpr GenericVector& 
+         * @return constexpr GenericMatrix& 
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		GenericVector& operator&=(TscalarType scalar) noexcept;
+		GenericMatrix& operator&=(TscalarType scalar) noexcept;
 
         /**
          * @brief bitwise AND assignment 
@@ -411,11 +423,11 @@ namespace FoxMath::Matrix
          * @tparam TLengthOther 
          * @tparam TType 
          * @param other 
-         * @return constexpr GenericVector& 
+         * @return constexpr GenericMatrix& 
          */
-        template <size_t TLengthOther, typename TTypeOther>
+        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 		inline constexpr
-		GenericVector& operator&=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept;
+		GenericMatrix& operator&=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>& other) noexcept;
 
         /**
          * @brief bitwise OR assignment 
@@ -423,11 +435,11 @@ namespace FoxMath::Matrix
          * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
-         * @return constexpr GenericVector& 
+         * @return constexpr GenericMatrix& 
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		GenericVector& operator|=(TscalarType scalar) noexcept;
+		GenericMatrix& operator|=(TscalarType scalar) noexcept;
 
         /**
          * @brief bitwise OR assignment 
@@ -435,11 +447,11 @@ namespace FoxMath::Matrix
          * @tparam TLengthOther 
          * @tparam TType 
          * @param other 
-         * @return constexpr GenericVector& 
+         * @return constexpr GenericMatrix& 
          */
-        template <size_t TLengthOther, typename TTypeOther>
+        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 		inline constexpr
-		GenericVector& operator|=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept;
+		GenericMatrix& operator|=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>& other) noexcept;
 
         /**
          * @brief bitwise XOR assignment 
@@ -447,11 +459,11 @@ namespace FoxMath::Matrix
          * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
-         * @return constexpr GenericVector& 
+         * @return constexpr GenericMatrix& 
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		GenericVector& operator^=(TscalarType scalar) noexcept;
+		GenericMatrix& operator^=(TscalarType scalar) noexcept;
 
         /**
          * @brief bitwise XOR assignment 
@@ -459,11 +471,11 @@ namespace FoxMath::Matrix
          * @tparam TLengthOther 
          * @tparam TType 
          * @param other 
-         * @return constexpr GenericVector& 
+         * @return constexpr GenericMatrix& 
          */
-        template <size_t TLengthOther, typename TTypeOther>
+        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 		inline constexpr
-		GenericVector& operator^=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept;
+		GenericMatrix& operator^=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>& other) noexcept;
 
         /**
          * @brief bitwise left shift assignment 
@@ -471,11 +483,11 @@ namespace FoxMath::Matrix
          * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
-         * @return constexpr GenericVector& 
+         * @return constexpr GenericMatrix& 
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		GenericVector& operator<<=(TscalarType scalar) noexcept;
+		GenericMatrix& operator<<=(TscalarType scalar) noexcept;
 
         /**
          * @brief bitwise left shift assignment 
@@ -483,11 +495,11 @@ namespace FoxMath::Matrix
          * @tparam TLengthOther 
          * @tparam TType 
          * @param other 
-         * @return constexpr GenericVector& 
+         * @return constexpr GenericMatrix& 
          */
-        template <size_t TLengthOther, typename TTypeOther>
+        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 		inline constexpr
-		GenericVector& operator<<=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept;
+		GenericMatrix& operator<<=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>& other) noexcept;
 
         /**
          * @brief bitwise right shift assignment 
@@ -495,11 +507,11 @@ namespace FoxMath::Matrix
          * @tparam TscalarType 
          * @tparam true 
          * @param scalar 
-         * @return constexpr GenericVector& 
+         * @return constexpr GenericMatrix& 
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		inline constexpr
-		GenericVector& operator>>=(TscalarType scalar) noexcept;
+		GenericMatrix& operator>>=(TscalarType scalar) noexcept;
 
         /**
          * @brief bitwise right shift assignment 
@@ -507,11 +519,11 @@ namespace FoxMath::Matrix
          * @tparam TLengthOther 
          * @tparam TType 
          * @param other 
-         * @return constexpr GenericVector& 
+         * @return constexpr GenericMatrix& 
          */
-        template <size_t TLengthOther, typename TTypeOther>
+        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 		inline constexpr
-		GenericVector& operator>>=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept;
+		GenericMatrix& operator>>=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>& other) noexcept;
 
         #pragma endregion //!region assignment operators
         #pragma region increment decrement operators
@@ -519,34 +531,34 @@ namespace FoxMath::Matrix
         /**
          * @brief  pre-increment operator
          * 
-         * @return constexpr GenericVector& 
+         * @return constexpr GenericMatrix& 
          */
         inline constexpr
-		GenericVector& 	operator++	() noexcept;
+		GenericMatrix& 	operator++	() noexcept;
 
         /**
          * @brief pre-decrement operator
          * 
-         * @return constexpr GenericVector& 
+         * @return constexpr GenericMatrix& 
          */
         inline constexpr
-		GenericVector& 	operator--	() noexcept;
+		GenericMatrix& 	operator--	() noexcept;
         
         /**
          * @brief post-increment  operator
          * 
-         * @return constexpr GenericVector 
+         * @return constexpr GenericMatrix 
          */
         inline constexpr
-		GenericVector 	    operator++	(int) noexcept;
+		GenericMatrix 	    operator++	(int) noexcept;
 
         /**
          * @brief post-decrement operator
          * 
-         * @return constexpr GenericVector 
+         * @return constexpr GenericMatrix 
          */
         inline constexpr
-		GenericVector 	    operator--	(int) noexcept;
+		GenericMatrix 	    operator--	(int) noexcept;
 
         #pragma endregion //!increment decrement operators
         #pragma region convertor
@@ -557,11 +569,11 @@ namespace FoxMath::Matrix
          * @example `FoxMath::Vector::Vector<2, float> rhs = static_cast<FoxMath::Vector::Vector<2, float>>(vec)`
          * @tparam TLengthOther 
          * @tparam TTypeOther 
-         * @return GenericVector<TLengthOther, TTypeOther> 
+         * @return GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> 
          */
-        template <size_t TLengthOther, typename TTypeOther>
+        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
         [[nodiscard]] implicit constexpr inline
-        operator GenericVector<TLengthOther, TTypeOther>() const noexcept;
+        operator GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>() const noexcept;
 
         #pragma endregion //!convertor
         #pragma endregion //!operators
@@ -575,37 +587,37 @@ namespace FoxMath::Matrix
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @param mat 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator+(GenericVector<TLength, TType> const& vec) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator+(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& mat) noexcept;
 
     /**
      * @brief unary minus 
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @param mat 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator-(GenericVector<TLength, TType> vec) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator-(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> vec) noexcept;
 
     /**
      * @brief addition 
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec 
+     * @param mat 
      * @param scalar 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator+(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator+(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief addition 
@@ -613,12 +625,12 @@ namespace FoxMath::Matrix
      * @tparam TLength 
      * @tparam TType 
      * @param scalar 
-     * @param vec 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @param mat 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator+(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator+(TTypeScalar scalar, GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> vec) noexcept;
 
     /**
      * @brief addition 
@@ -627,24 +639,25 @@ namespace FoxMath::Matrix
      * @tparam TType 
      * @param lhs 
      * @param rhs 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
+	    template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
+                size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator+(GenericVector<TLength, TType> lhs, const GenericVector< TLengthOther, TTypeOther>& rhs) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator+(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, const GenericMatrix< TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>& rhs) noexcept;
 
     /**
      * @brief subtraction
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec 
+     * @param mat 
      * @param scalar 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator-(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator-(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief subtraction
@@ -652,12 +665,12 @@ namespace FoxMath::Matrix
      * @tparam TLength 
      * @tparam TType 
      * @param scalar 
-     * @param vec 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @param mat 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator-(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator-(TTypeScalar scalar, GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> vec) noexcept;
 
     /**
      * @brief subtraction
@@ -666,24 +679,25 @@ namespace FoxMath::Matrix
      * @tparam TType 
      * @param lhs 
      * @param rhs 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
+	    template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
+                size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator-(GenericVector<TLength, TType> lhs, const GenericVector<TLengthOther, TTypeOther>& rhs) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator-(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>& rhs) noexcept;
 
     /**
      * @brief multiplication
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec 
+     * @param mat 
      * @param scalar 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator*(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator*(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief multiplication
@@ -691,12 +705,12 @@ namespace FoxMath::Matrix
      * @tparam TLength 
      * @tparam TType 
      * @param scalar 
-     * @param vec 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @param mat 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator*(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator*(TTypeScalar scalar, GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> vec) noexcept;
 
     /**
      * @brief multiplication
@@ -705,24 +719,25 @@ namespace FoxMath::Matrix
      * @tparam TType 
      * @param lhs 
      * @param rhs 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
+	    template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
+                size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator*(GenericVector<TLength, TType> lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator*(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
 
     /**
      * @brief division
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec 
+     * @param mat 
      * @param scalar 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator/(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator/(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief division
@@ -730,12 +745,12 @@ namespace FoxMath::Matrix
      * @tparam TLength 
      * @tparam TType 
      * @param scalar 
-     * @param vec 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @param mat 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator/(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator/(TTypeScalar scalar, GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> vec) noexcept;
 
     /**
      * @brief division
@@ -744,24 +759,25 @@ namespace FoxMath::Matrix
      * @tparam TType 
      * @param lhs 
      * @param rhs 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
+	    template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
+                size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator/(GenericVector<TLength, TType> lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator/(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
 
     /**
      * @brief modulo
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec 
+     * @param mat 
      * @param scalar 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator%(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator%(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief modulo
@@ -769,12 +785,12 @@ namespace FoxMath::Matrix
      * @tparam TLength 
      * @tparam TType 
      * @param scalar 
-     * @param vec 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @param mat 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator%(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator%(TTypeScalar scalar, GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> vec) noexcept;
 
     /**
      * @brief modulo
@@ -783,11 +799,12 @@ namespace FoxMath::Matrix
      * @tparam TType 
      * @param lhs 
      * @param rhs 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
+	    template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
+                size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator%(GenericVector<TLength, TType> lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator%(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
 
     /**
      * @brief bitwise AND
@@ -796,11 +813,11 @@ namespace FoxMath::Matrix
      * @tparam TType 
      * @param lhs 
      * @param scalar 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator&(GenericVector<TLength, TType> lhs, TTypeScalar scalar) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator&(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, TTypeScalar scalar) noexcept;
 
     /**
      * @brief bitwise AND
@@ -808,12 +825,12 @@ namespace FoxMath::Matrix
      * @tparam TLength 
      * @tparam TType 
      * @param scalar 
-     * @param vec 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @param mat 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator&(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator&(TTypeScalar scalar, GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> vec) noexcept;
 
     /**
      * @brief bitwise AND 
@@ -822,24 +839,25 @@ namespace FoxMath::Matrix
      * @tparam TType 
      * @param lhs 
      * @param rhs 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
+	    template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
+                size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator&(GenericVector<TLength, TType> lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator&(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
 
     /**
      * @brief bitwise OR 
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec 
+     * @param mat 
      * @param scalar 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator|(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator|(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief bitwise OR
@@ -847,12 +865,12 @@ namespace FoxMath::Matrix
      * @tparam TLength 
      * @tparam TType 
      * @param scalar 
-     * @param vec 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @param mat 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator|(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator|(TTypeScalar scalar, GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> vec) noexcept;
 
     /**
      * @brief bitwise OR 
@@ -861,24 +879,25 @@ namespace FoxMath::Matrix
      * @tparam TType 
      * @param lhs 
      * @param rhs 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
+	    template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
+                size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator|(GenericVector<TLength, TType> lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator|(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
 
     /**
      * @brief bitwise XOR
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec 
+     * @param mat 
      * @param scalar 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator^(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator^(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief bitwise XOR
@@ -886,12 +905,12 @@ namespace FoxMath::Matrix
      * @tparam TLength 
      * @tparam TType 
      * @param scalar 
-     * @param vec 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @param mat 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator^(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator^(TTypeScalar scalar, GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> vec) noexcept;
 
     /**
      * @brief bitwise XOR
@@ -900,24 +919,25 @@ namespace FoxMath::Matrix
      * @tparam TType 
      * @param lhs 
      * @param rhs 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
+	    template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
+                size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator^(GenericVector<TLength, TType> lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator^(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
 
     /**
      * @brief bitwise left shift
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec 
+     * @param mat 
      * @param scalar 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator<<(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator<<(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief bitwise left shift
@@ -925,12 +945,12 @@ namespace FoxMath::Matrix
      * @tparam TLength 
      * @tparam TType 
      * @param scalar 
-     * @param vec 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @param mat 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator<<(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator<<(TTypeScalar scalar, GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> vec) noexcept;
 
     /**
      * @brief bitwise left shift
@@ -939,24 +959,25 @@ namespace FoxMath::Matrix
      * @tparam TType 
      * @param lhs 
      * @param rhs 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
+	    template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
+                size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator<<(GenericVector<TLength, TType> lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator<<(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
 
     /**
      * @brief bitwise right shift
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec 
+     * @param mat 
      * @param scalar 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator>>(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator>>(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> vec, TTypeScalar scalar) noexcept;
 
     /**
      * @brief bitwise right shift 
@@ -964,12 +985,12 @@ namespace FoxMath::Matrix
      * @tparam TLength 
      * @tparam TType 
      * @param scalar 
-     * @param vec 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @param mat 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator>>(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator>>(TTypeScalar scalar, GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> vec) noexcept;
 
     /**
      * @brief bitwise right shift 
@@ -978,61 +999,62 @@ namespace FoxMath::Matrix
      * @tparam TType 
      * @param lhs 
      * @param rhs 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
+	    template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
+                size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator>>(GenericVector<TLength, TType> lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator>>(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
 
     /**
      * @brief bitwise NOT
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec 
-     * @return constexpr GenericVector<TLength, TType> 
+     * @param mat 
+     * @return constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> 
      */
-	template <size_t TLength, typename TType>
+	template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
 	[[nodiscard]] inline constexpr
-    GenericVector<TLength, TType> operator~(GenericVector<TLength, TType> vec) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator~(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> vec) noexcept;
 
     #pragma endregion //!logical operators
     #pragma region logical operators
     
-    /**
-     * @brief negation
-     * 
-     * @tparam TLength 
-     * @param vec 
-     * @return constexpr GenericVector<TLength, bool> 
-     */
-    template <size_t TLength>
-	[[nodiscard]] inline constexpr
-    GenericVector<TLength, bool> operator!(GenericVector<TLength, bool> vec) noexcept;
+    // /**
+    //  * @brief negation
+    //  * 
+    //  * @tparam TLength 
+    //  * @param mat 
+    //  * @return constexpr GenericMatrix<TLength, bool> 
+    //  */
+    // template <size_t TLength>
+	// [[nodiscard]] inline constexpr
+    // GenericMatrix<TLength, bool> operator!(GenericMatrix<TLength, bool> vec) noexcept;
 	
-    /**
-     * @brief AND
-     * 
-     * @tparam TLength 
-     * @param lhs 
-     * @param rhs 
-     * @return constexpr GenericVector<TLength, bool> 
-     */
-    template <size_t TLength, size_t TLengthOther>
-	[[nodiscard]] inline constexpr
-    GenericVector<TLength, bool> operator&&(GenericVector<TLength, bool> lhs, GenericVector<TLengthOther, bool> const& rhs) noexcept;
+    // /**
+    //  * @brief AND
+    //  * 
+    //  * @tparam TLength 
+    //  * @param lhs 
+    //  * @param rhs 
+    //  * @return constexpr GenericMatrix<TLength, bool> 
+    //  */
+    // template <size_t TLength, size_t TLengthOther>
+	// [[nodiscard]] inline constexpr
+    // GenericMatrix<TLength, bool> operator&&(GenericMatrix<TLength, bool> lhs, GenericMatrix<TLengthOther, bool> const& rhs) noexcept;
 
-    /**
-     * @brief inclusive OR
-     * 
-     * @tparam TLength 
-     * @param lhs 
-     * @param rhs 
-     * @return constexpr GenericVector<TLength, bool> 
-     */
-	template <size_t TLength, size_t TLengthOther>
-	[[nodiscard]] inline constexpr
-    GenericVector<TLength, bool> operator||(GenericVector<TLength, bool> lhs, GenericVector<TLengthOther, bool> const& rhs) noexcept;
+    // /**
+    //  * @brief inclusive OR
+    //  * 
+    //  * @tparam TLength 
+    //  * @param lhs 
+    //  * @param rhs 
+    //  * @return constexpr GenericMatrix<TLength, bool> 
+    //  */
+	// template <size_t TLength, size_t TLengthOther>
+	// [[nodiscard]] inline constexpr
+    // GenericMatrix<TLength, bool> operator||(GenericMatrix<TLength, bool> lhs, GenericMatrix<TLengthOther, bool> const& rhs) noexcept;
     
     #pragma endregion //!logical operators
     #pragma region comparision operators
@@ -1048,23 +1070,24 @@ namespace FoxMath::Matrix
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
+    template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
+                size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
     [[nodiscard]] inline constexpr
-    bool operator==(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    bool operator==(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
 
     /**
      * @brief equal to
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec 
+     * @param mat 
      * @param scalar 
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator==(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
+    bool operator==(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& mat, TTypeScalar scalar) noexcept;
 
     /**
      * @brief equal to
@@ -1072,13 +1095,13 @@ namespace FoxMath::Matrix
      * @tparam TLength 
      * @tparam TType 
      * @param scalar 
-     * @param vec 
+     * @param mat 
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator==(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept;
+    bool operator==(TTypeScalar scalar, GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& mat) noexcept;
 
     /**
      * @brief not equal to
@@ -1090,23 +1113,24 @@ namespace FoxMath::Matrix
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
+        template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
+                size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
     [[nodiscard]] inline constexpr
-    bool operator!=(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    bool operator!=(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
 
     /**
      * @brief not equal to
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec 
+     * @param mat 
      * @param scalar 
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator!=(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
+    bool operator!=(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& mat, TTypeScalar scalar) noexcept;
 
     /**
      * @brief not equal to
@@ -1114,13 +1138,13 @@ namespace FoxMath::Matrix
      * @tparam TLength 
      * @tparam TType 
      * @param scalar 
-     * @param vec 
+     * @param mat 
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator!=(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept;
+    bool operator!=(TTypeScalar scalar, GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& mat) noexcept;
 
     /**
      * @brief less than
@@ -1132,23 +1156,24 @@ namespace FoxMath::Matrix
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
+        template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
+                size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
     [[nodiscard]] inline constexpr
-    bool operator<(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    bool operator<(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
 
     /**
      * @brief less than
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec 
+     * @param mat 
      * @param scalar 
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator<(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
+    bool operator<(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& mat, TTypeScalar scalar) noexcept;
 
     /**
      * @brief less than
@@ -1156,13 +1181,13 @@ namespace FoxMath::Matrix
      * @tparam TLength 
      * @tparam TType 
      * @param scalar 
-     * @param vec 
+     * @param mat 
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator<(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept;
+    bool operator<(TTypeScalar scalar, GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& mat) noexcept;
 
     /**
      * @brief greater than
@@ -1174,23 +1199,24 @@ namespace FoxMath::Matrix
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
+        template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
+                size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
     [[nodiscard]] inline constexpr
-    bool operator>(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    bool operator>(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
 
     /**
      * @brief greater than
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec 
+     * @param mat 
      * @param scalar 
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator>(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
+    bool operator>(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& mat, TTypeScalar scalar) noexcept;
 
     /**
      * @brief greater than
@@ -1198,13 +1224,13 @@ namespace FoxMath::Matrix
      * @tparam TLength 
      * @tparam TType 
      * @param scalar 
-     * @param vec 
+     * @param mat 
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator>(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept;
+    bool operator>(TTypeScalar scalar, GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& mat) noexcept;
 
     /**
      * @brief less than or equal to
@@ -1216,23 +1242,24 @@ namespace FoxMath::Matrix
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
+        template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
+                size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
     [[nodiscard]] inline constexpr
-    bool operator<=(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    bool operator<=(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
 
     /**
      * @brief less than or equal to
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec 
+     * @param mat 
      * @param scalar 
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator<=(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
+    bool operator<=(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& mat, TTypeScalar scalar) noexcept;
 
     /**
      * @brief less than or equal to
@@ -1240,13 +1267,13 @@ namespace FoxMath::Matrix
      * @tparam TLength 
      * @tparam TType 
      * @param scalar 
-     * @param vec 
+     * @param mat 
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator<=(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept;
+    bool operator<=(TTypeScalar scalar, GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& mat) noexcept;
 
     /**
      * @brief greater than or equal to
@@ -1258,23 +1285,24 @@ namespace FoxMath::Matrix
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
+        template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
+                size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
     [[nodiscard]] inline constexpr
-    bool operator>=(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
+    bool operator>=(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
 
     /**
      * @brief greater than or equal to
      * 
      * @tparam TLength 
      * @tparam TType 
-     * @param vec 
+     * @param mat 
      * @param scalar 
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator>=(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
+    bool operator>=(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& mat, TTypeScalar scalar) noexcept;
 
     /**
      * @brief greater than or equal to
@@ -1282,13 +1310,13 @@ namespace FoxMath::Matrix
      * @tparam TLength 
      * @tparam TType 
      * @param scalar 
-     * @param vec 
+     * @param mat 
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
-    bool operator>=(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept;
+    bool operator>=(TTypeScalar scalar, GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& mat) noexcept;
 
     #pragma endregion //!comparision operators
     #pragma region stream operators
@@ -1299,12 +1327,12 @@ namespace FoxMath::Matrix
      * @tparam TLength 
      * @tparam TType 
      * @param out 
-     * @param vec 
+     * @param mat 
      * @return constexpr std::ostream& 
      */
-    template <size_t TLength, typename TType>
+    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
     [[nodiscard]] inline constexpr
-    std::ostream& 	operator<<		(std::ostream& out, const GenericVector<TLength, TType>& vec) noexcept;
+    std::ostream& 	operator<<		(std::ostream& out, const GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& vec) noexcept;
 
     /**
      * @brief input stream
@@ -1312,21 +1340,21 @@ namespace FoxMath::Matrix
      * @tparam TLength 
      * @tparam TType 
      * @param out 
-     * @param vec 
+     * @param mat 
      * @return constexpr std::ostream& 
      */
-    template <size_t TLength, typename TType>
+    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
     [[nodiscard]] inline constexpr
-    std::istream& 	operator>>		(std::istream& in, const GenericVector<TLength, TType>& vec) noexcept;
+    std::istream& 	operator>>		(std::istream& in, const GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& vec) noexcept;
 
     #pragma endregion //!stream operators
 
     #include "GenericMatrix.inl"
 
-    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
-    using Matrix = GenericVector<TRowSize, TColumnSize, TType, TMatrixConvention>;
+    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    using Matrix = GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>;
 
-    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
+    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
     using Mat = Matrix<TRowSize, TColumnSize, TType, TMatrixConvention>;
 
 } /*namespace FoxMath::Matrix*/
