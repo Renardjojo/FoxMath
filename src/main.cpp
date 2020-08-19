@@ -13,6 +13,7 @@ int main()
     {
         std::cout << std::endl << std::endl << "Generic vector sandbox" << std::endl;
         Vector<3, float> vect (3.f, 5.f, 10.f);
+        Vector<4, int> vectCopy = vect;
         constexpr Vector<3, float> constVect (3.f, 5.f, 10.f);
         constexpr Vector<3, float> constVect2  (5.f, 5.f);
         
@@ -184,24 +185,19 @@ int main()
     {
         std::cout << std::endl << std::endl << "Matrix sandbox" << std::endl;
 
-        Matrix<3, 3, float, EMatrixConvention::RowMajor> matRowMajor;
+        Matrix<4, 2, float, EMatrixConvention::RowMajor> matRowMajor;
+
 
         matRowMajor[0][0] = 2.f;
         matRowMajor[0][1] = 2.f;
-        matRowMajor[0][2] = 2.f;
-        matRowMajor.at(2).at(0) = 4.f;
-        matRowMajor.getData(4) = 3.f;
+        //matRowMajor[0][2] = 2.f;
+        //matRowMajor.at(2).at(0) = 4.f;
 
         std::cout << matRowMajor << std::endl;
+        std::cout << matRowMajor[0] << std::endl << std::endl;
 
-        Matrix<3, 3, float, EMatrixConvention::ColumnMajor> matColumnMajor;
-
-        matColumnMajor[0][0] = 2.f;
-        matColumnMajor[0][1] = 2.f;
-        matColumnMajor[0][2] = 2.f;
-        matColumnMajor.at(2).at(0) = 4.f;
-        matColumnMajor.getData(4) = 3.f;
-
+        Matrix<2, 4, int, EMatrixConvention::ColumnMajor> matColumnMajor = matRowMajor;
         std::cout << matColumnMajor << std::endl;
+        std::cout << matColumnMajor[0] << std::endl;
     }
 }
