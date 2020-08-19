@@ -50,7 +50,7 @@
 namespace FoxMath::Vector
 {
     /*Use of IsArithmetic*/
-    template <size_t TLength, typename TType, 
+    template <size_t TLength, typename TType = float, 
                 Type::IsNotEqualTo<TLength, 0> = true, 
                 Type::IsArithmetic<TType> = true>
     class GenericVector;
@@ -1609,10 +1609,10 @@ namespace FoxMath::Vector
 
     #include "GenericVector.inl"
 
-    template <size_t TLength, typename TType>
+    template <size_t TLength, typename TType  = float>
     using Vector = GenericVector<TLength, TType>;
 
-    template <size_t TLength, typename TType>
+    template <size_t TLength, typename TType  = float>
     using Vec = Vector<TLength, TType>;
 
 } /*namespace FoxMath::Vector*/

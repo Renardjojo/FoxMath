@@ -34,7 +34,7 @@
 
 namespace FoxMath::Vector
 {
-    template <typename TType>
+    template <typename TType = float>
     class Vector3 : public Vector<3, TType>
     {
         private:
@@ -235,7 +235,7 @@ namespace FoxMath::Vector
         #pragma endregion //! static attribut
     };
 
-    template <typename TType>
+    template <typename TType = float>
     using Vec3          = Vector3<TType>;
 
     using Vector3f      = Vector3<float>;
