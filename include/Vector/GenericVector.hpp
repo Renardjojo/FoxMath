@@ -1582,6 +1582,8 @@ namespace FoxMath::Vector
     /**
      * @brief output stream
      * 
+     * @note : define std::setprecision(n) before calling this operator to define floating point prescision like : std::cout << std::setprecision(4) << vec;
+     * 
      * @tparam TLength 
      * @tparam TType 
      * @param out 
@@ -1594,6 +1596,8 @@ namespace FoxMath::Vector
 
     /**
      * @brief input stream
+     * 
+     * @note : define std::setprecision(n) before calling this operator to define floating point prescision like : std::cin >> std::setprecision(4) >> vec;
      * 
      * @tparam TLength 
      * @tparam TType 
