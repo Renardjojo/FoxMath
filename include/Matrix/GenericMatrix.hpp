@@ -34,6 +34,7 @@
 #include "Vector/GenericVector.hpp" //Vector::GenericVector
 #include "Types/Implicit.hpp"
 
+#include <iostream> //ostream, istream
 #include <array> //std::array
 
 namespace FoxMath::Matrix
@@ -49,10 +50,8 @@ namespace FoxMath::Matrix
     template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
     class GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>
     {
-        private:
+        public:
     
-        protected:
-
         #pragma region static attribut
 
         /**
@@ -94,7 +93,42 @@ namespace FoxMath::Matrix
             return TRowSize * TColumnSize;
         }
 
+        /**
+         * @brief Get the Matrix Convention enumerator. 
+         * 
+         * @return constexpr const EMatrixConvention&
+         */
+        [[nodiscard]] static inline constexpr
+		const EMatrixConvention& 	    getMatrixConvention	() noexcept
+        {   
+            return TMatrixConvention;
+        }
+
+        /**
+         * @brief Get the Matrix Convention enumerator. 
+         * 
+         * @return constexpr const EMatrixConvention &
+         */
+        [[nodiscard]] static inline constexpr
+		const size_t& 	    getRowSize	() noexcept
+        {
+            return TRowSize;
+        }
+
+        /**
+         * @brief Get the Matrix Convention enumerator. 
+         * 
+         * @return constexpr const EMatrixConvention&
+         */
+        [[nodiscard]] static inline constexpr
+		const size_t& 	    getColumnSize	() noexcept
+        {
+            return TColumnSize;
+        }
+
         #pragma endregion //! static attribut
+
+        protected:
 
         #pragma region attribut
 
@@ -195,30 +229,6 @@ namespace FoxMath::Matrix
          */
         [[nodiscard]] inline constexpr
 		const TType& 	    getData	(size_t index) const throw ();
-
-        /**
-         * @brief Get the Matrix Convention enumerator. 
-         * 
-         * @return constexpr const EMatrixConvention&
-         */
-        [[nodiscard]] inline constexpr
-		const EMatrixConvention& 	    getMatrixConvention	() const noexcept;
-
-        /**
-         * @brief Get the Matrix Convention enumerator. 
-         * 
-         * @return constexpr const EMatrixConvention &
-         */
-        [[nodiscard]] inline constexpr
-		const size_t& 	    getRowSize	() const noexcept;
-
-        /**
-         * @brief Get the Matrix Convention enumerator. 
-         * 
-         * @return constexpr const EMatrixConvention&
-         */
-        [[nodiscard]] inline constexpr
-		const size_t& 	    getColumnSize	() const noexcept;
         
         #pragma endregion //!accessor
     
@@ -1324,18 +1334,7 @@ namespace FoxMath::Matrix
     /**
      * @brief output stream
      * 
-     * @tparam TLength 
-     * @tparam TType 
-     * @param out 
-     * @param mat 
-     * @return constexpr std::ostream& 
-     */
-    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
-    [[nodiscard]] inline constexpr
-    std::ostream& 	operator<<		(std::ostream& out, const GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& vec) noexcept;
-
-    /**
-     * @brief input stream
+     * @note : define std::setprecision(n) before calling this operator to define floating point prescision like : std::cout << std::setprecision(4) << mat;
      * 
      * @tparam TLength 
      * @tparam TType 
@@ -1345,7 +1344,22 @@ namespace FoxMath::Matrix
      */
     template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
     [[nodiscard]] inline constexpr
-    std::istream& 	operator>>		(std::istream& in, const GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& vec) noexcept;
+    std::ostream& 	operator<<		(std::ostream& out, const GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& mat) noexcept;
+
+    /**
+     * @brief input stream
+     * 
+     * @note : define std::setprecision(n) before calling this operator to define floating point prescision like : std::cin >> std::setprecision(4) >> mat;
+     * 
+     * @tparam TLength 
+     * @tparam TType 
+     * @param out 
+     * @param mat 
+     * @return constexpr std::ostream& 
+     */
+    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
+    [[nodiscard]] inline constexpr
+    std::istream& 	operator>>		(std::istream& in, const GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& mat) noexcept;
 
     #pragma endregion //!stream operators
 
@@ -1354,7 +1368,7 @@ namespace FoxMath::Matrix
     template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
     using Matrix = GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>;
 
-    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention >
     using Mat = Matrix<TRowSize, TColumnSize, TType, TMatrixConvention>;
 
 } /*namespace FoxMath::Matrix*/
