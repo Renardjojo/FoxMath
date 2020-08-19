@@ -32,13 +32,17 @@
 #include "Matrix/EMatrixConvention.hpp" //EMatrixConvention
 #include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>
 #include "Vector/GenericVector.hpp" //Vector::GenericVector
+#include "Types/Implicit.hpp"
 
 #include <array> //std::array
 
 namespace FoxMath::Matrix
 {
     /*Use of IsArithmetic*/
-    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor, Type::IsArithmetic<TType> = true>
+    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor,
+                Type::IsNotEqualTo<TRowSize, 0> = true, 
+                Type::IsNotEqualTo<TColumnSize, 0> = true,
+                Type::IsArithmetic<TType> = true>
     class GenericMatrix;
 
     /*Specilisation of GenericMatrix class*/
