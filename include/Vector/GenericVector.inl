@@ -457,24 +457,23 @@ GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator=(const Ge
         m_data[i] = static_cast<TType>(other[i]);
     }
 
-    if (minLenght < TLength)
-    {
+
 #if __cplusplus >= 201709L
-        if (std::is_constant_evaluated())
-        {
+    if (std::is_constant_evaluated())
+    {
 #endif
-            for (size_t i = minLenght; i < TLength; i++)
-            {
-                m_data[i] = static_cast<TType>(0);
-            }
+        for (size_t i = minLenght; i < TLength; i++)
+        {
+            m_data[i] = static_cast<TType>(0);
+        }
 #if __cplusplus >= 201709L 
     }
-        else //memset optimization is not constexpr
-        {
-            std::memset(&m_data[minLenght], 0, sizeof(TType) * TLength - minLenght);
-        }
-#endif
+    else //memset optimization is not constexpr
+    {
+        std::memset(&m_data[minLenght], 0, sizeof(TType) * TLength - minLenght);
     }
+#endif
+
 
     return *this;
 }
