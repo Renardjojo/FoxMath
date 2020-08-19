@@ -50,7 +50,9 @@
 namespace FoxMath::Vector
 {
     /*Use of IsArithmetic*/
-    template <size_t TLength, typename TType, typename Type::IsNotEqualTo<TLength, 0> = true, Type::IsArithmetic<TType> = true>
+    template <size_t TLength, typename TType, 
+                Type::IsNotEqualTo<TLength, 0> = true, 
+                Type::IsArithmetic<TType> = true>
     class GenericVector;
 
     /*Specilisation of GenericVector class*/
