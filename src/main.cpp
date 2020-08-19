@@ -184,14 +184,24 @@ int main()
     {
         std::cout << std::endl << std::endl << "Matrix sandbox" << std::endl;
 
-        Matrix<3, 3, float, EMatrixConvention::RowMajor> mat;
+        Matrix<3, 3, float, EMatrixConvention::RowMajor> matRowMajor;
 
-        mat[0][0] = 2.f;
-        mat[0][1] = 2.f;
-        mat[0][2] = 2.f;
-        mat.at(2).at(0) = 4.f;
-        mat.getData(4) = 3.f;
+        matRowMajor[0][0] = 2.f;
+        matRowMajor[0][1] = 2.f;
+        matRowMajor[0][2] = 2.f;
+        matRowMajor.at(2).at(0) = 4.f;
+        matRowMajor.getData(4) = 3.f;
 
-        std::cout << mat << std::endl;
+        std::cout << matRowMajor << std::endl;
+
+        Matrix<3, 3, float, EMatrixConvention::ColumnMajor> matColumnMajor;
+
+        matColumnMajor[0][0] = 2.f;
+        matColumnMajor[0][1] = 2.f;
+        matColumnMajor[0][2] = 2.f;
+        matColumnMajor.at(2).at(0) = 4.f;
+        matColumnMajor.getData(4) = 3.f;
+
+        std::cout << matColumnMajor << std::endl;
     }
 }
