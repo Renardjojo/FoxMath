@@ -53,6 +53,8 @@ namespace FoxMath::Matrix
     
         protected:
 
+        using GenericMatrixSelfType = GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>;
+
         #pragma region attribut/methods
 
         /**
