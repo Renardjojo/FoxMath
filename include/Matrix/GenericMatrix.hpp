@@ -63,9 +63,9 @@ namespace FoxMath::Matrix
         size_t vectorLength () noexcept
         {
             if constexpr (TMatrixConvention == EMatrixConvention::ColumnMajor)
-                return TColumnSize;
-            else 
                 return TRowSize;
+            else 
+                return TColumnSize;
         }
 
         /**
@@ -77,9 +77,9 @@ namespace FoxMath::Matrix
         size_t numberOfInternalVector () noexcept
         {
             if constexpr (TMatrixConvention == EMatrixConvention::ColumnMajor)
-                return TRowSize;
-            else 
                 return TColumnSize;
+            else 
+                return TRowSize;
         }
 
         /**
@@ -268,20 +268,6 @@ namespace FoxMath::Matrix
 
         #pragma endregion //!member access operators
         #pragma region  assignment operators
-
-        /**
-         * @brief Assignment operator that assign any matrix in another
-         * 
-         * @tparam TRowSizeOther 
-         * @tparam TColumnSizeOther 
-         * @tparam TTypeOther 
-         * @tparam TMatrixConventionOther 
-         * @param other 
-         * @return constexpr GenericMatrix& 
-         */
-        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
-		implicit inline constexpr
-		GenericMatrix& operator=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>& other) noexcept;
 
         /**
          * @brief simple assignment
@@ -574,11 +560,14 @@ namespace FoxMath::Matrix
         #pragma region convertor
 
         /**
-         * @brief Converte generic vector to another generic vector type
-         * @note use static_cast<> to call this function. Is use only if you try to downgrade generic vector like static_cast<Vec3f>(vec4f). Else use the constructor
-         * @example `FoxMath::Vector::Vector<2, float> rhs = static_cast<FoxMath::Vector::Vector<2, float>>(vec)`
-         * @tparam TLengthOther 
+         * @brief Converte generic matrix to another generic matrix type
+         * @note use static_cast<> to call this function. Is use only if you try to downgrade generic matrix like static_cast<Vec3f>(vec4f). Else use the constructor
+         * @example `FoxMath::Matrix::Matrix<2, 3, float> rhs = static_cast<FoxMath::Matrix::Matrix<8, 2, int, EMatrixConvention::RowMajor>>(lhs)`
+         * 
+         * @tparam TRowSizeOther 
+         * @tparam TColumnSizeOther 
          * @tparam TTypeOther 
+         * @tparam TMatrixConventionOther 
          * @return GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> 
          */
         template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>

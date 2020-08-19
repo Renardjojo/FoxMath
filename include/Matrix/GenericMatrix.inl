@@ -99,27 +99,6 @@ const typename GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::I
     return m_vector[index];
 }
 
-template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
-template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
-inline constexpr
-GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::operator=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>& other) noexcept
-{
-    constexpr size_t minInternalVector = (numberOfInternalVector() < other.numberOfInternalVector()) ? 
-                                          numberOfInternalVector() : other.numberOfInternalVector();
-
-    for (size_t i = 0; i < minInternalVector; i++)
-    {
-        //conversion type is inside vector's assignement operator
-        m_vector[i] = other[i];
-    }
-
-    for (size_t i = minInternalVector; i < numberOfInternalVector(); i++)
-    {
-        m_vector[i] = static_cast<TType>(0);
-    }
-
-    return *this;
-}
 /*
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
 template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
@@ -449,25 +428,33 @@ GenericVector<TLength, TType> GenericMatrix<TRowSize, TColumnSize, TType, TMatri
 	--*this;
 	return result;
 }
+*/
 
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
-template <size_t TLengthOther, typename TTypeOther>
+template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 constexpr inline 
-GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::operator GenericVector<TLengthOther, TTypeOther>() const noexcept
+GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::operator GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>() const noexcept
 {
-    GenericVector<TLengthOther, TTypeOther> result;
+    GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> result;
 
-    constexpr size_t minLenght = (TLengthOther < TLength) ? TLengthOther : TLength;
+    constexpr size_t minInternalVector = (GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>::numberOfInternalVector() < numberOfInternalVector()) ? 
+                                          GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>::numberOfInternalVector() : numberOfInternalVector();
 
-    for (size_t i = 0; i < minLenght; i++)
+    for (size_t i = 0; i < minInternalVector; i++)
     {
-        result[i] = static_cast<TTypeOther>(m_data[i]);
+        //conversion type is inside vector's assignement operator
+        result[i] = m_vector[i];
+    }
+
+    for (size_t i = minInternalVector; i < GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>::numberOfInternalVector(); i++)
+    {
+        result[i] = static_cast<TTypeOther>(0);
     }
 
     return result;
 }
 
-
+/*
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
 inline constexpr
 GenericVector<TLength, TType> operator+(GenericVector<TLength, TType> const& vec) noexcept
