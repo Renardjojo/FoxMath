@@ -940,9 +940,23 @@ template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention
 inline constexpr
 std::ostream& 	operator<<		(std::ostream& out, const GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& mat) noexcept
 {
-    for (size_t i = 0; i < mat.numberOfInternalVector(); i++)
+    if constexpr (TMatrixConvention == EMatrixConvention::RowMajor)
     {
-        out << mat[i] << std::endl;
+        for (size_t i = 0; i < mat.numberOfInternalVector(); i++)
+        {
+            out << mat[i] << std::endl;
+        }
+    }
+    else
+    {
+        for (size_t iData = 0; iData < mat.vectorLength(); iData++)
+        {
+            for (size_t iVec = 0; iVec < mat.numberOfInternalVector(); iVec++)
+            {
+                out << mat[iVec][iData] << "  ";
+            }
+            out << std::endl;
+        }
     }
 
     return out;  
@@ -952,9 +966,22 @@ template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention
 inline constexpr
 std::istream& 	operator>>		(std::istream& in, const GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& mat) noexcept
 {
-    for (size_t i = 0; i < mat.numberOfInternalVector(); i++)
+    if constexpr (TMatrixConvention == EMatrixConvention::RowMajor)
     {
-        in >> mat[i] >> std::endl;
+        for (size_t i = 0; i < mat.numberOfInternalVector(); i++)
+        {
+            in >> mat[i];
+        }
+    }
+    else
+    {
+        for (size_t iData = 0; iData < mat.vectorLength(); iData++)
+        {
+            for (size_t iVec = 0; iVec < mat.numberOfInternalVector(); iVec++)
+            {
+                in >> mat[iVec][iData];
+            }
+        }
     }
 
     return in;  
