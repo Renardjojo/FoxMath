@@ -439,39 +439,6 @@ const TType&    GenericVector<TLength, TType>::at (size_t index) const throw ()
 }
 
 template <size_t TLength, typename TType>
-template <size_t TLengthOther, typename TTypeOther>
-inline constexpr
-GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept
-{
-    constexpr size_t minLenght = (TLengthOther < TLength) ? TLengthOther : TLength;
-
-    for (size_t i = 0; i < minLenght; i++)
-    {
-        m_data[i] = static_cast<TType>(other[i]);
-    }
-
-
-#if __cplusplus >= 201709L
-    if (std::is_constant_evaluated())
-    {
-#endif
-        for (size_t i = minLenght; i < TLength; i++)
-        {
-            m_data[i] = static_cast<TType>(0);
-        }
-#if __cplusplus >= 201709L 
-    }
-    else //memset optimization is not constexpr
-    {
-        std::memset(&m_data[minLenght], 0, sizeof(TType) * TLength - minLenght);
-    }
-#endif
-
-
-    return *this;
-}
-
-template <size_t TLength, typename TType>
 template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
 GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator=(TscalarType scalar) noexcept
@@ -813,6 +780,22 @@ GenericVector<TLength, TType>::operator GenericVector<TLengthOther, TTypeOther>(
     {
         result[i] = static_cast<TTypeOther>(m_data[i]);
     }
+
+#if __cplusplus >= 201709L
+    if (std::is_constant_evaluated())
+    {
+#endif
+        for (size_t i = minLenght; i < TLengthOther; i++)
+        {
+            result[i] = static_cast<TTypeOther>(0);
+        }
+#if __cplusplus >= 201709L 
+    }
+    else //memset optimization is not constexpr
+    {
+        std::memset(&result[minLenght], 0, sizeof(TTypeOther) * TLengthOther - minLenght);
+    }
+#endif
 
     return result;
 }

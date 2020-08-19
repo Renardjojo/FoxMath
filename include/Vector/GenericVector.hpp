@@ -543,18 +543,6 @@ namespace FoxMath::Vector
          * @param other 
          * @return constexpr GenericVector& 
          */
-        template <size_t TLengthOther, typename TTypeOther>
-		implicit inline constexpr
-		GenericVector& operator=(const GenericVector<TLengthOther, TTypeOther>& other) noexcept;
-
-        /**
-         * @brief simple assignment
-         * 
-         * @tparam TLengthOther 
-         * @tparam TType 
-         * @param other 
-         * @return constexpr GenericVector& 
-         */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		implicit inline constexpr
 		GenericVector& operator=(TscalarType scalar) noexcept;
