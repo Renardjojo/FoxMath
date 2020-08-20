@@ -189,11 +189,11 @@ int main()
     {
         std::cout << std::endl << std::endl << "Matrix sandbox" << std::endl;
 
-        Matrix<4, 2, float, EMatrixConvention::RowMajor> matRowMajor;
+        Matrix<4, 2, float, EMatrixConvention::RowMajor> matRowMajor;;//(2.f, 5.f, 8.f, 8.f, 8.f, 8.f, 8.f, 8.f);
 
 
-        matRowMajor[0][0] = 2.588989f;
-        matRowMajor[0][1] = 2.987654321f;
+        //matRowMajor[0][0] = 2.588989f;
+        //matRowMajor[0][1] = 2.987654321f;
         //matRowMajor[0][2] = 2.f;
         //matRowMajor.at(2).at(0) = 4.f;
 
