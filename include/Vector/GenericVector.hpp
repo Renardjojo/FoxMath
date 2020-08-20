@@ -103,8 +103,13 @@ namespace FoxMath::Vector
         GenericVector& operator=(GenericVector && other)			= default;
     
         /**
-         * @brief Variadic templated constructor to init member
+         * @brief Aggregate initialization
+         * 
+         * @note : If the number of initializer clauses is less than the number of members or initializer list is completely empty, the remaining members are value-initialized. 
+         * If a member of a reference type is one of these remaining members, the program is ill-formed.
+         * 
          * @example `FoxMath::Vector::Vector<2, int> vec (1, 1, 3)` or `FoxMath::Vector::Vector<2, int> vec (1, 2)`
+         * 
          * @tparam T 
          * @tparam Sfinae IsSame 
          */
