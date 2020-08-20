@@ -30,10 +30,26 @@
 #pragma once
 
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
+template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>> = true>
+inline constexpr
+GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::GenericMatrix (T... args) noexcept
+{
+    m_data = std::array<TType, numberOfData ()>{args...};
+}
+
+/*
+template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
+template<typename... T, Type::IsSame<Type::Pack<typename GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::InternalVector, T...>, Type::Pack<T..., typename GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::InternalVector>> = true>
+inline constexpr
+GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::GenericMatrix (T... args) noexcept
+{
+    m_vector = std::array<TType, numberOfInternalVector ()>{args...};
+}*/
+
+template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
 inline constexpr
 typename GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::InternalVector&  GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::at (size_t index) throw ()
 {
-    
 
     if (index < numberOfInternalVector()) [[likely]]
         return m_vector[index];

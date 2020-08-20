@@ -30,7 +30,7 @@
 #pragma once
 
 #include "Matrix/EMatrixConvention.hpp" //EMatrixConvention
-#include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>
+#include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
 #include "Vector/GenericVector.hpp" //Vector::GenericVector
 #include "Types/Implicit.hpp"
 
@@ -166,7 +166,27 @@ namespace FoxMath::Matrix
 
         constexpr inline
         GenericMatrix& operator=(GenericMatrix && other) noexcept		= default;
-    
+
+        /**
+         * @brief Aggregate initialization
+         * 
+         * @note : If the number of initializer clauses is less than the number of members or initializer list is completely empty, the remaining members are value-initialized. 
+         * If a member of a reference type is one of these remaining members, the program is ill-formed.
+         * 
+         * @example `FoxMath::Vector::Vector<2, int> vec (1, 1, 3)` or `FoxMath::Vector::Vector<2, int> vec (1, 2)`
+         * 
+         * @tparam T 
+         * @tparam true 
+         * @tparam true 
+         */
+        template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>> = true>
+        explicit inline constexpr
+        GenericMatrix (T... args) noexcept;
+/*
+        template<typename... T, Type::IsSame<Type::Pack<InternalVector, T...>, Type::Pack<T..., InternalVector>> = true>
+        explicit inline constexpr
+        GenericMatrix (T... args) noexcept;
+*/
         #pragma endregion //!constructor/destructor
     
         #pragma region methods
