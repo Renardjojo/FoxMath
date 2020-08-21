@@ -639,10 +639,12 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator*(Generic
 {
     return lhs *= rhs;
 }
-
-template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther,  Type::IsEqualTo<TColumnSize, TRowSizeOther> = true>
+*/
+template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
+            size_t TRowSizeOther, size_t TColumnSizeOther,
+            Type::IsEqualTo<TColumnSize, TRowSizeOther> = true>
 inline constexpr
-GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& operator*(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention>& other) noexcept
+GenericMatrix<TRowSize, TColumnSizeOther, TType, TMatrixConvention> operator*(const GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& lhs, const GenericMatrix<TRowSizeOther, TColumnSizeOther, TType, TMatrixConvention>& rhs) noexcept
 {
     constexpr size_t squareCommonSize = TRowSizeOther; //Same as TColumnSize
 
@@ -655,16 +657,14 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& operator*(const 
         {
             for ( size_t index = 0; index < squareCommonSize; index++)
             {
-                mRst[columnI][rowI] += ((*this)[index][rowI] * static_cast<TType>(other[columnI][index]));
+                mRst[columnI][rowI] += lhs[index][rowI] * rhs[columnI][index];
             }
         }
     }
 
-    (*this) = std::move(mRst);
-    
-    return *this;
+    return mRst;
 }
-
+/*
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator/(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> vec, TTypeScalar scalar) noexcept
