@@ -36,6 +36,7 @@
 
 #include <iostream> //ostream, istream
 #include <array> //std::array
+#include <utility> //std::swap
 
 namespace FoxMath::Matrix
 {
@@ -210,6 +211,35 @@ namespace FoxMath::Matrix
         #pragma endregion //!constructor/destructor
     
         #pragma region methods
+
+        /**
+         * @brief Fill generic vector's member with scalar value
+         * 
+         * @tparam TscalarType 
+         * @tparam true 
+         * @param scalar 
+         * @return constexpr GenericMatrix& 
+         */
+        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        inline constexpr  
+        GenericMatrix& fill (const TscalarType scalar) noexcept;
+
+        /**
+         * @brief transpose matrix
+         * 
+         * @return GenericMatrix& 
+         */
+        inline constexpr  
+        GenericMatrix&		transpose		() noexcept;
+
+        /**
+         * @brief Get the Transpose object
+         * 
+         * @return constexpr GenericMatrix 
+         */
+        [[nodiscard]] inline constexpr  
+        GenericMatrix		getTranspose	() const noexcept;
+
         #pragma endregion //!methods
     
         #pragma region accessor
@@ -310,11 +340,11 @@ namespace FoxMath::Matrix
         #pragma region  assignment operators
 
         /**
-         * @brief simple assignment
+         * @brief fill the matrix with scalar assigned
          * 
-         * @tparam TLengthOther 
-         * @tparam TType 
-         * @param other 
+         * @tparam TscalarType 
+         * @tparam true 
+         * @param scalar 
          * @return constexpr GenericMatrix& 
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
@@ -336,14 +366,15 @@ namespace FoxMath::Matrix
         /**
          * @brief addition assignment 
          * 
-         * @tparam TLengthOther 
-         * @tparam TType 
+         * @tparam TRowSizeOther 
+         * @tparam TColumnSizeOther 
+         * @tparam TTypeOther 
          * @param other 
          * @return constexpr GenericMatrix& 
          */
-        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
+        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther>
 		inline constexpr
-		GenericMatrix& operator+=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>& other) noexcept;
+		GenericMatrix& operator+=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention>& other) noexcept;
 
         /**
          * @brief subtraction assignment 
@@ -360,14 +391,15 @@ namespace FoxMath::Matrix
         /**
          * @brief subtraction assignment 
          * 
-         * @tparam TLengthOther 
-         * @tparam TType 
+         * @tparam TRowSizeOther 
+         * @tparam TColumnSizeOther 
+         * @tparam TTypeOther 
          * @param other 
          * @return constexpr GenericMatrix& 
          */
-        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
+        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther>
 		inline constexpr
-		GenericMatrix& operator-=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>& other) noexcept;
+		GenericMatrix& operator-=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention>& other) noexcept;
 
         /**
          * @brief multiplication assignment 
@@ -384,14 +416,15 @@ namespace FoxMath::Matrix
         /**
          * @brief multiplication assignment 
          * 
-         * @tparam TLengthOther 
-         * @tparam TType 
+         * @tparam TRowSizeOther 
+         * @tparam TColumnSizeOther 
+         * @tparam TTypeOther 
          * @param other 
          * @return constexpr GenericMatrix& 
          */
-        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
+        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther>
 		inline constexpr
-		GenericMatrix& operator*=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>& other) noexcept;
+		GenericMatrix& operator*=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention>& other) noexcept;
 
         /**
          * @brief division assignment
@@ -408,14 +441,15 @@ namespace FoxMath::Matrix
         /**
          * @brief division assignment
          * 
-         * @tparam TLengthOther 
-         * @tparam TType 
+         * @tparam TRowSizeOther 
+         * @tparam TColumnSizeOther 
+         * @tparam TTypeOther 
          * @param other 
          * @return constexpr GenericMatrix& 
          */
-        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
+        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther>
 		inline constexpr
-		GenericMatrix& operator/=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>& other) noexcept;
+		GenericMatrix& operator/=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention>& other) noexcept;
 
         /**
          * @brief modulo assignment
@@ -432,14 +466,15 @@ namespace FoxMath::Matrix
         /**
          * @brief modulo assignment
          * 
-         * @tparam TLengthOther 
-         * @tparam TType 
+         * @tparam TRowSizeOther 
+         * @tparam TColumnSizeOther 
+         * @tparam TTypeOther 
          * @param other 
          * @return constexpr GenericMatrix& 
          */
-        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
+        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther>
 		inline constexpr
-		GenericMatrix& operator%=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>& other) noexcept;
+		GenericMatrix& operator%=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention>& other) noexcept;
 
         /**
          * @brief bitwise AND assignment 
@@ -456,14 +491,15 @@ namespace FoxMath::Matrix
         /**
          * @brief bitwise AND assignment 
          * 
-         * @tparam TLengthOther 
-         * @tparam TType 
+         * @tparam TRowSizeOther 
+         * @tparam TColumnSizeOther 
+         * @tparam TTypeOther 
          * @param other 
          * @return constexpr GenericMatrix& 
          */
-        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
+        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther>
 		inline constexpr
-		GenericMatrix& operator&=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>& other) noexcept;
+		GenericMatrix& operator&=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention>& other) noexcept;
 
         /**
          * @brief bitwise OR assignment 
@@ -480,14 +516,15 @@ namespace FoxMath::Matrix
         /**
          * @brief bitwise OR assignment 
          * 
-         * @tparam TLengthOther 
-         * @tparam TType 
+         * @tparam TRowSizeOther 
+         * @tparam TColumnSizeOther 
+         * @tparam TTypeOther 
          * @param other 
          * @return constexpr GenericMatrix& 
          */
-        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
+        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther>
 		inline constexpr
-		GenericMatrix& operator|=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>& other) noexcept;
+		GenericMatrix& operator|=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention>& other) noexcept;
 
         /**
          * @brief bitwise XOR assignment 
@@ -504,14 +541,15 @@ namespace FoxMath::Matrix
         /**
          * @brief bitwise XOR assignment 
          * 
-         * @tparam TLengthOther 
-         * @tparam TType 
+         * @tparam TRowSizeOther 
+         * @tparam TColumnSizeOther 
+         * @tparam TTypeOther 
          * @param other 
          * @return constexpr GenericMatrix& 
          */
-        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
+        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther>
 		inline constexpr
-		GenericMatrix& operator^=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>& other) noexcept;
+		GenericMatrix& operator^=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention>& other) noexcept;
 
         /**
          * @brief bitwise left shift assignment 
@@ -528,14 +566,15 @@ namespace FoxMath::Matrix
         /**
          * @brief bitwise left shift assignment 
          * 
-         * @tparam TLengthOther 
-         * @tparam TType 
+         * @tparam TRowSizeOther 
+         * @tparam TColumnSizeOther 
+         * @tparam TTypeOther 
          * @param other 
          * @return constexpr GenericMatrix& 
          */
-        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
+        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther>
 		inline constexpr
-		GenericMatrix& operator<<=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>& other) noexcept;
+		GenericMatrix& operator<<=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention>& other) noexcept;
 
         /**
          * @brief bitwise right shift assignment 
@@ -552,14 +591,15 @@ namespace FoxMath::Matrix
         /**
          * @brief bitwise right shift assignment 
          * 
-         * @tparam TLengthOther 
-         * @tparam TType 
+         * @tparam TRowSizeOther 
+         * @tparam TColumnSizeOther 
+         * @tparam TTypeOther 
          * @param other 
          * @return constexpr GenericMatrix& 
          */
-        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
+        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther>
 		inline constexpr
-		GenericMatrix& operator>>=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>& other) noexcept;
+		GenericMatrix& operator>>=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention>& other) noexcept;
 
         #pragma endregion //!region assignment operators
         #pragma region increment decrement operators
@@ -608,7 +648,7 @@ namespace FoxMath::Matrix
          * @tparam TColumnSizeOther 
          * @tparam TTypeOther 
          * @tparam TMatrixConventionOther 
-         * @return GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> 
+         * @return GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention> 
          */
         template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
         [[nodiscard]] implicit constexpr inline
@@ -723,7 +763,7 @@ namespace FoxMath::Matrix
 	    template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
                 size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 	[[nodiscard]] inline constexpr
-    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator-(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>& rhs) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator-(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention>& rhs) noexcept;
 
     /**
      * @brief multiplication
@@ -763,7 +803,7 @@ namespace FoxMath::Matrix
 	    template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
                 size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 	[[nodiscard]] inline constexpr
-    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator*(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator*(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention> const& rhs) noexcept;
 
     /**
      * @brief division
@@ -803,7 +843,7 @@ namespace FoxMath::Matrix
 	    template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
                 size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 	[[nodiscard]] inline constexpr
-    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator/(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator/(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention> const& rhs) noexcept;
 
     /**
      * @brief modulo
@@ -843,7 +883,7 @@ namespace FoxMath::Matrix
 	    template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
                 size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 	[[nodiscard]] inline constexpr
-    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator%(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator%(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention> const& rhs) noexcept;
 
     /**
      * @brief bitwise AND
@@ -883,7 +923,7 @@ namespace FoxMath::Matrix
 	    template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
                 size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 	[[nodiscard]] inline constexpr
-    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator&(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator&(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention> const& rhs) noexcept;
 
     /**
      * @brief bitwise OR 
@@ -923,7 +963,7 @@ namespace FoxMath::Matrix
 	    template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
                 size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 	[[nodiscard]] inline constexpr
-    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator|(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator|(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention> const& rhs) noexcept;
 
     /**
      * @brief bitwise XOR
@@ -963,7 +1003,7 @@ namespace FoxMath::Matrix
 	    template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
                 size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 	[[nodiscard]] inline constexpr
-    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator^(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator^(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention> const& rhs) noexcept;
 
     /**
      * @brief bitwise left shift
@@ -1003,7 +1043,7 @@ namespace FoxMath::Matrix
 	    template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
                 size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 	[[nodiscard]] inline constexpr
-    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator<<(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator<<(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention> const& rhs) noexcept;
 
     /**
      * @brief bitwise right shift
@@ -1043,7 +1083,7 @@ namespace FoxMath::Matrix
 	    template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
                 size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
 	[[nodiscard]] inline constexpr
-    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator>>(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator>>(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention> const& rhs) noexcept;
 
     /**
      * @brief bitwise NOT
@@ -1112,7 +1152,7 @@ namespace FoxMath::Matrix
     template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
                 size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
     [[nodiscard]] inline constexpr
-    bool operator==(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
+    bool operator==(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention> const& rhs) noexcept;
 
     /**
      * @brief equal to
@@ -1155,7 +1195,7 @@ namespace FoxMath::Matrix
         template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
                 size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
     [[nodiscard]] inline constexpr
-    bool operator!=(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
+    bool operator!=(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention> const& rhs) noexcept;
 
     /**
      * @brief not equal to
@@ -1198,7 +1238,7 @@ namespace FoxMath::Matrix
         template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
                 size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
     [[nodiscard]] inline constexpr
-    bool operator<(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
+    bool operator<(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention> const& rhs) noexcept;
 
     /**
      * @brief less than
@@ -1241,7 +1281,7 @@ namespace FoxMath::Matrix
         template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
                 size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
     [[nodiscard]] inline constexpr
-    bool operator>(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
+    bool operator>(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention> const& rhs) noexcept;
 
     /**
      * @brief greater than
@@ -1284,7 +1324,7 @@ namespace FoxMath::Matrix
         template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
                 size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
     [[nodiscard]] inline constexpr
-    bool operator<=(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
+    bool operator<=(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention> const& rhs) noexcept;
 
     /**
      * @brief less than or equal to
@@ -1327,7 +1367,7 @@ namespace FoxMath::Matrix
         template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
                 size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
     [[nodiscard]] inline constexpr
-    bool operator>=(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther> const& rhs) noexcept;
+    bool operator>=(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention> const& rhs) noexcept;
 
     /**
      * @brief greater than or equal to
