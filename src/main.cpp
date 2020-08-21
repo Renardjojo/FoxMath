@@ -189,27 +189,20 @@ int main()
     {
         std::cout << std::endl << std::endl << "Matrix sandbox" << std::endl;
 
-        Vector<2, float> a;
-        a = Vec2f(3.f, 5.f);
-
-        Matrix<4, 2, float, EMatrixConvention::RowMajor> matRowMajor(   2.f, 5.f, 8.f,
-                                                                        8.f, 8.f, 8.f, 
-                                                                        8.f, 8.f);
-
-        Matrix<4, 2, float, EMatrixConvention::RowMajor> matRowMajorWithVec(Vec2f(3.f, 5.f), Vector<2, float>(3.f, 5.f), Vec2f(3.f, 5.f));
-
-
-        //matRowMajor[0][0] = 2.588989f;
-        //matRowMajor[0][1] = 2.987654321f;
-        //matRowMajor[0][2] = 2.f;
-        //matRowMajor.at(2).at(0) = 4.f;
+        std::cout << std::endl << std::endl << "Create Row major matrix" << std::endl;
+        Matrix<4, 2, float, EMatrixConvention::RowMajor> matRowMajor(   1.f, 2.f,
+                                                                        3.f, 4.f,
+                                                                        5.f, 6.f,
+                                                                        7.f, 8.f);
 
         std::cout << std::endl << matrixConventionToString(matRowMajor.getMatrixConvention()) << std::endl << std::setprecision(2) << std::fixed << matRowMajor;
-        std::cout << "First line : " << matRowMajor[0] << std::endl << std::endl;
-        std::cout << matRowMajorWithVec << std::endl << std::endl;
 
-        Matrix<2, 4, int, EMatrixConvention::ColumnMajor> matColumnMajor = matRowMajor;
+        std::cout << std::endl << std::endl << "Display transposed matrix in row and column convention" << std::endl;
+        std::cout << std::endl << matRowMajor.getTransposed();
+        std::cout << std::endl << matRowMajor.getTransposed<EMatrixConvention::ColumnMajor>();
+
+        std::cout << std::endl << std::endl << "Convert Matrix" << std::endl;
+        Matrix<4, 6, int, EMatrixConvention::ColumnMajor> matColumnMajor = matRowMajor;
         std::cout << matrixConventionToString(matColumnMajor.getMatrixConvention()) << std::endl << std::setprecision(2)  << std::fixed  << matColumnMajor;
-        std::cout << "First column : " << matColumnMajor[0] << std::endl;
     }
 }
