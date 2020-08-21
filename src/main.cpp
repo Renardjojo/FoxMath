@@ -208,7 +208,17 @@ int main()
         std::cout << std::endl << std::endl << "Try to transpose itself matrix" << std::endl;
         matColumnMajor.transpose();
         std::cout << matrixConventionToString(matColumnMajor.getMatrixConvention()) << std::endl << std::setprecision(2)  << std::fixed  << matColumnMajor;
-
         //matRowMajor.transpose(); Do not work, because matrix is not square
+
+        Matrix<3, 2, float, EMatrixConvention::ColumnMajor> matColumnMajorSqrt = matColumnMajor;
+        Matrix<2, 3, float, EMatrixConvention::ColumnMajor> matColumnMajorSqrt2 = matColumnMajor;
+        std::cout << matrixConventionToString(matColumnMajorSqrt.getMatrixConvention()) << std::endl << std::setprecision(2)  << std::fixed  << matColumnMajorSqrt;
+        std::cout << matrixConventionToString(matColumnMajorSqrt.getMatrixConvention()) << std::endl << std::setprecision(2)  << std::fixed  << matColumnMajorSqrt2;
+        //matColumnMajorSqrt *= matColumnMajorSqrt2;
+        std::cout << matrixConventionToString(matColumnMajorSqrt.getMatrixConvention()) << std::endl << std::setprecision(2)  << std::fixed  << matColumnMajorSqrt;
+
+        Matrix<3, 3, float, EMatrixConvention::RowMajor> matRowMajorSqrt = matColumnMajor;
+        matRowMajorSqrt *= matRowMajorSqrt;
+        std::cout << matrixConventionToString(matRowMajorSqrt.getMatrixConvention()) << std::endl << std::setprecision(2)  << std::fixed  << matRowMajorSqrt;
     }
 }
