@@ -133,6 +133,18 @@ namespace FoxMath::Matrix
             return TColumnSize;
         }
 
+        /**
+         * @brief Return true if the number of column and row is same.
+         * 
+         * @return true 
+         * @return false 
+         */
+        [[nodiscard]] static inline constexpr
+		bool 	    isSquare	() noexcept
+        {
+            return TColumnSize == TRowSize;
+        }
+
         #pragma endregion //! static attribut
 
         protected:
@@ -230,18 +242,15 @@ namespace FoxMath::Matrix
         inline constexpr  
         GenericMatrix& fill (const TscalarType scalar) noexcept;
 
-        /* TODO: Only square matrix can transpose itself
+        /**
+         * @brief Transpose the matrix on itself. Only square matrix can do that because of static matrix
+         *          
+         * @note Only check if matrix is square on debug mode (assert)
+         * 
+         * @return constexpr GenericMatrix& 
+         */
         inline constexpr  
         GenericMatrix&		transpose		() noexcept;
-        */
-
-        /**
-         * @brief Get the Transpose object
-         * 
-         * @note : If you really wan't to transpose matrix itself, you can use union : Matrix<4, 2> and Matrix<2, 4> share the same memory space
-         * 
-         * @return constexpr GenericMatrix<TColumnSize, TRowSize>
-         */
 
         /**
          * @brief Get the Transpose object. If the user wan't to change the convention it can add it in template arg

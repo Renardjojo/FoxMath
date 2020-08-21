@@ -61,11 +61,12 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& GenericMatrix<TR
     return *this;
 }
 
-/* TODO: Only square matrix can transpose itself
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
 inline constexpr  
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>&		GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::transpose		() noexcept
 {
+    assert(isSquare());
+
     size_t shift = 1;
 
     for (size_t i = 0; i < TColumnSize - 1; i++)
@@ -78,7 +79,7 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>&		GenericMatrix<T
     }
     
     return *this;
-}*/
+}
 
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
 template <EMatrixConvention TMatrixConventionOther = TMatrixConvention>
