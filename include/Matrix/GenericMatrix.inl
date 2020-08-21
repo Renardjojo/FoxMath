@@ -264,57 +264,28 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& GenericMatrix<TR
 
 
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
-template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther>
+template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther,  Type::IsEqualTo<TColumnSize, TRowSizeOther> = true, Type::IsEqualTo<TColumnSize, TColumnSizeOther> = true>
 inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::operator*=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention>& other) noexcept
 {
-/*
-    constexpr size_t minInternalVector = (other::numberOfInternalVector() < numberOfInternalVector()) ? other::numberOfInternalVector() : numberOfInternalVector();
+    constexpr size_t squareCommonSize = TRowSizeOther; //Same as TColumnSize
 
-    for (size_t i = 0; i < minInternalVector; i++)
-    {
-        m_vector[i] += other[i];
-    }
-*/
-    if constexpr(TMatrixConvention = EMatrixConvention::ColumnMajor)
-    {
-        static_assert(TRowSize == TColumnSizeOther);
-        constexpr size_t squareCommonSize = TRowSize;
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> mRst;
+    mRst.fill(0);
 
-        for ( size_t i = 0; i < TColumnSize ; i++ )
+    for ( size_t rowI = 0; rowI < TRowSize  ; rowI++ )
+    {
+        for ( size_t columnI = 0; columnI < TColumnSize; columnI++ )
         {
-            for ( size_t j = 0; j < TRowSize; j++ )
+            for ( size_t index = 0; index < squareCommonSize; index++)
             {
-                TType result = static_cast<TType>(0);
-
-                for ( size_t index = 0; index < squareCommonSize; index++)
-                {
-                    result += ((*this)[i][index] * static_cast<TType>(other[index][j]));
-                }
-                m_vector[i][j] = result;
-            }
-        }
-    }
-    else
-    {
-        static_assert(TColumnSize == TRowSizeOther);
-        constexpr size_t squareCommonSize = TColumnSize;
-        
-        for ( size_t i = 0; i < TRowSize; i++ )
-        {
-            for ( size_t j = 0; j < TColumnSize; j++ )
-            {
-                TType result = static_cast<TType>(0);
-
-                for ( size_t index = 0; index < squareCommonSize; index++)
-                {
-                    result += ((*this)[index][i] * static_cast<TType>(other[j][index]));
-                }
-                m_vector[j][i] = result;
+                mRst[columnI][rowI] += ((*this)[index][rowI] * static_cast<TType>(other[columnI][index]));
             }
         }
     }
 
+    (*this) = std::move(mRst);
+    
     return *this;
 }
 
@@ -667,6 +638,31 @@ inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator*(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention> const& rhs) noexcept
 {
     return lhs *= rhs;
+}
+
+template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther,  Type::IsEqualTo<TColumnSize, TRowSizeOther> = true>
+inline constexpr
+GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& operator*(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention>& other) noexcept
+{
+    constexpr size_t squareCommonSize = TRowSizeOther; //Same as TColumnSize
+
+    GenericMatrix<TRowSize, TColumnSizeOther, TType, TMatrixConvention> mRst;
+    mRst.fill(0);
+
+    for ( size_t rowI = 0; rowI < TRowSize  ; rowI++ )
+    {
+        for ( size_t columnI = 0; columnI < TColumnSizeOther; columnI++ )
+        {
+            for ( size_t index = 0; index < squareCommonSize; index++)
+            {
+                mRst[columnI][rowI] += ((*this)[index][rowI] * static_cast<TType>(other[columnI][index]));
+            }
+        }
+    }
+
+    (*this) = std::move(mRst);
+    
+    return *this;
 }
 
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>

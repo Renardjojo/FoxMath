@@ -218,14 +218,6 @@ namespace FoxMath::Matrix
         explicit inline constexpr
         GenericMatrix (T... args) noexcept;
 
-/*
-        template<typename... T, std::enable_if_t<std::is_convertible_v<Type::Pack<InternalVector, T...>, Type::Pack<T..., InternalVector>>, bool> = true>
-        explicit inline constexpr
-        GenericMatrix (T... args) noexcept
-        {
-            m_vector = std::array<InternalVector, numberOfInternalVector ()>{args...};
-        }
-*/
         #pragma endregion //!constructor/destructor
     
         #pragma region methods
@@ -438,7 +430,7 @@ namespace FoxMath::Matrix
 		GenericMatrix& operator*=(TscalarType scalar) noexcept;
 
         /**
-         * @brief multiplication assignment 
+         * @brief multiplication assignment. Only work if both matrix is square
          * 
          * @tparam TRowSizeOther 
          * @tparam TColumnSizeOther 
@@ -446,7 +438,7 @@ namespace FoxMath::Matrix
          * @param other 
          * @return constexpr GenericMatrix& 
          */
-        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther>
+        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, Type::IsEqualTo<TColumnSize, TRowSizeOther> = true, Type::IsEqualTo<TColumnSize, TColumnSizeOther> = true>
 		inline constexpr
 		GenericMatrix& operator*=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention>& other) noexcept;
 
