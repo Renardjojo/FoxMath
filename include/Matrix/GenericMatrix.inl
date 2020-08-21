@@ -61,6 +61,7 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& GenericMatrix<TR
     return *this;
 }
 
+/* TODO: Only square matrix can transpose itself
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
 inline constexpr  
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>&		GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::transpose		() noexcept
@@ -77,14 +78,44 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>&		GenericMatrix<T
     }
     
     return *this;
-}
+}*/
 
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
+template <EMatrixConvention TMatrixConventionOther = TMatrixConvention>
 inline constexpr  
-GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>		GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getTranspose	() const noexcept
+GenericMatrix<TColumnSize, TRowSize, TType, TMatrixConventionOther>		GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getTransposed	() const noexcept
 {
-    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> rst (*this);
-    rst.transpose();
+    GenericMatrix<TColumnSize, TRowSize, TType, TMatrixConventionOther> rst;
+
+    if constexpr (TMatrixConvention == TMatrixConventionOther)
+    {
+        for (size_t i = 0; i < numberOfInternalVector(); i++)
+        {
+            for (size_t j = 0; j < vectorLength(); j++)
+            {
+                rst[j][i] = m_vector[i][j];
+            }
+        }
+    }
+    else
+    {
+#if __cplusplus >= 201709L
+        if (std::is_constant_evaluated())
+        {
+#endif
+            for (size_t i = 0; i < numberOfData(); i++)
+            {
+                rst.getData(i) = m_data[i];
+            }
+#if __cplusplus >= 201709L 
+        }
+        else //memcopy optimization is not constexpr
+        {
+            std::memcpy(&rst[0], &m_data[0], sizeof(TType) * numberOfData());
+        }
+#endif
+    }
+
     return rst;
 }
 
@@ -522,15 +553,17 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::operator Generic
     constexpr size_t minInternalVector = (GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>::numberOfInternalVector() < numberOfInternalVector()) ? 
                                           GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>::numberOfInternalVector() : numberOfInternalVector();
 
+
+
     for (size_t i = 0; i < minInternalVector; i++)
     {
         //conversion type is inside vector's assignement operator
         result[i] = m_vector[i];
     }
 
-    for (size_t i = minInternalVector; i < GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>::numberOfInternalVector(); i++)
+    if constexpr (TMatrixConventionOther != TMatrixConvention)
     {
-        result[i] = static_cast<TTypeOther>(0);
+        //transpose();
     }
 
     return result;

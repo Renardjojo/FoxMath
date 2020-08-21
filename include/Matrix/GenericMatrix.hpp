@@ -38,6 +38,12 @@
 #include <array> //std::array
 #include <utility> //std::swap
 
+/*Only if c++ >= 2020*/
+#if __cplusplus >= 201709L
+#include <cstring> //std::memcpy
+#include <type_traits> //std::is_constant_evaluated
+#endif
+
 namespace FoxMath::Matrix
 {
     /*Use of IsArithmetic*/
@@ -224,21 +230,30 @@ namespace FoxMath::Matrix
         inline constexpr  
         GenericMatrix& fill (const TscalarType scalar) noexcept;
 
-        /**
-         * @brief transpose matrix
-         * 
-         * @return GenericMatrix& 
-         */
+        /* TODO: Only square matrix can transpose itself
         inline constexpr  
         GenericMatrix&		transpose		() noexcept;
+        */
 
         /**
          * @brief Get the Transpose object
          * 
-         * @return constexpr GenericMatrix 
+         * @note : If you really wan't to transpose matrix itself, you can use union : Matrix<4, 2> and Matrix<2, 4> share the same memory space
+         * 
+         * @return constexpr GenericMatrix<TColumnSize, TRowSize>
          */
+
+        /**
+         * @brief Get the Transpose object. If the user wan't to change the convention it can add it in template arg
+         * 
+         * @note : If you really wan't to transpose matrix itself, you can use union : Matrix<4, 2> and Matrix<2, 4> share the same memory space
+         * 
+         * @tparam TMatrixConvention 
+         * @return constexpr GenericMatrix<TColumnSize, TRowSize, TType, TMatrixConventionOther> 
+         */
+        template <EMatrixConvention TMatrixConventionOther = TMatrixConvention>
         [[nodiscard]] inline constexpr  
-        GenericMatrix		getTranspose	() const noexcept;
+        GenericMatrix<TColumnSize, TRowSize, TType, TMatrixConventionOther>		getTransposed	() const noexcept;
 
         #pragma endregion //!methods
     
