@@ -30,6 +30,12 @@
 #pragma once
 
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
+constexpr inline
+GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::GenericMatrix () noexcept
+    : m_data{}
+{}
+
+template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
 template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>> = true>
 inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::GenericMatrix (T... args) noexcept
@@ -37,14 +43,14 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::GenericMatrix (T
     m_data = std::array<TType, numberOfData ()>{args...};
 }
 
-/*
+
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
-template<typename... T, Type::IsSame<Type::Pack<typename GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::InternalVector, T...>, Type::Pack<T..., typename GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::InternalVector>> = true>
+template<typename... T>
 inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::GenericMatrix (T... args) noexcept
 {
-    m_vector = std::array<TType, numberOfInternalVector ()>{args...};
-}*/
+    m_vector = std::array<InternalVector, numberOfInternalVector ()>{args...};
+}
 
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
 inline constexpr

@@ -137,7 +137,7 @@ namespace FoxMath::Matrix
         union
         {
             std::array<TType, numberOfData ()> m_data;
-            std::array<InternalVector, numberOfInternalVector ()>  m_vector {};
+            std::array<InternalVector, numberOfInternalVector ()>  m_vector;
         };
 
         #pragma endregion //!attribut
@@ -149,8 +149,8 @@ namespace FoxMath::Matrix
     
         #pragma region constructor/destructor
     
-        constexpr inline
-        GenericMatrix () noexcept 					                    = default;
+        explicit constexpr inline
+        GenericMatrix () noexcept;
 
         constexpr inline
         GenericMatrix (const GenericMatrix& other) noexcept			    = default;
@@ -168,12 +168,12 @@ namespace FoxMath::Matrix
         GenericMatrix& operator=(GenericMatrix && other) noexcept		= default;
 
         /**
-         * @brief Aggregate initialization
+         * @brief Aggregate initialization for scalar
          * 
          * @note : If the number of initializer clauses is less than the number of members or initializer list is completely empty, the remaining members are value-initialized. 
          * If a member of a reference type is one of these remaining members, the program is ill-formed.
          * 
-         * @example `FoxMath::Vector::Vector<2, int> vec (1, 1, 3)` or `FoxMath::Vector::Vector<2, int> vec (1, 2)`
+         * @example `FoxMath::Matrix::Matrix<2, 2, int> mat (1, 1, 3)` or `FoxMath::Matrix::Matrix<2, 2, int> mat (1, 2)`
          * 
          * @tparam T 
          * @tparam true 
@@ -182,10 +182,30 @@ namespace FoxMath::Matrix
         template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>> = true>
         explicit inline constexpr
         GenericMatrix (T... args) noexcept;
-/*
-        template<typename... T, Type::IsSame<Type::Pack<InternalVector, T...>, Type::Pack<T..., InternalVector>> = true>
+
+        /**
+         * @brief Aggregate initialization for vector
+         * 
+         * @note : If the number of initializer clauses is less than the number of members or initializer list is completely empty, the remaining members are value-initialized. 
+         * If a member of a reference type is one of these remaining members, the program is ill-formed.
+         * 
+         * @example `FoxMath::Matrix::Matrix<2, 2, int> mat (Vec2f(1, 1), Vec2f(3))` or `FoxMath::Matrix::Matrix<2, 2, int> mat (Vec2f(1.f, 2.f))`
+         * 
+         * @tparam T 
+         * @tparam true 
+         * @tparam true 
+         */
+        template<typename... T>
         explicit inline constexpr
         GenericMatrix (T... args) noexcept;
+
+/*
+        template<typename... T, std::enable_if_t<std::is_convertible_v<Type::Pack<InternalVector, T...>, Type::Pack<T..., InternalVector>>, bool> = true>
+        explicit inline constexpr
+        GenericMatrix (T... args) noexcept
+        {
+            m_vector = std::array<InternalVector, numberOfInternalVector ()>{args...};
+        }
 */
         #pragma endregion //!constructor/destructor
     
