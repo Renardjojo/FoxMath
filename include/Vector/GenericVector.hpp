@@ -548,10 +548,10 @@ namespace FoxMath::Vector
         /**
          * @brief fill the vector with scalar assigned
          * 
-         * @tparam TLengthOther 
-         * @tparam TType 
-         * @param other 
-         * @return constexpr GenericVector& 
+         * @tparam TscalarType 
+         * @tparam true 
+         * @param scalar 
+         * @return implicit constexpr& 
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 		implicit inline constexpr
