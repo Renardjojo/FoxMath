@@ -1,5 +1,5 @@
 # FoxMath
-Lib math
+Mathematical library coded in C++ in generic paradigme
 
 Project run with C++ 2017 - 2020
 
