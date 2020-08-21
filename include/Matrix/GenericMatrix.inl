@@ -553,17 +553,23 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::operator Generic
     constexpr size_t minInternalVector = (GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>::numberOfInternalVector() < numberOfInternalVector()) ? 
                                           GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>::numberOfInternalVector() : numberOfInternalVector();
 
-
-
-    for (size_t i = 0; i < minInternalVector; i++)
+    if constexpr (TMatrixConvention != TMatrixConventionOther)
     {
-        //conversion type is inside vector's assignement operator
-        result[i] = m_vector[i];
+        GenericMatrix<TColumnSize, TRowSize, TType, TMatrixConventionOther> transposedVector = getTransposed<TMatrixConventionOther>();
+
+        for (size_t i = 0; i < minInternalVector; i++)
+        {
+            //conversion type is inside vector's assignement operator
+            result[i] = transposedVector[i];
+        }
     }
-
-    if constexpr (TMatrixConventionOther != TMatrixConvention)
+    else
     {
-        //transpose();
+        for (size_t i = 0; i < minInternalVector; i++)
+        {
+            //conversion type is inside vector's assignement operator
+            result[i] = m_vector[i];
+        }
     }
 
     return result;
@@ -1060,18 +1066,6 @@ std::ostream& 	operator<<		(std::ostream& out, const GenericMatrix<TRowSize, TCo
             out << std::endl;
         }
     }
-
-        for (size_t iData = 0; iData < mat.numberOfData(); iData++)
-        {
-            out << mat.getData(iData) << "   ";
-        }
-        out << std::endl;
-
-        for (size_t i = 0; i < mat.numberOfInternalVector(); i++)
-        {
-            out << mat[i] << "  ";
-        }
-        out << std::endl;
 
     return out;  
 }

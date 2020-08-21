@@ -669,6 +669,7 @@ namespace FoxMath::Matrix
         [[nodiscard]] implicit constexpr inline
         operator GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>() const noexcept;
 
+
         #pragma endregion //!convertor
         #pragma endregion //!operators
     
