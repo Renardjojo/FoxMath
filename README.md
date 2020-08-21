@@ -3,8 +3,16 @@ Mathematical library coded in C++ in generic paradigme
 
 Project run with C++ 2017 - 2020
 
-c++ 2017 : g++ -std=gnu++17 -Werror -Wno-unknown-pragmas main.cpp -o exe && ./exe
-c++ 2020 : g++ -std=gnu++2a -Werror -Wno-unknown-pragmas main.cpp -o exe && ./exe
+## How to compile
+Open terminal on the root folder and enter 
+```
+make run
+```
+You can also compile in multithread with :
+```
+make multi
+```
+Read [Makefile](Makefile) to see all command and compile with C++ 2017 or 2020
 
 ## TODO:
 
