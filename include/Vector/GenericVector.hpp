@@ -139,9 +139,14 @@ namespace FoxMath::Vector
         /**
          * @brief Fill generic vector's member with scalar value
          * 
+         * @tparam TscalarType 
+         * @tparam true 
+         * @param scalar 
+         * @return constexpr GenericVector& 
          */
+        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
         inline constexpr  
-        void fill (const TType scalar) noexcept;
+        GenericVector& fill (const TscalarType scalar) noexcept;
 
         /**
          * @brief Return squartLength of generic vector. More optimize to compare distance than length
@@ -541,7 +546,7 @@ namespace FoxMath::Vector
         #pragma region  assignment operators
 
         /**
-         * @brief simple assignment
+         * @brief fill the vector with scalar assigned
          * 
          * @tparam TLengthOther 
          * @tparam TType 

@@ -84,13 +84,12 @@ GenericVector<TLength, TType>::GenericVector (const GenericVector<TLengthOther, 
 }
 
 template <size_t TLength, typename TType>
+template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr 
-void GenericVector<TLength, TType>::fill(const TType scalar) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::fill(const TscalarType scalar) noexcept
 {
-    for (TType& data : m_data)
-    {
-        data = scalar;
-    }
+    m_data.fill(static_cast<TType>(scalar));
+    return *this;
 }
 
 template <size_t TLength, typename TType>
@@ -443,11 +442,7 @@ template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
 GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator=(TscalarType scalar) noexcept
 {
-    for (TType& data : m_data)
-    {
-        data = static_cast<TType>(scalar);
-    }
-    return *this;
+    return fill(static_cast<TType>(scalar));
 }
 
 template <size_t TLength, typename TType>
