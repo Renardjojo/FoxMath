@@ -189,7 +189,14 @@ int main()
     {
         std::cout << std::endl << std::endl << "Matrix sandbox" << std::endl;
 
-        Matrix<4, 2, float, EMatrixConvention::RowMajor> matRowMajor;;//(2.f, 5.f, 8.f, 8.f, 8.f, 8.f, 8.f, 8.f);
+        Vector<2, float> a;
+        a = Vec2f(3.f, 5.f);
+
+        Matrix<4, 2, float, EMatrixConvention::RowMajor> matRowMajor(   2.f, 5.f, 8.f,
+                                                                        8.f, 8.f, 8.f, 
+                                                                        8.f, 8.f);
+
+        Matrix<4, 2, float, EMatrixConvention::RowMajor> matRowMajorWithVec(Vec2f(3.f, 5.f), Vector<2, float>(3.f, 5.f), Vec2f(3.f, 5.f));
 
 
         //matRowMajor[0][0] = 2.588989f;
@@ -199,6 +206,7 @@ int main()
 
         std::cout << std::endl << matrixConventionToString(matRowMajor.getMatrixConvention()) << std::endl << std::setprecision(2) << std::fixed << matRowMajor;
         std::cout << "First line : " << matRowMajor[0] << std::endl << std::endl;
+        std::cout << matRowMajorWithVec << std::endl << std::endl;
 
         Matrix<2, 4, int, EMatrixConvention::ColumnMajor> matColumnMajor = matRowMajor;
         std::cout << matrixConventionToString(matColumnMajor.getMatrixConvention()) << std::endl << std::setprecision(2)  << std::fixed  << matColumnMajor;
