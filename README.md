@@ -26,6 +26,13 @@ c++ 2020 : g++ -std=gnu++2a -Werror -Wno-unknown-pragmas main.cpp -o exe && ./ex
 ## Readability
 Program create on vscod with spaces of 4 for tabulation
 
+Vscode extension use :
+- Doxygen Documentation Generator by Christoph Schlosser
+- Markdown Checkboxes by Matt Bierner
+- TODO Highlight by Wayou Liu
+- Snippet by vscode-snippet
+- Resource Monitor by mutantdino
+
 ## License
 MIT License
 
