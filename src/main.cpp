@@ -202,7 +202,13 @@ int main()
         std::cout << std::endl << matRowMajor.getTransposed<EMatrixConvention::ColumnMajor>();
 
         std::cout << std::endl << std::endl << "Convert Matrix" << std::endl;
-        Matrix<4, 6, int, EMatrixConvention::ColumnMajor> matColumnMajor = matRowMajor;
+        Matrix<6, 6, int, EMatrixConvention::ColumnMajor> matColumnMajor = matRowMajor;
         std::cout << matrixConventionToString(matColumnMajor.getMatrixConvention()) << std::endl << std::setprecision(2)  << std::fixed  << matColumnMajor;
+
+        std::cout << std::endl << std::endl << "Try to transpose itself matrix" << std::endl;
+        matColumnMajor.transpose();
+        std::cout << matrixConventionToString(matColumnMajor.getMatrixConvention()) << std::endl << std::setprecision(2)  << std::fixed  << matColumnMajor;
+
+        //matRowMajor.transpose(); Do not work, because matrix is not square
     }
 }
