@@ -148,13 +148,15 @@ namespace FoxMath::Matrix
         }
 
         /**
-         * @brief Get identity matrix
+         * @brief Get identity matrix. Work only if matrix is square
          * 
          * @return constexpr GenericMatrix& 
          */
         [[nodiscard]] static inline constexpr  
         GenericMatrix identity () noexcept
         {
+            assert (isSquare());
+
             GenericMatrix rst;
             rst.generateIdentity();
             return rst;

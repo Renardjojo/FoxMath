@@ -147,6 +147,8 @@ template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention
 inline constexpr  
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::generateIdentity () noexcept
 {
+    assert (isSquare());
+
     /*Repsect data alignement*/
     if constexpr (TMatrixConvention == EMatrixConvention::ColumnMajor)
     {
@@ -154,7 +156,7 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& GenericMatrix<TR
         {
             for ( size_t j = 0; j < TRowSize; j++ )
             {
-                (*this)[i][j] = i == j ? 1.f : 0.f;
+                (*this)[i][j] = ((i == j) ? static_cast<TType>(1) : static_cast<TType>(0));
             }
         }
     }
@@ -164,10 +166,11 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& GenericMatrix<TR
         {
             for ( size_t j = 0; j < TColumnSize; j++ )
             {
-                (*this)[i][j] = i == j ? 1.f : 0.f;
+                (*this)[i][j] = ((i == j) ? static_cast<TType>(1) : static_cast<TType>(0));
             }
         }
     }
+    return *this;
 }
 
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
@@ -259,41 +262,48 @@ template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention
 inline constexpr  
 TType		GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getDeterminant		() noexcept
 {
-    TType result = static_cast<TType>(0);
-
-    for (size_t i = 0; i < TColumnSize; i++)
+    if constexpr (numberOfData() == 1) //Check if matrix 1*1
     {
-        //found signe
-        signed int signe = pow(-1, 0 + i);
-
-        //found coef
-        TType coef = signe * (*this)[i][0];
-    
-        //create submatrix
-        GenericMatrix<TColumnSize - 1, TRowSize - 1, TType, TMatrixConvention> subMatrix;
-
-        //fill submatrix
-        bool coefLineFound = false;
-
-        for (size_t iSubMatrix = 0; iSubMatrix < subMatrix.getRowSize(); iSubMatrix++)
-        {
-            if (iSubMatrix == i)
-                coefLineFound = true;
-
-            for (size_t jSubMatrix = 0; jSubMatrix < subMatrix.getColumnSize(); jSubMatrix++)
-            { 
-                subMatrix[iSubMatrix][jSubMatrix] = (*this)[iSubMatrix + coefLineFound][jSubMatrix + 1];
-            }
-        }
-
-        //found determinant
-        TType determinant = subMatrix.getDeterminant();
-
-        //found result
-        result += coef * determinant;
+        return getData(0);
     }
+    else
+    {
+        TType result = static_cast<TType>(0);
+        
+        for (size_t i = 0; i < TColumnSize; i++)
+        {
+            //found signe
+            signed int signe = pow(-1, 0 + i);
 
-    return result;
+            //found coef
+            TType coef = signe * (*this)[i][0];
+        
+            //create submatrix
+            GenericMatrix<TRowSize - 1, TColumnSize - 1, TType, TMatrixConvention> subMatrix;
+
+            //fill submatrix
+            bool coefLineFound = false;
+
+            for (size_t iSubMatrix = 0; iSubMatrix < subMatrix.getRowSize(); iSubMatrix++)
+            {
+                if (iSubMatrix == i)
+                    coefLineFound = true;
+
+                for (size_t jSubMatrix = 0; jSubMatrix < subMatrix.getColumnSize(); jSubMatrix++)
+                { 
+                    subMatrix[iSubMatrix][jSubMatrix] = (*this)[iSubMatrix + coefLineFound][jSubMatrix + 1];
+                }
+            }
+
+            //found determinant
+            TType determinant = subMatrix.getDeterminant();
+
+            //found result
+            result += coef * determinant;
+        }
+        
+        return result;
+    }
 }
 
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
