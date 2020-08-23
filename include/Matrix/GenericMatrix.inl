@@ -103,30 +103,27 @@ template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention
 template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>> = true>
 inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::GenericMatrix (T... args) noexcept
-{
-    m_data = std::array<TType, numberOfData ()>{args...};
-
-    if constexpr (TMatrixConvention == EMatrixConvention::ColumnMajor)
-    {
-        transpose();
-    }
-}
+    : m_data {std::array<TType, numberOfData ()>{args...}}
+{}
 
 
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
 template<typename... T>
 inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::GenericMatrix (T... args) noexcept
-{
-    m_vector = std::array<InternalVector, numberOfInternalVector ()>{args...};
-}
+    : m_vector {std::array<InternalVector, numberOfInternalVector ()>{args...}}
+{}
 
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
 template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr  
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::fill (const TscalarType scalar) noexcept
 {
-    m_data.fill(static_cast<TType>(scalar));
+    for (auto &&vec : m_vector)
+    {
+        vec = static_cast<TType>(scalar);
+    }
+    
     return *this;
 }
 
@@ -175,7 +172,22 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>&		GenericMatrix<T
         {
             for (size_t j = shift; j < TRowSize; j++)
             {
+#if __cplusplus >= 201709L //TODO: constexpr swap
                 std::swap(m_vector[i][j], m_vector[j][i]);
+#else
+                if constexpr (std::is_floating_point_v<TType>)
+                {
+                    TType temp = m_vector[j][i];
+                    m_vector[i][j] = m_vector[j][i];
+                    m_vector[j][i] = temp;
+                }
+                else
+                {
+                    m_vector[i][j] ^= m_vector[j][i];
+                    m_vector[j][i] ^= m_vector[i][j];
+                    m_vector[i][j] ^= m_vector[j][i];
+                }
+#endif
             }
             shift++;
         }
@@ -186,7 +198,22 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>&		GenericMatrix<T
         {
             for (size_t j = shift; j < TColumnSize; j++)
             {
+#if __cplusplus >= 201709L //TODO: constexpr swap
                 std::swap(m_vector[i][j], m_vector[j][i]);
+#else
+                if constexpr (std::is_floating_point_v<TType>)
+                {
+                    TType temp = m_vector[j][i];
+                    m_vector[i][j] = m_vector[j][i];
+                    m_vector[j][i] = temp;
+                }
+                else
+                {
+                    m_vector[i][j] ^= m_vector[j][i];
+                    m_vector[j][i] ^= m_vector[i][j];
+                    m_vector[i][j] ^= m_vector[j][i];
+                }
+#endif
             }
             shift++;
         }
@@ -208,6 +235,7 @@ GenericMatrix<TColumnSize, TRowSize, TType, TMatrixConventionOther>		GenericMatr
         {
             for (size_t j = 0; j < vectorLength(); j++)
             {
+                //rst.getData(j * vectorLength() + i) = m_data[i * vectorLength() + j];
                 rst[j][i] = m_vector[i][j];
             }
         }
@@ -240,9 +268,9 @@ bool		GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::isOrtho		(
 {
 	assert (isSquare());
 
-	const GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> mT (getTransposed());
+	/*const GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> mT (getTransposed());
 
-	return mT * (*this) == identity(); 
+	return mT * (*this) == identity(); */
 }
 
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
@@ -299,11 +327,13 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>		GenericMatrix<TR
 {
 	assert (isSquare() || (*this) == static_cast<TType>(0));
 
+    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> reversedMatrix;
+
 	if (isOrtho() == true)
 	{
 		return getTransposed();
 	}
-
+/*
 	const TType determinant = getDeterminant();
 	
 	if (Numeric::isSameAsZero<TType>(determinant)) //in two step for more perform
@@ -314,7 +344,7 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>		GenericMatrix<TR
 	reversedMatrix.tranformCoMatToAdjointMat();
 
 	reversedMatrix /= determinant;
-
+*/
 	return reversedMatrix;
 }
 
