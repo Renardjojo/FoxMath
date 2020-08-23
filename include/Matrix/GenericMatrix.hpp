@@ -246,15 +246,6 @@ namespace FoxMath::Matrix
         inline constexpr  
         void		tranformCoMatToAdjointMat		() noexcept;
 
-        /**
-         * @brief retrun if the adjoint matrix can be reverse. Assert if is square. Return if matrx can be invert (if zero was found in matrix)
-         * 
-         * @return true 
-         * @return false 
-         */
-        [[nodiscard]] inline constexpr  
-        bool		adjointMatrixIsReversible		() const noexcept;
-
         #pragma endregion //!methods
     
         public:
@@ -374,7 +365,7 @@ namespace FoxMath::Matrix
          * @return constexpr TType 
          */
         [[nodiscard]] inline constexpr  
-        TType		getDeterminant		() noexcept;
+        TType		getDeterminant		() const noexcept;
 
         /**
          * @brief reserse matrix if it's possible, else return false. 

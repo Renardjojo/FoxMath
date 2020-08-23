@@ -74,9 +74,9 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>	GenericMatrix<TRo
 
 	GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> coMatrix;
 
-    for ( unsigned int i = 0; i < TRowSize; i++ )
+    for ( size_t i = 0; i < TRowSize; i++ )
 	{
-        for ( unsigned int j = 0; j < TColumnSize; j++ )
+        for ( size_t j = 0; j < TColumnSize; j++ )
 		{
 			coMatrix[i][j] = getCofactor(i, j);
 		}
@@ -94,24 +94,6 @@ void		GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::tranformCo
 }
 
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
-inline constexpr  
-bool		GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::adjointMatrixIsReversible		() const noexcept
-{
-	assert (isSquare());
-	
-    for (size_t i = 0; i < TRowSize; i++ )
-	{
-        for (size_t j = 0; j < TColumnSize; j++ )
-		{
-			if ((*this)[i][j] == 0.f)
-				return false;
-		}
-	}
-
-    return true;
-}
-
-template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
 constexpr inline
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::GenericMatrix () noexcept
     : m_data{}
@@ -123,6 +105,11 @@ inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::GenericMatrix (T... args) noexcept
 {
     m_data = std::array<TType, numberOfData ()>{args...};
+
+    if constexpr (TMatrixConvention == EMatrixConvention::ColumnMajor)
+    {
+        transpose();
+    }
 }
 
 
@@ -166,7 +153,7 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& GenericMatrix<TR
         {
             for ( size_t j = 0; j < TColumnSize; j++ )
             {
-                (*this)[i][j] = ((i == j) ? static_cast<TType>(1) : static_cast<TType>(0));
+               (*this)[i][j] = ((i == j) ? static_cast<TType>(1) : static_cast<TType>(0));
             }
         }
     }
@@ -253,14 +240,14 @@ bool		GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::isOrtho		(
 {
 	assert (isSquare());
 
-	constexpr GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> mT = getTransposed();
+	const GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> mT (getTransposed());
 
 	return mT * (*this) == identity(); 
 }
 
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
 inline constexpr  
-TType		GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getDeterminant		() noexcept
+TType		GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getDeterminant		() const noexcept
 {
     if constexpr (numberOfData() == 1) //Check if matrix 1*1
     {
@@ -317,16 +304,14 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>		GenericMatrix<TR
 		return getTransposed();
 	}
 
-	TType determinant = getDeterminant();
+	const TType determinant = getDeterminant();
 	
 	if (Numeric::isSameAsZero<TType>(determinant)) //in two step for more perform
 		return GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::zero();
 
 	GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> reversedMatrix = getCoMatrix();
-	reversedMatrix.tranformCoMatToAdjointMat();
 
-	if (!reversedMatrix.adjointMatrixIsReversible()) //in two step for more perform
-		return GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::zero();
+	reversedMatrix.tranformCoMatToAdjointMat();
 
 	reversedMatrix /= determinant;
 
@@ -1146,7 +1131,7 @@ bool operator==(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> c
 
     for (size_t i = 0; i < minInternalVector && rst; i++)
     {
-        rst &= lhs[i] == static_cast<TType>(rhs[i]);
+        rst &= lhs[i] == rhs[i];
     }
 
     return rst;
