@@ -88,7 +88,11 @@ template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr 
 GenericVector<TLength, TType>& GenericVector<TLength, TType>::fill(const TscalarType scalar) noexcept
 {
-    m_data.fill(static_cast<TType>(scalar));
+    for (size_t i = 0; i < TLength; i++)
+    {
+        m_data[i] = static_cast<TType>(scalar);
+    }
+
     return *this;
 }
 
