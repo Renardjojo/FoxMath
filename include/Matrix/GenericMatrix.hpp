@@ -1325,6 +1325,23 @@ namespace FoxMath::Matrix
     bool operator==(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention> const& rhs) noexcept;
 
     /**
+     * @brief Check if all element is same as the scalar
+     * 
+     * @tparam TRowSize 
+     * @tparam TColumnSize 
+     * @tparam TType 
+     * @tparam TMatrixConvention 
+     * @tparam TTypeScalar 
+     * @param mat 
+     * @param scalar 
+     * @return true 
+     * @return false 
+     */
+    template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar>
+    [[nodiscard]] inline constexpr
+    bool operator==(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& mat, TTypeScalar scalar) noexcept;
+
+    /**
      * @brief not equal to
      * 
      * @tparam TLength 
@@ -1339,6 +1356,22 @@ namespace FoxMath::Matrix
     [[nodiscard]] inline constexpr
     bool operator!=(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention> const& rhs) noexcept;
 
+    /**
+     * @brief Check if all element is not same as the scalar
+     * 
+     * @tparam TRowSize 
+     * @tparam TColumnSize 
+     * @tparam TType 
+     * @tparam TMatrixConvention 
+     * @tparam TTypeScalar 
+     * @param mat 
+     * @param scalar 
+     * @return true 
+     * @return false 
+     */
+    template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar>
+    [[nodiscard]] inline constexpr
+    bool operator!=(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& mat, TTypeScalar scalar) noexcept;
 
     #pragma endregion //!comparision operators
     #pragma region stream operators

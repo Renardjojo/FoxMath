@@ -1152,12 +1152,33 @@ bool operator==(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> c
     return rst;
 }
 
+template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar>
+inline constexpr
+bool operator==(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& mat, TTypeScalar scalar) noexcept
+{
+    for (size_t i = 0; i < mat.numberOfData(); i++)
+    {
+        if (!Numeric::isSame<TType>(mat.getData(i), static_cast<TType>(scalar)))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
             size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther>
 inline constexpr
 bool operator!=(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention> const& rhs) noexcept
 {
     return !(lhs == rhs);
+}
+
+template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeScalar>
+inline constexpr
+bool operator!=(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& mat, TTypeScalar scalar) noexcept
+{
+    return !(mat == scalar);
 }
 
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
