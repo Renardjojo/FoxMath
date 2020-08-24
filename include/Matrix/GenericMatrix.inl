@@ -51,7 +51,7 @@ TType		GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getMinor	
 			if (jSubMatrix == j)
 				coefRowFound = true;
 
-			subMatrix[iSubMatrix][jSubMatrix] = (*this)	[iSubMatrix + coefLineFound][jSubMatrix + coefRowFound];
+			subMatrix.getData(iSubMatrix * subMatrix.vectorLength() + jSubMatrix) = m_data[(iSubMatrix + coefLineFound) * vectorLength() + jSubMatrix + coefRowFound];
 		}
 		coefRowFound = false;
 	}
@@ -78,7 +78,7 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>	GenericMatrix<TRo
 	{
         for ( size_t j = 0; j < TColumnSize; j++ )
 		{
-			coMatrix[i][j] = getCofactor(i, j);
+			coMatrix.getData(i * coMatrix.vectorLength() + j) = getCofactor(i, j);
 		}
 	}
 	
@@ -119,9 +119,9 @@ template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr  
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::fill (const TscalarType scalar) noexcept
 {
-    for (auto &&vec : m_vector)
+    for (auto &&data : m_data)
     {
-        vec = static_cast<TType>(scalar);
+        data = static_cast<TType>(scalar);
     }
     
     return *this;
@@ -140,7 +140,7 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& GenericMatrix<TR
         {
             for ( size_t j = 0; j < TRowSize; j++ )
             {
-                (*this)[i][j] = ((i == j) ? static_cast<TType>(1) : static_cast<TType>(0));
+                m_data[i * vectorLength() + j] = ((i == j) ? static_cast<TType>(1) : static_cast<TType>(0));
             }
         }
     }
@@ -150,7 +150,7 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& GenericMatrix<TR
         {
             for ( size_t j = 0; j < TColumnSize; j++ )
             {
-               (*this)[i][j] = ((i == j) ? static_cast<TType>(1) : static_cast<TType>(0));
+               m_data[i * vectorLength() + j] = ((i == j) ? static_cast<TType>(1) : static_cast<TType>(0));
             }
         }
     }
@@ -173,19 +173,19 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>&		GenericMatrix<T
             for (size_t j = shift; j < TRowSize; j++)
             {
 #if __cplusplus >= 201709L //TODO: constexpr swap
-                std::swap(m_vector[i][j], m_vector[j][i]);
+                std::swap(m_data[i * vectorLength() + j], m_data[j * vectorLength() + i]);
 #else
                 if constexpr (std::is_floating_point_v<TType>)
                 {
-                    TType temp = m_vector[j][i];
-                    m_vector[i][j] = m_vector[j][i];
-                    m_vector[j][i] = temp;
+                    TType temp = m_data[j * vectorLength() + i];
+                    m_data[i * vectorLength() + j] = m_data[j * vectorLength() + i];
+                    m_data[j * vectorLength() + i] = temp;
                 }
                 else
                 {
-                    m_vector[i][j] ^= m_vector[j][i];
-                    m_vector[j][i] ^= m_vector[i][j];
-                    m_vector[i][j] ^= m_vector[j][i];
+                    m_data[i * vectorLength() + j] ^= m_data[j * vectorLength() + i];
+                    m_data[j * vectorLength() + i] ^= m_data[i * vectorLength() + j];
+                    m_data[i * vectorLength() + j] ^= m_data[j * vectorLength() + i];
                 }
 #endif
             }
@@ -199,19 +199,19 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>&		GenericMatrix<T
             for (size_t j = shift; j < TColumnSize; j++)
             {
 #if __cplusplus >= 201709L //TODO: constexpr swap
-                std::swap(m_vector[i][j], m_vector[j][i]);
+                std::swap(m_data[i * vectorLength() + j], m_data[j * vectorLength() + i]);
 #else
                 if constexpr (std::is_floating_point_v<TType>)
                 {
-                    TType temp = m_vector[j][i];
-                    m_vector[i][j] = m_vector[j][i];
-                    m_vector[j][i] = temp;
+                    TType temp = m_data[j * vectorLength() + i];
+                    m_data[i * vectorLength() + j] = m_data[j * vectorLength() + i];
+                    m_data[j * vectorLength() + i] = temp;
                 }
                 else
                 {
-                    m_vector[i][j] ^= m_vector[j][i];
-                    m_vector[j][i] ^= m_vector[i][j];
-                    m_vector[i][j] ^= m_vector[j][i];
+                    m_data[i * vectorLength() + j] ^= m_data[j * vectorLength() + i];
+                    m_data[j * vectorLength() + i] ^= m_data[i * vectorLength() + j];
+                    m_data[i * vectorLength() + j] ^= m_data[j * vectorLength() + i];
                 }
 #endif
             }
@@ -235,8 +235,7 @@ GenericMatrix<TColumnSize, TRowSize, TType, TMatrixConventionOther>		GenericMatr
         {
             for (size_t j = 0; j < vectorLength(); j++)
             {
-                //rst.getData(j * vectorLength() + i) = m_data[i * vectorLength() + j];
-                rst[j][i] = m_vector[i][j];
+                rst.getData(j * rst.vectorLength() + i) = m_data[i * vectorLength() + j];
             }
         }
     }
@@ -268,9 +267,9 @@ bool		GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::isOrtho		(
 {
 	assert (isSquare());
 
-	/*const GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> mT (getTransposed());
+	const GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> mT (getTransposed());
 
-	return mT * (*this) == identity(); */
+	return mT * (*this) == identity();
 }
 
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
@@ -291,7 +290,7 @@ TType		GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getDeterm
             signed int signe = pow(-1, 0 + i);
 
             //found coef
-            TType coef = signe * (*this)[i][0];
+            TType coef = signe * m_data[i * vectorLength()];
         
             //create submatrix
             GenericMatrix<TRowSize - 1, TColumnSize - 1, TType, TMatrixConvention> subMatrix;
@@ -306,7 +305,7 @@ TType		GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getDeterm
 
                 for (size_t jSubMatrix = 0; jSubMatrix < subMatrix.getColumnSize(); jSubMatrix++)
                 { 
-                    subMatrix[iSubMatrix][jSubMatrix] = (*this)[iSubMatrix + coefLineFound][jSubMatrix + 1];
+                    subMatrix.getData(iSubMatrix * subMatrix.vectorLength() + jSubMatrix) = m_data[(iSubMatrix + coefLineFound) * vectorLength() + jSubMatrix + 1];
                 }
             }
 
@@ -327,13 +326,11 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>		GenericMatrix<TR
 {
 	assert (isSquare() || (*this) == static_cast<TType>(0));
 
-    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> reversedMatrix;
-
 	if (isOrtho() == true)
 	{
 		return getTransposed();
 	}
-/*
+
 	const TType determinant = getDeterminant();
 	
 	if (Numeric::isSameAsZero<TType>(determinant)) //in two step for more perform
@@ -344,7 +341,7 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>		GenericMatrix<TR
 	reversedMatrix.tranformCoMatToAdjointMat();
 
 	reversedMatrix /= determinant;
-*/
+
 	return reversedMatrix;
 }
 
@@ -524,7 +521,7 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& GenericMatrix<TR
         {
             for ( size_t index = 0; index < squareCommonSize; index++)
             {
-                mRst[columnI][rowI] += ((*this)[index][rowI] * static_cast<TType>(other[columnI][index]));
+                mRst.getData(columnI * mRst.vectorLength() + rowI) += (m_data[index * vectorLength() + rowI] * static_cast<TType>(other.getData(columnI * other.vectorLength() + index)));
             }
         }
     }
@@ -818,9 +815,9 @@ template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention
 inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator+(TTypeScalar scalar, GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> mat) noexcept
 {
-    for (size_t i = 0; i < mat.numberOfInternalVector(); i++)
+    for (size_t i = 0; i < mat.numberOfData(); i++)
     {
-        mat[i] = static_cast<TType>(scalar) + mat[i];
+        mat.getData(i) = static_cast<TType>(scalar) + mat.getData(i);
     }
     
     return mat;
@@ -844,9 +841,9 @@ template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention
 inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator-(TTypeScalar scalar, GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> mat) noexcept
 {
-    for (size_t i = 0; i < mat.numberOfInternalVector(); i++)
+    for (size_t i = 0; i < mat.numberOfData(); i++)
     {
-        mat[i] = static_cast<TType>(scalar) - mat[i];
+        mat.getData(i) = static_cast<TType>(scalar) - mat.getData(i);
     }
     
     return mat;
@@ -870,19 +867,12 @@ template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention
 inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator*(TTypeScalar scalar, GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> mat) noexcept
 {
-    for (size_t i = 0; i < mat.numberOfInternalVector(); i++)
+    for (size_t i = 0; i < mat.numberOfData(); i++)
     {
-        mat[i] = static_cast<TType>(scalar) * mat[i];
+        mat.getData(i) = static_cast<TType>(scalar) * mat.getData(i);
     }
     
     return mat;
-}
-
-template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther>
-inline constexpr
-GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator*(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention> const& rhs) noexcept
-{
-    return lhs *= rhs;
 }
 
 template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
@@ -902,7 +892,7 @@ GenericMatrix<TRowSize, TColumnSizeOther, TType, TMatrixConvention> operator*(co
         {
             for ( size_t index = 0; index < squareCommonSize; index++)
             {
-                mRst[columnI][rowI] += lhs[index][rowI] * rhs[columnI][index];
+                mRst.getData(columnI * mRst.vectorLength() + rowI) += lhs.getData(index * lhs.vectorLength() + rowI) * rhs.getData(columnI * rhs.vectorLength() + index);
             }
         }
     }
@@ -921,9 +911,9 @@ template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention
 inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator/(TTypeScalar scalar, GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> mat) noexcept
 {
-    for (size_t i = 0; i < mat.numberOfInternalVector(); i++)
+    for (size_t i = 0; i < mat.numberOfData(); i++)
     {
-        mat[i] = static_cast<TType>(scalar) / mat[i];
+        mat.getData(i) = static_cast<TType>(scalar) / mat.getData(i);
     }
     
     return mat;
@@ -947,9 +937,9 @@ template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention
 inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator%(TTypeScalar scalar, GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> mat) noexcept
 {
-    for (size_t i = 0; i < mat.numberOfInternalVector(); i++)
+    for (size_t i = 0; i < mat.numberOfData(); i++)
     {
-        mat[i] = static_cast<TType>(scalar) % mat[i];
+        mat.getData(i) = static_cast<TType>(scalar) % mat.getData(i);
     }
     
     return mat;
@@ -973,9 +963,9 @@ template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention
 inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator&(TTypeScalar scalar, GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> mat) noexcept
 {
-    for (size_t i = 0; i < mat.numberOfInternalVector(); i++)
+    for (size_t i = 0; i < mat.numberOfData(); i++)
     {
-        mat[i] = static_cast<TType>(scalar) & mat[i];
+        mat.getData(i) = static_cast<TType>(scalar) & mat.getData(i);
     }
     
     return mat;
@@ -999,9 +989,9 @@ template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention
 inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator|(TTypeScalar scalar, GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> mat) noexcept
 {
-    for (size_t i = 0; i < mat.numberOfInternalVector(); i++)
+    for (size_t i = 0; i < mat.numberOfData(); i++)
     {
-        mat[i] = static_cast<TType>(scalar) | mat[i];
+        mat.getData(i) = static_cast<TType>(scalar) | mat.getData(i);
     }
     
     return mat;
@@ -1025,9 +1015,9 @@ template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention
 inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator^(TTypeScalar scalar, GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> mat) noexcept
 {
-    for (size_t i = 0; i < mat.numberOfInternalVector(); i++)
+    for (size_t i = 0; i < mat.numberOfData(); i++)
     {
-        mat[i] = static_cast<TType>(scalar) ^ mat[i];
+        mat.getData(i) = static_cast<TType>(scalar) ^ mat.getData(i);
     }
     
     return mat;
@@ -1052,9 +1042,9 @@ template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention
 inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator<<(TTypeScalar scalar, GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> mat) noexcept
 {
-    for (size_t i = 0; i < mat.numberOfInternalVector(); i++)
+    for (size_t i = 0; i < mat.numberOfData(); i++)
     {
-        mat[i] = static_cast<TType>(scalar) << mat[i];
+        mat.getData(i) = static_cast<TType>(scalar) << mat.getData(i);
     }
     
     return mat;
@@ -1079,9 +1069,9 @@ template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention
 inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator>>(TTypeScalar scalar, GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> mat) noexcept
 {
-    for (size_t i = 0; i < mat.numberOfInternalVector(); i++)
+    for (size_t i = 0; i < mat.numberOfData(); i++)
     {
-        mat[i] = static_cast<TType>(scalar) >> mat[i];
+        mat.getData(i) = static_cast<TType>(scalar) >> mat.getData(i);
     }
     
     return mat;
@@ -1099,9 +1089,9 @@ template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention
 inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> operator~(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> mat) noexcept
 {
-    for (size_t i = 0; i < mat.numberOfInternalVector(); i++)
+    for (size_t i = 0; i < mat.numberOfData(); i++)
     {
-        mat[i] = ~mat[i];
+        mat.getData(i) = ~mat.getData(i);
     }
     
     return mat;
@@ -1111,9 +1101,9 @@ template <size_t TRowSize, size_t TColumnSize, EMatrixConvention TMatrixConventi
 inline constexpr
 GenericMatrix<TRowSize, TColumnSize, bool, TMatrixConvention> operator!(GenericMatrix<TRowSize, TColumnSize, bool, TMatrixConvention> mat) noexcept
 {
-    for (size_t i = 0; i < mat.numberOfInternalVector(); i++)
+    for (size_t i = 0; i < mat.numberOfData(); i++)
     {
-        mat[i] = !mat[i];
+        mat.getData(i) = !mat.getData(i);
     }
     
     return mat;
@@ -1149,19 +1139,16 @@ GenericMatrix<TRowSize, TColumnSize, bool, TMatrixConvention> operator||(Generic
     return lhs;
 }
 
-template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
-            size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther>
+template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeOther>
 inline constexpr
-bool operator==(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention> const& rhs) noexcept
+bool operator==(const GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& lhs, const GenericMatrix<TRowSize, TColumnSize, TTypeOther, TMatrixConvention>& rhs) noexcept
 {
-    constexpr size_t minInternalVector = (rhs.numberOfInternalVector() < lhs.numberOfInternalVector()) ? 
-                                          rhs.numberOfInternalVector() : lhs.numberOfInternalVector();
-
     bool rst = true;
 
-    for (size_t i = 0; i < minInternalVector && rst; i++)
+    const size_t numberOfData = TRowSize * TColumnSize;
+    for (size_t i = 0; i < numberOfData && rst; i++)
     {
-        rst &= lhs[i] == rhs[i];
+        rst &= Numeric::isSame<TType>(lhs.getData(i), static_cast<TType>(rhs.getData(i)));
     }
 
     return rst;

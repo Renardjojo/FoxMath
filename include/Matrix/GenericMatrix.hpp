@@ -1303,17 +1303,20 @@ namespace FoxMath::Matrix
      * @brief equal to
      * @note    if VECTOR_OPERATOR_EGALE_COMPARE_LENGTH is define, this function compare length of the both generic vector. Else it compare the both member.
      *          By default, VECTOR_OPERATOR_EGALE_COMPARE_LENGTH is not define
-     * @tparam TLength 
+     * 
+     * @tparam TRowSize 
+     * @tparam TColumnSize 
      * @tparam TType 
+     * @tparam TMatrixConvention 
+     * @tparam TTypeOther 
      * @param lhs 
      * @param rhs 
      * @return true 
      * @return false 
      */
-    template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention,
-                size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther>
+    template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention, typename TTypeOther>
     [[nodiscard]] inline constexpr
-    bool operator==(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& lhs, GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention> const& rhs) noexcept;
+    bool operator==(GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> const& lhs, GenericMatrix<TRowSize, TColumnSize, TTypeOther, TMatrixConvention> const& rhs) noexcept;
 
     /**
      * @brief Check if all element is same as the scalar
