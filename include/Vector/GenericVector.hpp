@@ -93,7 +93,7 @@ namespace FoxMath::Vector
         implicit constexpr inline 
         GenericVector (GenericVector&& other)				        = default;
         
-        implicit
+        implicit inline
         ~GenericVector ()				                            = default;
         
         implicit constexpr inline 
