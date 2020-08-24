@@ -49,7 +49,7 @@
 namespace FoxMath::Matrix
 {
     /*Use of IsArithmetic*/
-    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor,
+    template <size_t TRowSize, size_t TColumnSize, typename TType = float, EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor,
                 Type::IsNotEqualTo<TRowSize, 0> = true, 
                 Type::IsNotEqualTo<TColumnSize, 0> = true,
                 Type::IsArithmetic<TType> = true>
@@ -148,21 +148,6 @@ namespace FoxMath::Matrix
         }
 
         /**
-         * @brief Get identity matrix. Work only if matrix is square
-         * 
-         * @return constexpr GenericMatrix& 
-         */
-        [[nodiscard]] static inline constexpr  
-        GenericMatrix identity () noexcept
-        {
-            assert (isSquare());
-
-            GenericMatrix rst;
-            rst.generateIdentity();
-            return rst;
-        }
-
-        /**
          * @brief return void matrix init with zero
          * 
          * @return constexpr GenericMatrix& 
@@ -192,42 +177,6 @@ namespace FoxMath::Matrix
         #pragma endregion //!attribut
     
         #pragma region methods
-
-        /**
-         * @brief return the determinant of minor element in function of M aij. Assert if matrix is not square.
-         * 
-         * @param i : start to 0 just to n - 1 
-         * @param j : start to 0 just to n - 1
-         * @return constexpr TType 
-         */
-        [[nodiscard]] inline constexpr  
-        TType		getMinor		(size_t i, size_t j) const noexcept;
-
-        /**
-         * @brief return the result of coeficient multipliate by his cofactor multipliate by the signe : (-1)^(i+j) * minor(i, j)
-         * 
-         * @param i : start to 0 just to n - 1 
-         * @param j : start to 0 just to n - 1
-         * @return constexpr TType 
-         */
-        [[nodiscard]] inline constexpr  
-        TType		getCofactor		(size_t i, size_t j) const noexcept;
-            
-        /**
-         * @brief return the cofactor matrix of the current matrix. Assert if is square
-         * 
-         * @return constexpr GenericMatrix 
-         */
-        [[nodiscard]] inline constexpr  
-        GenericMatrix		getCoMatrix		() const noexcept;
-
-        /**
-         * @brief transpose the cofactor matrix. Assert if is square
-         * 
-         */
-        inline constexpr  
-        void		tranformCoMatToAdjointMat		() noexcept;
-
         #pragma endregion //!methods
     
         public:
@@ -302,24 +251,6 @@ namespace FoxMath::Matrix
         GenericMatrix& fill (const TscalarType scalar) noexcept;
 
         /**
-         * @brief affect identity to matrix
-         * 
-         * @return constexpr GenericMatrix& 
-         */
-        inline constexpr  
-        GenericMatrix& generateIdentity () noexcept;
-
-        /**
-         * @brief Transpose the matrix on itself. Only square matrix can do that because of static matrix
-         *          
-         * @note Only check if matrix is square on debug mode (assert)
-         * 
-         * @return constexpr GenericMatrix& 
-         */
-        inline constexpr  
-        GenericMatrix&		transpose		() noexcept;
-
-        /**
          * @brief Get the Transpose object. If the user wan't to change the convention it can add it in template arg
          * 
          * @note : If you really wan't to transpose matrix itself, you can use union : Matrix<4, 2> and Matrix<2, 4> share the same memory space
@@ -330,45 +261,6 @@ namespace FoxMath::Matrix
         template <EMatrixConvention TMatrixConventionOther = TMatrixConvention>
         [[nodiscard]] inline constexpr  
         GenericMatrix<TColumnSize, TRowSize, TType, TMatrixConventionOther>		getTransposed	() const noexcept;
-
-        /**
-         * @brief return true of false if matrix is orthogonal. If M*M.transpose() = I. Assert if matrix is not square
-         * 
-         * @return true 
-         * @return false 
-         */
-        [[nodiscard]] inline constexpr  
-        bool		isOrtho		() const noexcept;
-    
-        /**
-         * @brief Calcul the derteminant of square matrix X*X. Create assert if matrix is not square or if matrix is void. 
-         *		  If determinant is geometrical area betwen eache vector in matrix.
-         * 
-         * @return constexpr TType 
-         */
-        [[nodiscard]] inline constexpr  
-        TType		getDeterminant		() const noexcept;
-
-        /**
-         * @brief reserse matrix if it's possible, else return false. 
-         * If function if orthogonal, this function return the transposate of matrix.
-         * Assert if is square or empty
-         * 
-         * @return Matrix return empty matrix if reverse is not possible
-         */
-        [[nodiscard]] inline constexpr  
-        GenericMatrix		getReverse		() const noexcept;
-
-        /**
-         * @brief reserse matrix if it's possible, else return false.
-         * If function if orthogonal, matrix will be transpose.
-         * Assert if is square or empty
-         * 
-         * @return true 
-         * @return false 
-         */
-        inline constexpr 
-        bool		reverse		() noexcept;
 
         #pragma endregion //!methods
     
@@ -544,7 +436,7 @@ namespace FoxMath::Matrix
 		GenericMatrix& operator*=(TscalarType scalar) noexcept;
 
         /**
-         * @brief multiplication assignment. Only work if both matrix is square
+         * @brief multiplication assignment. Only work if other is square.
          * 
          * @tparam TRowSizeOther 
          * @tparam TColumnSizeOther 
@@ -552,7 +444,9 @@ namespace FoxMath::Matrix
          * @param other 
          * @return constexpr GenericMatrix& 
          */
-        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, Type::IsEqualTo<TColumnSize, TRowSizeOther> = true, Type::IsEqualTo<TColumnSize, TColumnSizeOther> = true>
+        template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, 
+        Type::IsEqualTo<TColumnSize, TRowSizeOther> = true,
+        Type::IsEqualTo<TRowSizeOther, TColumnSizeOther> = true>
 		inline constexpr
 		GenericMatrix& operator*=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention>& other) noexcept;
 
@@ -1404,10 +1298,10 @@ namespace FoxMath::Matrix
 
     #include "GenericMatrix.inl"
 
-    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <size_t TRowSize, size_t TColumnSize, typename TType = float, EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
     using Matrix = GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>;
 
-    template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention >
+    template <size_t TRowSize, size_t TColumnSize, typename TType = float, EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
     using Mat = Matrix<TRowSize, TColumnSize, TType, TMatrixConvention>;
 
 } /*namespace FoxMath::Matrix*/
