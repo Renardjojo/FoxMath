@@ -206,7 +206,7 @@ int main()
         std::cout << matrixConventionToString(matColumnMajor.getMatrixConvention()) << std::endl << std::setprecision(2)  << std::fixed  << matColumnMajor;
 
         std::cout << std::endl << std::endl << "Try to transpose itself matrix" << std::endl;
-        matColumnMajor.transpose();
+        reinterpret_cast<SquareMatrix<6, int, EMatrixConvention::ColumnMajor>*>(&matColumnMajor)->transpose();
         std::cout << matrixConventionToString(matColumnMajor.getMatrixConvention()) << std::endl << std::setprecision(2)  << std::fixed  << matColumnMajor;
         //matRowMajor.transpose(); Do not work, because matrix is not square
 
@@ -224,16 +224,17 @@ int main()
         std::cout << matrixConventionToString(matRowMajorSqrt.getMatrixConvention()) << std::endl << std::setprecision(2)  << std::fixed  << matRowMajorSqrt;
         
         std::cout << std::endl << std::endl << "create consexpr reverse matrix" << std::endl;
-        constexpr Matrix<3, 3, double, EMatrixConvention::ColumnMajor> matConstColumnMajorSqrt (    2., 1., 3., 
+        constexpr SquareMatrix<3, double, EMatrixConvention::ColumnMajor> matConstColumnMajorSqrt ( 2., 1., 3., 
                                                                                                     4., 2., -1.,
                                                                                                     2., -1., 1.);
-        constexpr Matrix<3, 3, double, EMatrixConvention::RowMajor> matConstRowMajorSqrt = matConstColumnMajorSqrt;
+        
+        constexpr SquareMatrix<3, double, EMatrixConvention::RowMajor> matConstRowMajorSqrt = matConstColumnMajorSqrt;
 
         std::cout << std::endl << std::endl << matConstColumnMajorSqrt << std::endl;
         std::cout << std::endl << std::endl << matConstRowMajorSqrt << std::endl;
 
-        constexpr Matrix<3, 3, double, EMatrixConvention::ColumnMajor> matConstColumnMajorInverse = matConstColumnMajorSqrt.getReverse();
-        constexpr Matrix<3, 3, double, EMatrixConvention::ColumnMajor> matConstRowMajorInverse = matConstRowMajorSqrt.getReverse();
+        constexpr SquareMatrix<3, double, EMatrixConvention::ColumnMajor> matConstColumnMajorInverse = matConstColumnMajorSqrt.getReverse();
+        constexpr SquareMatrix<3, double, EMatrixConvention::ColumnMajor> matConstRowMajorInverse = matConstRowMajorSqrt.getReverse();
         std::cout << std::endl << std::endl << matConstColumnMajorInverse << std::endl;
         std::cout << std::endl << std::endl << matConstRowMajorInverse << std::endl;
     }
