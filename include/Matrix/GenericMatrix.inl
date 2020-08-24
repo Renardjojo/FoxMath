@@ -458,11 +458,16 @@ inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::operator+=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention>& other) noexcept
 {
     constexpr size_t minInternalVector = (other.numberOfInternalVector() < numberOfInternalVector()) ? other.numberOfInternalVector() : numberOfInternalVector();
+    constexpr size_t minVectorLength =   (other.vectorLength() < vectorLength()) ? other.vectorLength() : vectorLength();
 
     for (size_t i = 0; i < minInternalVector; i++)
     {
-        m_vector[i] += other[i];
+        for (size_t j = 0; j < minVectorLength; j++)
+        {
+            m_data[i * vectorLength() + j] += other.getData(i * other.vectorLength() + j);
+        }
     }
+
     return *this;
 }
 
@@ -484,11 +489,16 @@ inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::operator-=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention>& other) noexcept
 {
     constexpr size_t minInternalVector = (other.numberOfInternalVector() < numberOfInternalVector()) ? other.numberOfInternalVector() : numberOfInternalVector();
+    constexpr size_t minVectorLength =   (other.vectorLength() < vectorLength()) ? other.vectorLength() : vectorLength();
 
     for (size_t i = 0; i < minInternalVector; i++)
     {
-        m_vector[i] -= other[i];
+        for (size_t j = 0; j < minVectorLength; j++)
+        {
+            m_data[i * vectorLength() + j] -= other.getData(i * other.vectorLength() + j);
+        }
     }
+
     return *this;
 }
 
@@ -551,11 +561,16 @@ inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::operator/=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention>& other) noexcept
 {
     constexpr size_t minInternalVector = (other.numberOfInternalVector() < numberOfInternalVector()) ? other.numberOfInternalVector() : numberOfInternalVector();
+    constexpr size_t minVectorLength =   (other.vectorLength() < vectorLength()) ? other.vectorLength() : vectorLength();
 
     for (size_t i = 0; i < minInternalVector; i++)
     {
-        m_vector[i] /= static_cast<TType>(other[i]);
+        for (size_t j = 0; j < minVectorLength; j++)
+        {
+            m_data[i * vectorLength() + j] /= other.getData(i * other.vectorLength() + j);
+        }
     }
+
     return *this;
 }
 
@@ -577,11 +592,16 @@ inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::operator%=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention>& other) noexcept
 {
     constexpr size_t minInternalVector = (other.numberOfInternalVector() < numberOfInternalVector()) ? other.numberOfInternalVector() : numberOfInternalVector();
+    constexpr size_t minVectorLength =   (other.vectorLength() < vectorLength()) ? other.vectorLength() : vectorLength();
 
     for (size_t i = 0; i < minInternalVector; i++)
     {
-        m_vector[i] %= static_cast<TType>(other[i]);
+        for (size_t j = 0; j < minVectorLength; j++)
+        {
+            m_data[i * vectorLength() + j] %= other.getData(i * other.vectorLength() + j);
+        }
     }
+
     return *this;
 }
 
@@ -603,11 +623,16 @@ inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::operator&=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention>& other) noexcept
 {
     constexpr size_t minInternalVector = (other.numberOfInternalVector() < numberOfInternalVector()) ? other.numberOfInternalVector() : numberOfInternalVector();
+    constexpr size_t minVectorLength =   (other.vectorLength() < vectorLength()) ? other.vectorLength() : vectorLength();
 
     for (size_t i = 0; i < minInternalVector; i++)
     {
-        m_vector[i] &= static_cast<TType>(other[i]);
+        for (size_t j = 0; j < minVectorLength; j++)
+        {
+            m_data[i * vectorLength() + j] &= other.getData(i * other.vectorLength() + j);
+        }
     }
+
     return *this;
 }
 
@@ -629,11 +654,16 @@ inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::operator|=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention>& other) noexcept
 {
     constexpr size_t minInternalVector = (other.numberOfInternalVector() < numberOfInternalVector()) ? other.numberOfInternalVector() : numberOfInternalVector();
+    constexpr size_t minVectorLength =   (other.vectorLength() < vectorLength()) ? other.vectorLength() : vectorLength();
 
     for (size_t i = 0; i < minInternalVector; i++)
     {
-        m_vector[i] |= static_cast<TType>(other[i]);
+        for (size_t j = 0; j < minVectorLength; j++)
+        {
+            m_data[i * vectorLength() + j] |= other.getData(i * other.vectorLength() + j);
+        }
     }
+
     return *this;
 }
 
@@ -655,11 +685,16 @@ inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::operator^=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention>& other) noexcept
 {
     constexpr size_t minInternalVector = (other.numberOfInternalVector() < numberOfInternalVector()) ? other.numberOfInternalVector() : numberOfInternalVector();
+    constexpr size_t minVectorLength =   (other.vectorLength() < vectorLength()) ? other.vectorLength() : vectorLength();
 
     for (size_t i = 0; i < minInternalVector; i++)
     {
-        m_vector[i] ^= static_cast<TType>(other[i]);
+        for (size_t j = 0; j < minVectorLength; j++)
+        {
+            m_data[i * vectorLength() + j] ^= other.getData(i * other.vectorLength() + j);
+        }
     }
+
     return *this;
 }
 
@@ -681,11 +716,16 @@ inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::operator<<=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention>& other) noexcept
 {
     constexpr size_t minInternalVector = (other.numberOfInternalVector() < numberOfInternalVector()) ? other.numberOfInternalVector() : numberOfInternalVector();
+    constexpr size_t minVectorLength =   (other.vectorLength() < vectorLength()) ? other.vectorLength() : vectorLength();
 
     for (size_t i = 0; i < minInternalVector; i++)
     {
-        m_vector[i] <<= static_cast<TType>(other[i]);
+        for (size_t j = 0; j < minVectorLength; j++)
+        {
+            m_data[i * vectorLength() + j] <<= other.getData(i * other.vectorLength() + j);
+        }
     }
+
     return *this;
 }
 
@@ -707,11 +747,16 @@ inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::operator>>=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention>& other) noexcept
 {
     constexpr size_t minInternalVector = (other.numberOfInternalVector() < numberOfInternalVector()) ? other.numberOfInternalVector() : numberOfInternalVector();
+    constexpr size_t minVectorLength =   (other.vectorLength() < vectorLength()) ? other.vectorLength() : vectorLength();
 
     for (size_t i = 0; i < minInternalVector; i++)
     {
-        m_vector[i] >>= static_cast<TType>(other[i]);
+        for (size_t j = 0; j < minVectorLength; j++)
+        {
+            m_data[i * vectorLength() + j] >>= other.getData(i * other.vectorLength() + j);
+        }
     }
+
     return *this;
 }
 
