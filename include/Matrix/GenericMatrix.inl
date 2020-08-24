@@ -1189,9 +1189,9 @@ std::ostream& 	operator<<		(std::ostream& out, const GenericMatrix<TRowSize, TCo
 {
     if constexpr (TMatrixConvention == EMatrixConvention::RowMajor)
     {
-        for (size_t i = 0; i < mat.numberOfInternalVector(); i++)
+        for (size_t i = 0; i < mat.numberOfData(); i++)
         {
-            out << mat[i] << std::endl;
+            out << mat.getData(i) << std::endl;
         }
     }
     else
@@ -1200,7 +1200,7 @@ std::ostream& 	operator<<		(std::ostream& out, const GenericMatrix<TRowSize, TCo
         {
             for (size_t iVec = 0; iVec < mat.numberOfInternalVector(); iVec++)
             {
-                out << mat[iVec][iData] << "  ";
+                out << mat.getData(iVec * mat.vectorLength() + iData) << "  ";
             }
             out << std::endl;
         }
@@ -1215,9 +1215,9 @@ std::istream& 	operator>>		(std::istream& in, const GenericMatrix<TRowSize, TCol
 {
     if constexpr (TMatrixConvention == EMatrixConvention::RowMajor)
     {
-        for (size_t i = 0; i < mat.numberOfInternalVector(); i++)
+        for (size_t i = 0; i < mat.numberOfData(); i++)
         {
-            in >> mat[i];
+            in >> mat.getData(i);
         }
     }
     else
@@ -1226,7 +1226,7 @@ std::istream& 	operator>>		(std::istream& in, const GenericMatrix<TRowSize, TCol
         {
             for (size_t iVec = 0; iVec < mat.numberOfInternalVector(); iVec++)
             {
-                in >> mat[iVec][iData];
+                in >> mat.getData(iVec * mat.vectorLength() + iData);
             }
         }
     }
