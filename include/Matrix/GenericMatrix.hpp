@@ -175,24 +175,6 @@ namespace FoxMath::Matrix
             return rst;
         }
 
-        /**
-         * @brief This function solve a system of n equation of n unknow. 
-         * @example q1 * x1 + q2 * x2 + q3 * x3 = v1 or q4 * x1 + q5 * x2 + q6 * x3 = v2
-         * 
-         * @note    Enter in parameter each coef under the form of matrix and each result under the form of colmun vector (other matrix) 
-         *	        Assert if matrix of equation colum is under 1 or if one of all matrix is empty.
-         * @param eqCoef 
-         * @param eqRslt 
-         * @return constexpr GenericMatrix 
-         */
-        [[nodiscard]] static inline constexpr 
-        GenericMatrix		getSolvationNEquationOfNInknow		(const GenericMatrix& eqCoef, const GenericMatrix<TRowSize, 1, TType, TMatrixConvention>& eqRslt) noexcept
-        {
-            assert(eqCoef != static_cast<TType>(0) && eqRslt != static_cast<TType>(0) && eqCoef.isSquare());
-
-            return eqCoef.getReverse() * eqRslt;
-        }
-
         #pragma endregion //! static attribut
 
         protected:
@@ -1402,6 +1384,23 @@ namespace FoxMath::Matrix
     std::istream& 	operator>>		(std::istream& in, const GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& mat) noexcept;
 
     #pragma endregion //!stream operators
+
+    /**
+     * @brief This function solve a system of n equation of n unknow. 
+     * @example q1 * x1 + q2 * x2 + q3 * x3 = v1 or q4 * x1 + q5 * x2 + q6 * x3 = v2
+     * 
+     * @note    Enter in parameter each coef under the form of matrix and each result under the form of colmun vector (other matrix) 
+     *	        Assert if matrix of equation colum is under 1 or if one of all matrix is empty.
+     * 
+     * @tparam TSizeEquation 
+     * @tparam TType 
+     * @param eqCoef 
+     * @param eqRslt 
+     * @return constexpr GenericMatrix<TSizeEquation, TSizeEquation, TType, EMatrixConvention::RowMajor> 
+     */
+    template <size_t TSizeEquation, typename TType>
+    [[nodiscard]] static inline constexpr 
+    GenericMatrix<TSizeEquation, TSizeEquation, TType, EMatrixConvention::RowMajor> getSolvationNEquationOfNInknow		(const GenericMatrix<TSizeEquation, TSizeEquation, TType, EMatrixConvention::RowMajor>& eqCoef, const Vector::GenericVector<TSizeEquation, TType>& eqRslt) noexcept;
 
     #include "GenericMatrix.inl"
 

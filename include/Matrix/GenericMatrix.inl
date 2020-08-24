@@ -177,7 +177,7 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>&		GenericMatrix<T
 #else
                 if constexpr (std::is_floating_point_v<TType>)
                 {
-                    TType temp = m_data[j * vectorLength() + i];
+                    TType temp = m_data[i * vectorLength() + j];
                     m_data[i * vectorLength() + j] = m_data[j * vectorLength() + i];
                     m_data[j * vectorLength() + i] = temp;
                 }
@@ -203,7 +203,7 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>&		GenericMatrix<T
 #else
                 if constexpr (std::is_floating_point_v<TType>)
                 {
-                    TType temp = m_data[j * vectorLength() + i];
+                    TType temp = m_data[i * vectorLength() + j];
                     m_data[i * vectorLength() + j] = m_data[j * vectorLength() + i];
                     m_data[j * vectorLength() + i] = temp;
                 }
@@ -766,6 +766,8 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::operator Generic
 
     constexpr size_t minInternalVector = (GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>::numberOfInternalVector() < numberOfInternalVector()) ? 
                                           GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>::numberOfInternalVector() : numberOfInternalVector();
+    constexpr size_t minVectorLength =   (GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>::vectorLength() < vectorLength()) ? 
+                                          GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConventionOther>::vectorLength() : vectorLength();
 
     if constexpr (TMatrixConvention != TMatrixConventionOther)
     {
@@ -773,16 +775,20 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::operator Generic
 
         for (size_t i = 0; i < minInternalVector; i++)
         {
-            //conversion type is inside vector's assignement operator
-            result[i] = transposedVector[i];
+            for (size_t j = 0; j < minVectorLength; j++)
+            {
+                result.getData(i * result.vectorLength() + j) = transposedVector.getData(i * transposedVector.vectorLength() + j);
+            }
         }
     }
     else
     {
         for (size_t i = 0; i < minInternalVector; i++)
         {
-            //conversion type is inside vector's assignement operator
-            result[i] = m_vector[i];
+            for (size_t j = 0; j < minVectorLength; j++)
+            {
+                result.getData(i * result.vectorLength() + j) = m_data[i * vectorLength() + j];
+            }
         }
     }
 
@@ -1189,9 +1195,13 @@ std::ostream& 	operator<<		(std::ostream& out, const GenericMatrix<TRowSize, TCo
 {
     if constexpr (TMatrixConvention == EMatrixConvention::RowMajor)
     {
-        for (size_t i = 0; i < mat.numberOfData(); i++)
+        for (size_t iVec = 0; iVec < mat.numberOfInternalVector(); iVec++)
         {
-            out << mat.getData(i) << std::endl;
+            for (size_t iData = 0; iData < mat.vectorLength(); iData++)
+            {
+                out << mat.getData(iVec * mat.vectorLength() + iData) << "  ";
+            }
+            out << std::endl;
         }
     }
     else
@@ -1232,4 +1242,11 @@ std::istream& 	operator>>		(std::istream& in, const GenericMatrix<TRowSize, TCol
     }
 
     return in;  
+}
+
+template <size_t TSizeEquation, typename TType>
+static inline constexpr 
+GenericMatrix<TSizeEquation, TSizeEquation, TType, EMatrixConvention::RowMajor> getSolvationNEquationOfNInknow		(const GenericMatrix<TSizeEquation, TSizeEquation, TType, EMatrixConvention::RowMajor>& eqCoef, const Vector::GenericVector<TSizeEquation, TType>& eqRslt) noexcept
+{
+    return eqRslt * eqCoef.getReverse();
 }
