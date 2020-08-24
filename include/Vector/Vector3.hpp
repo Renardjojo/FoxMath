@@ -55,16 +55,16 @@ namespace FoxMath::Vector
         #pragma region constructor/destructor
     
         constexpr inline
-        Vector3 () noexcept			                = default;
+        Vector3 () noexcept			                        = default;
 
         constexpr inline  
-        Vector3 (const Vector3& other) noexcept     = default;
+        Vector3 (const Vector3& other) noexcept             = default;
 
         constexpr inline
         Vector3 (Vector3&& other) noexcept				    = default;
 
         inline
-        virtual ~Vector3 ()	noexcept			            = default;
+        ~Vector3 ()	noexcept			                    = default;
 
         constexpr inline
         Vector3& operator=(Vector3 const& other) noexcept   = default;
