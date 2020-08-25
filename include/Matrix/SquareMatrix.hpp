@@ -29,6 +29,7 @@
 
 #pragma once
 
+#include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
 #include "Matrix/GenericMatrix.hpp"
 
 namespace FoxMath::Matrix
@@ -115,9 +116,7 @@ namespace FoxMath::Matrix
          * @param other 
          */
         constexpr inline
-        SquareMatrix (const GenericMatrix<TSize, TSize, TType, TMatrixConvention>& other) noexcept
-            : GenericMatrix<TSize, TSize, TType, TMatrixConvention>(other)
-        {}
+        SquareMatrix (const GenericMatrix<TSize, TSize, TType, TMatrixConvention>& other) noexcept;
 
         /**
          * @brief Aggregate initialization for scalar
@@ -133,9 +132,7 @@ namespace FoxMath::Matrix
          */
         template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>> = true>
         explicit inline constexpr
-        SquareMatrix (T... args) noexcept
-            : GenericMatrix<TSize, TSize, TType, TMatrixConvention>(args...)
-        {}
+        SquareMatrix (T... args) noexcept;
 
         /**
          * @brief Aggregate initialization for vector
@@ -151,9 +148,7 @@ namespace FoxMath::Matrix
          */
         template<typename... T>
         explicit inline constexpr
-        SquareMatrix (T... args) noexcept
-            : GenericMatrix<TSize, TSize, TType, TMatrixConvention>(args...)
-        {}
+        SquareMatrix (T... args) noexcept;
 
 
         #pragma endregion //!constructor/destructor
@@ -266,29 +261,7 @@ namespace FoxMath::Matrix
          */
         template <size_t TSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
         [[nodiscard]] implicit constexpr inline
-        operator SquareMatrix<TSizeOther, TTypeOther, TMatrixConventionOther>() const noexcept
-        {
-            GenericMatrix<TSizeOther, TSizeOther, TTypeOther, TMatrixConventionOther> rstConv = (*this);
-            return rstConv;
-        }
-
-        /**
-         * @brief simple assignment
-         * 
-         * @tparam TSizeOther 
-         * @tparam TTypeOther 
-         * @tparam TMatrixConventionOther 
-         * @param other 
-         * @return constexpr SquareMatrix& 
-         */
-        template <size_t TSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
-		inline constexpr
-		SquareMatrix& operator=(const GenericMatrix<TSizeOther, TSizeOther, TTypeOther, TMatrixConventionOther>& other) noexcept
-        {
-            GenericMatrix<TSize, TSize, TType, TMatrixConvention>::operator=(other);
-            return *this;
-        }
-
+        operator SquareMatrix<TSizeOther, TTypeOther, TMatrixConventionOther>() const noexcept;
 
         #pragma endregion //!operator
     

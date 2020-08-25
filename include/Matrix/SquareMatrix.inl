@@ -30,6 +30,26 @@
 #pragma once
 
 template <size_t TSize, typename TType, EMatrixConvention TMatrixConvention>
+constexpr inline
+SquareMatrix<TSize, TType, TMatrixConvention>::SquareMatrix (const GenericMatrix<TSize, TSize, TType, TMatrixConvention>& other) noexcept
+    : GenericMatrix<TSize, TSize, TType, TMatrixConvention>(other)
+{}
+
+template <size_t TSize, typename TType, EMatrixConvention TMatrixConvention>
+template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>>>
+inline constexpr
+SquareMatrix<TSize, TType, TMatrixConvention>::SquareMatrix (T... args) noexcept
+    : GenericMatrix<TSize, TSize, TType, TMatrixConvention>(args...)
+{}
+
+template <size_t TSize, typename TType, EMatrixConvention TMatrixConvention>
+template<typename... T>
+inline constexpr
+SquareMatrix<TSize, TType, TMatrixConvention>::SquareMatrix (T... args) noexcept
+    : GenericMatrix<TSize, TSize, TType, TMatrixConvention>(args...)
+{}
+
+template <size_t TSize, typename TType, EMatrixConvention TMatrixConvention>
 inline constexpr  
 TType		SquareMatrix<TSize, TType, TMatrixConvention>::getMinor		(size_t i, size_t j) const noexcept
 {
@@ -231,4 +251,13 @@ void		SquareMatrix<TSize, TType, TMatrixConvention>::reverse		() noexcept
 	SquareMatrix<TSize, TType, TMatrixConvention> reversedMatrix = getReverse();
 
 	(*this) = reversedMatrix;
+}
+
+template <size_t TSize, typename TType, EMatrixConvention TMatrixConvention>
+template <size_t TSizeOther, typename TTypeOther, EMatrixConvention TMatrixConventionOther>
+constexpr inline
+SquareMatrix<TSize, TType, TMatrixConvention>::operator SquareMatrix<TSizeOther, TTypeOther, TMatrixConventionOther>() const noexcept
+{
+    GenericMatrix<TSizeOther, TSizeOther, TTypeOther, TMatrixConventionOther> rstConv = (*this);
+    return rstConv;
 }
