@@ -36,6 +36,6 @@
 
 #include "Matrix/GenericMatrix.hpp"
 #include "Matrix/SquareMatrix.hpp"
-// #include "Matrix/Matrix2.hpp"
-// #include "Matrix/Matrix3.hpp"
-// #include "Matrix/Matrix4.hpp"
+#include "Matrix/Matrix2.hpp"
+#include "Matrix/Matrix3.hpp"
+#include "Matrix/Matrix4.hpp"
