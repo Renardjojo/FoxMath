@@ -29,8 +29,9 @@
 
 #pragma once
 
-#include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
 #include "Matrix/GenericMatrix.hpp"
+#include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
+#include "Types/Implicit.hpp" //implicit
 
 namespace FoxMath::Matrix
 {
