@@ -29,63 +29,65 @@
 
 #pragma once
 
+#include "Matrix/SquareMatrix.hpp"
+
 namespace FoxMath::Matrix
 {
+    template <typename TType = float, EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    class Matrix3 :  public SquareMatrix<3, TType, TMatrixConvention>
+    {
+        private:
 
-class Matrix3
-{
-    private:
+        protected:
 
-    protected:
+        #pragma region attribut
+        #pragma endregion //!attribut
 
-    #pragma region attribut
-    #pragma endregion //!attribut
+        #pragma region static attribut
+        #pragma endregion //! static attribut
 
-    #pragma region static attribut
-    #pragma endregion //! static attribut
+        #pragma region methods
+        #pragma endregion //!methods
 
-    #pragma region methods
-    #pragma endregion //!methods
+        public:
 
-    public:
+        #pragma region constructor/destructor
 
-    #pragma region constructor/destructor
+        constexpr inline
+        Matrix3 () noexcept 					                = default;
 
-    constexpr inline
-    Matrix3 () noexcept 					                = default;
+        constexpr inline
+        Matrix3 (const Matrix3& other) noexcept			        = default;
 
-    constexpr inline
-    Matrix3 (const Matrix3& other) noexcept			        = default;
+        constexpr inline
+        Matrix3 (Matrix3&& other) noexcept				        = default;
 
-    constexpr inline
-    Matrix3 (Matrix3&& other) noexcept				        = default;
+        inline
+        ~Matrix3 () noexcept				                    = default;
 
-    inline
-    ~Matrix3 () noexcept				                    = default;
+        constexpr inline
+        Matrix3& operator=(Matrix3 const& other) noexcept		= default;
 
-    constexpr inline
-    Matrix3& operator=(Matrix3 const& other) noexcept		= default;
+        constexpr inline
+        Matrix3& operator=(Matrix3 && other) noexcept			= default;
 
-    constexpr inline
-    Matrix3& operator=(Matrix3 && other) noexcept			= default;
+        #pragma endregion //!constructor/destructor
 
-    #pragma endregion //!constructor/destructor
+        #pragma region methods
+        #pragma endregion //!methods
 
-    #pragma region methods
-    #pragma endregion //!methods
+        #pragma region accessor
+        #pragma endregion //!accessor
 
-    #pragma region accessor
-    #pragma endregion //!accessor
+        #pragma region mutator
+        #pragma endregion //!mutator
 
-    #pragma region mutator
-    #pragma endregion //!mutator
+        #pragma region operator
+        #pragma endregion //!operator
 
-    #pragma region operator
-    #pragma endregion //!operator
+        #pragma region convertor
+        #pragma endregion //!convertor
 
-    #pragma region convertor
-    #pragma endregion //!convertor
-
-};
+    };
 
 } /*namespace FoxMath::Matrix*/
