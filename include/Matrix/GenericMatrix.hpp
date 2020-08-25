@@ -214,9 +214,11 @@ namespace FoxMath::Matrix
          * @tparam true 
          * @tparam true 
          */
-        template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>> = true>
+        template<typename... T, Type::IsAllSame<TType, T...> = true>
         explicit inline constexpr
-        GenericMatrix (T... args) noexcept;
+        GenericMatrix (T... args) noexcept
+            : m_data {std::array<TType, numberOfData ()>{args...}}
+        {}
 
         /**
          * @brief Aggregate initialization for vector
@@ -230,9 +232,12 @@ namespace FoxMath::Matrix
          * @tparam true 
          * @tparam true 
          */
-        template<typename... T>
+
+        template<typename... T, std::enable_if_t<(std::is_convertible_v<InternalVector, T> && ...), bool> = true>
         explicit inline constexpr
-        GenericMatrix (T... args) noexcept;
+        GenericMatrix (T... args) noexcept
+            : m_vector {std::array<InternalVector, numberOfInternalVector ()>{args...}}
+        {}
 
         #pragma endregion //!constructor/destructor
     
