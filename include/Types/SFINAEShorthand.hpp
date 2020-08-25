@@ -42,12 +42,28 @@ namespace FoxMath::Type
     using IsSigned = std::enable_if_t<std::is_signed_v<T>, bool>;
 
     /**
+     * @brief Viariadic form of IsSigned
+     * 
+     * @tparam TType 
+     */
+    template<typename... TType>
+    using IsAllSigned = std::enable_if_t<(std::is_signed_v<TType> && ...), bool>;
+
+    /**
      * @brief Sfinae shorthand for std::is_unsigned_v
      * @note usage : `template<IsUnsigned<T> = true>`
      * @tparam T Type to test
      */
     template<typename T>
     using IsUnsigned = std::enable_if_t<std::is_unsigned_v<T>, bool>;
+
+    /**
+     * @brief Viariadic form of IsUnsigned
+     * 
+     * @tparam TType 
+     */
+    template<typename... TType>
+    using IsAllUnsigned = std::enable_if_t<(std::is_unsigned_v<TType> && ...), bool>;
 
     /**
      * @brief Sfinae shorthand for std::is_arithmetic_v
@@ -58,6 +74,14 @@ namespace FoxMath::Type
     using IsArithmetic = std::enable_if_t<std::is_arithmetic_v<T>, bool>;
 
     /**
+     * @brief Viariadic form of IsArithmetic
+     * 
+     * @tparam TType 
+     */
+    template<typename... TType>
+    using IsAllArithmetic = std::enable_if_t<(std::is_arithmetic_v<TType> && ...), bool>;
+
+    /**
      * @brief Sfinae shorthand for std::is_floating_point_v
      * @note usage : `template<IsFloatingPoint<T> = true>`
      * @tparam T Type to test
@@ -65,6 +89,15 @@ namespace FoxMath::Type
     template<typename T>
     using IsFloatingPoint = std::enable_if_t<std::is_floating_point_v<T>, bool>;
 
+    /**
+     * @brief Viariadic form of IsFloatingPoint
+     * 
+     * @tparam TType 
+     */
+    template<typename... TType>
+    using IsAllFloatingPoint = std::enable_if_t<(std::is_floating_point_v<TType> && ...), bool>;
+
+    //TODO: DEPRECATED
     /**
      * @brief 
      * @note usage : `Type::Pack<Type, VarType...>` or `Type::Pack<VarType..., Type>`
@@ -81,6 +114,15 @@ namespace FoxMath::Type
      */
     template<typename TType1, typename TType2>
     using IsSame = std::enable_if_t<std::is_same_v<TType1, TType2>, bool>;
+
+    /**
+     * @brief Viariadic form of IsSame
+     * 
+     * @tparam TBase 
+     * @tparam TTypeOther 
+     */
+    template<typename TBase, typename... TTypeOther>
+    using IsAllSame = std::enable_if_t<(std::is_same_v<TBase, TTypeOther> && ...), bool>;
 
     /**
      * @brief Sfinae shorthand for std::is_constructible_v
