@@ -238,4 +238,48 @@ int main()
         std::cout << std::endl << std::endl << matConstColumnMajorInverse << std::endl;
         std::cout << std::endl << std::endl << matConstRowMajorInverse << std::endl;
     }
+
+    /*Compatibility sandbox*/
+    {
+        std::cout << std::endl << std::endl << "Compatibility sandbox" << std::endl;
+        Vec2f  vec2f (1.f, 2.f);
+        Vec3f  vec3f(vec2f, 3.f);
+        Vec4f  vec4f (vec3f, 4.f);
+        
+        Vector<2, float>  baseVec2f (1.f, 2.f);;
+        Vector<3, float>  baseVec3f (baseVec2f, 3.f);
+        Vector<4, float>  baseVec4f (baseVec3f, 4.f);
+        /*constuctor*/
+        {
+            std::cout << std::endl << std::endl << "constuctor" << std::endl;
+            GenericMatrix<2, 2, float>   baseMat3f (vec3f, vec3f);
+            SquareMatrix <3, float>      sqrMat3f (vec3f, vec3f);
+
+            GenericMatrix<4, 4, float>   baseMat3ff (vec2f, baseVec3f, vec4f);
+            SquareMatrix <4, float>      sqrMat3ff (vec2f, baseVec3f, vec4f);
+
+            GenericMatrix<2, 2, float>   baseMat3fff (sqrMat3f);
+            SquareMatrix <3, float>      sqrMat3fff (baseMat3f);
+
+            GenericMatrix<2, 2, float>   baseMat3fffff (baseMat3f);
+            SquareMatrix <3, float>      sqrMat3fffff (sqrMat3f);
+
+            GenericMatrix<4, 4, float>   baseMat3ffffff (vec2f, baseVec3f);
+            SquareMatrix <4, float>      sqrMat3ffffff (vec2f, baseVec3f);
+        }  
+
+        /*operator =*/
+        {
+            std::cout << std::endl << std::endl << "operator =" << std::endl;
+
+            GenericMatrix<3, 3, int>   baseMat3fff;
+            SquareMatrix <4, int>      sqrMat3fff;
+
+            GenericMatrix<2, 2, float>   baseMat3fffff;
+            baseMat3fffff = baseMat3fff;
+
+            SquareMatrix <3, float>      sqrMat3fffff;
+            sqrMat3fffff = sqrMat3fff;
+        }
+    }
 }
