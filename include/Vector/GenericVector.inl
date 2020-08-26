@@ -30,7 +30,7 @@
 #pragma once
 
 template <size_t TLength, typename TType>
-template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>> = true,
+template<typename... T, Type::IsAllSame<TType, T...> = true,
 Type::IsLessThanOrEqualTo<sizeof...(T), TLength> = true>
 constexpr inline 
 GenericVector<TLength, TType>::GenericVector (T... args) noexcept
@@ -40,7 +40,7 @@ GenericVector<TLength, TType>::GenericVector (T... args) noexcept
 
 template <size_t TLength, typename TType>
 template<size_t TLengthOther, typename... TScalarArgs, 
-Type::IsSame<Type::Pack<TType, TScalarArgs...>, Type::Pack<TScalarArgs..., TType>> = true,
+Type::IsAllSame<TType, TScalarArgs...> = true,
 Type::IsLessThanOrEqualTo<sizeof...(TScalarArgs) + TLengthOther, TLength> = true,
 Type::IsLessThan<TLengthOther, TLength> = true>
 inline constexpr

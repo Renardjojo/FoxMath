@@ -36,7 +36,7 @@ SquareMatrix<TSize, TType, TMatrixConvention>::SquareMatrix (const GenericMatrix
 {}
 
 template <size_t TSize, typename TType, EMatrixConvention TMatrixConvention>
-template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>>>
+template<typename... T, Type::IsAllSame<TType, T...>>
 inline constexpr
 SquareMatrix<TSize, TType, TMatrixConvention>::SquareMatrix (T... args) noexcept
     : GenericMatrix<TSize, TSize, TType, TMatrixConvention>(args...)

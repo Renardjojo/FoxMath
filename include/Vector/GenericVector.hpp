@@ -113,7 +113,7 @@ namespace FoxMath::Vector
          * @tparam T 
          * @tparam Sfinae IsSame 
          */
-        template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>> = true,
+        template<typename... T, Type::IsAllSame<TType, T...> = true,
         Type::IsLessThanOrEqualTo<sizeof...(T), TLength> = true>
         explicit inline constexpr
         GenericVector (T... args) noexcept;
@@ -126,7 +126,7 @@ namespace FoxMath::Vector
          * @tparam TScalarArgs
          */
         template<size_t TLengthOther, typename... TScalarArgs, 
-        Type::IsSame<Type::Pack<TType, TScalarArgs...>, Type::Pack<TScalarArgs..., TType>> = true,
+        Type::IsAllSame<TType, TScalarArgs...> = true,
         Type::IsLessThanOrEqualTo<sizeof...(TScalarArgs) + TLengthOther, TLength> = true,
         Type::IsLessThan<TLengthOther, TLength> = true>
         explicit inline constexpr

@@ -131,7 +131,7 @@ namespace FoxMath::Matrix
          * @tparam true 
          * @tparam true 
          */
-        template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>> = true>
+        template<typename... T, Type::IsAllSame<TType, T...> = true>
         explicit inline constexpr
         SquareMatrix (T... args) noexcept;
 

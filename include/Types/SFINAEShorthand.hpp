@@ -97,15 +97,6 @@ namespace FoxMath::Type
     template<typename... TType>
     using IsAllFloatingPoint = std::enable_if_t<(std::is_floating_point_v<TType> && ...), bool>;
 
-    //TODO: DEPRECATED
-    /**
-     * @brief 
-     * @note usage : `Type::Pack<Type, VarType...>` or `Type::Pack<VarType..., Type>`
-     * @tparam  
-     */
-    template <class...>
-    struct Pack { };
-
     /**
      * @brief Sfinae shorthand for std::is_same
      * @note usage : `template<IsSame<T1, T2> = true>`. Can be use with Pack : `template<typename... VT, Type::IsSame<Type::Pack<T, VT...>, Type::Pack<T..., VT>> = true>`

@@ -36,7 +36,7 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::GenericMatrix ()
 {}
 /*
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
-template<typename... T, Type::IsSame<Type::Pack<TType, T...>, Type::Pack<T..., TType>> = true>
+template<typename... T, Type::IsAllSame<TType, T...> = true>
 inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::GenericMatrix (T... args) noexcept
     : m_data {std::array<TType, numberOfData ()>{args...}}
