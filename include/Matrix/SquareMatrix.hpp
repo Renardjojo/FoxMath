@@ -32,6 +32,7 @@
 #include "Matrix/GenericMatrix.hpp"
 #include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
 #include "Types/Implicit.hpp" //implicit
+#include "Angle/Angle.hpp"
 
 namespace FoxMath::Matrix
 {
@@ -237,6 +238,34 @@ namespace FoxMath::Matrix
             SquareMatrix rst;
             rst.generateIdentity();
             return rst;
+        }
+
+        /**
+         * @brief Create a Rotation Arround Axis Matrix object
+         * 
+         * @param unitAxis : Vector to use. Must be unit
+         * @param angleRad 
+         * @return SquareMatrix 
+         */
+        [[nodiscard]] static inline constexpr
+        SquareMatrix createRotationArroundAxisMatrix (const Vector::GenericVector<TSize, TType>& unitAxis, Angle<EAngleType::Radian, TType> angle) noexcept
+        {
+            assert(unitAxis == static_cast<TType>(1)); //assert if axis is not unit
+
+            const TType s = std::sin(angleRad);
+            const TType c = std::cos(angleRad);
+            const TType t = (1 - c);
+            SquareMatrix rst;
+
+            for (size_t i = 0; i < TSize; i++)
+            {
+                for (size_t j = 0; j < TSize; j++)
+                {
+                    const TType rotTrigo = (i == j) ? c : s * unitAxis[(TSize - i) - j];
+                    const int sign = (i < j) ? -std::pow(-1, i + j) : std::pow(-1, i + j);
+                    rst.getData(i * TSize + j) = t * unitAxis[i] * unitAxis[j] + sign * rotTrigo;
+                }
+            }
         }
 
         #pragma endregion //!static methods
