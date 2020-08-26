@@ -248,24 +248,80 @@ namespace FoxMath::Matrix
          * @return SquareMatrix 
          */
         [[nodiscard]] static inline constexpr
-        SquareMatrix createRotationArroundAxisMatrix (const Vector::GenericVector<TSize, TType>& unitAxis, Angle<EAngleType::Radian, TType> angle) noexcept
+        SquareMatrix createRotationArroundAxisMatrix (const Vector::GenericVector<TSize, TType>& unitAxis, Angle::Angle<Angle::EAngleType::Radian, TType> angle) noexcept
         {
             assert(unitAxis == static_cast<TType>(1)); //assert if axis is not unit
 
-            const TType s = std::sin(angleRad);
-            const TType c = std::cos(angleRad);
-            const TType t = (1 - c);
             SquareMatrix rst;
+            rst.fill(static_cast<TType>(0));
+
+            const TType s = std::sin(static_cast<TType>(angle));
+            const TType c = std::cos(static_cast<TType>(angle));
+            const TType t = (1 - c);
 
             for (size_t i = 0; i < TSize; i++)
             {
                 for (size_t j = 0; j < TSize; j++)
                 {
                     const TType rotTrigo = (i == j) ? c : s * unitAxis[(TSize - i) - j];
-                    const int sign = (i < j) ? -std::pow(-1, i + j) : std::pow(-1, i + j);
-                    rst.getData(i * TSize + j) = t * unitAxis[i] * unitAxis[j] + sign * rotTrigo;
+
+                    if constexpr (TMatrixConvention == EMatrixConvention::ColumnMajor)
+                    {
+                        const int sign = (i < j) ? -std::pow(-1, i + j) : std::pow(-1, i + j);
+                        rst.getData(i * TSize + j) = t * unitAxis[i] * unitAxis[j] + sign * rotTrigo;
+                    }
+                    else
+                    {
+                        const int sign = (i > j) ? -std::pow(-1, i + j) : std::pow(-1, i + j);
+                        rst.getData(i * TSize + j) = t * unitAxis[i] * unitAxis[j] + sign * rotTrigo;
+                    }
                 }
             }
+
+            return rst;
+        }
+
+        /**
+         * @brief Create a Translation Matrix object
+         * 
+         * @param vecTranslation 
+         * @return constexpr SquareMatrix 
+         */
+        [[nodiscard]] static inline constexpr
+        SquareMatrix<TSize + 1, TType, TMatrixConvention> createTranslationMatrix (const Vector::GenericVector<TSize, TType>& vecTranslation) noexcept
+        {
+            SquareMatrix<TSize + 1, TType, TMatrixConvention> rst;
+            rst.fill(static_cast<TType>(0));
+
+            const size_t lastVectorIndex = TSize * (TSize + 1);
+
+            for (size_t i = 0; i < TSize; i++)
+            {
+                rst.getData(lastVectorIndex + i) = vecTranslation[i];
+            }
+            rst.getData(lastVectorIndex + TSize) = static_cast<TType>(1);
+
+            return rst;
+        }
+
+        /**
+         * @brief Create a Scale Matrix object
+         * 
+         * @param vecScale 
+         * @return constexpr SquareMatrix 
+         */
+        [[nodiscard]] static inline constexpr
+        SquareMatrix createScaleMatrix (const Vector::GenericVector<TSize, TType>& vecScale) noexcept
+        {
+            SquareMatrix rst;
+            rst.fill(static_cast<TType>(0));
+
+            for (size_t i = 0; i < TSize; i++)
+            {
+                rst.getData(i * TSize + i) = vecScale[i];
+            }
+
+            return rst;
         }
 
         #pragma endregion //!static methods
