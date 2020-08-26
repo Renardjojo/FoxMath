@@ -237,6 +237,10 @@ int main()
         constexpr SquareMatrix<3, double, EMatrixConvention::ColumnMajor> matConstRowMajorInverse = matConstRowMajorSqrt.getReverse();
         std::cout << std::endl << std::endl << matConstColumnMajorInverse << std::endl;
         std::cout << std::endl << std::endl << matConstRowMajorInverse << std::endl;
+
+        std::cout << SquareMatrix<3, double, EMatrixConvention::ColumnMajor>::createTranslationMatrix(Vec3f(1.f, 2.f, 3.f)) << std::endl;
+        std::cout << SquareMatrix<3, double, EMatrixConvention::ColumnMajor>::createScaleMatrix(Vec3f(1.f, 2.f, 3.f)) << std::endl;
+        std::cout << SquareMatrix<3, double, EMatrixConvention::ColumnMajor>::createRotationArroundAxisMatrix(Vec3f(0.f, 1.f, 0.f), 90_deg) << std::endl;
     }
 
     /*Compatibility sandbox*/
