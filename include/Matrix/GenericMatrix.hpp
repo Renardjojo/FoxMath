@@ -183,7 +183,6 @@ namespace FoxMath::Matrix
     
         #pragma region constructor/destructor
     
-        
         explicit constexpr inline
         GenericMatrix () noexcept;
 
@@ -233,7 +232,7 @@ namespace FoxMath::Matrix
          * @tparam true 
          */
 
-        template<typename... T, std::enable_if_t<(std::is_convertible_v<InternalVector, T> && ...), bool> = true>
+        template<typename... T, std::enable_if_t<(std::is_convertible_v<T, InternalVector> && ...), bool> = true>
         explicit inline constexpr
         GenericMatrix (T... args) noexcept
             : m_vector {std::array<InternalVector, numberOfInternalVector ()>{args...}}
