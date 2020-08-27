@@ -31,6 +31,7 @@
 
 #include "Matrix/SquareMatrix.hpp"
 #include "Vector/Vector3.hpp"
+#include "Macro/CrossInheritanceCompatibility.hpp"
 
 namespace FoxMath::Matrix
 {
@@ -38,6 +39,8 @@ namespace FoxMath::Matrix
     class Matrix4 :  public SquareMatrix<4, TType, TMatrixConvention>
     {
         private:
+
+        using Parent = SquareMatrix<4, TType, TMatrixConvention>;
 
         protected:
 
@@ -69,6 +72,8 @@ namespace FoxMath::Matrix
         constexpr inline
         Matrix4& operator=(Matrix4 && other) noexcept			= default;
 
+        DECLARE_CROSS_INHERITANCE_COMPATIBILTY(Matrix4, Parent, SquareMatrix)
+
         #pragma endregion //!constructor/destructor
 
         #pragma region methods
@@ -89,16 +94,16 @@ namespace FoxMath::Matrix
         [[nodiscard]] static constexpr inline
         Matrix4 createLookAtView (const Vector::Vec3<TType> & from, const Vector::Vec3<TType> & to, const Vector::Vec3<TType> & up) noexcept
         {
-            const Vector::Vec3<TType> forward((to - from).getNormalize());
-            const Vector::Vec3<TType> side(forward.getCross(up).getNormalize());
-            const Vector::Vec3<TType> vUp(side.getCross(forward));
-            const TType zero {static_cast<TType>(0)};
-            const TType one  {static_cast<TType>(1)};
+            const Vector::Vec3<TType>   forward ((to - from).getNormalized());
+            const Vector::Vec3<TType>   side    (forward.getCross(up).getNormalized());
+            const Vector::Vec3<TType>   vUp     (side.getCross(forward));
+            const TType                 zero    {static_cast<TType>(0)};
+            const TType                 one     {static_cast<TType>(1)};
 
-            return { side.x  , vUp.x , -forward.x	, -side.dotProduct(from),
-                     side.y  , vUp.y , -forward.y	, -vUp.dotProduct(from),
-                     side.z  , vUp.z , -forward.z	, forward.dotProduct(from),
-                     zero	  , zero  ,  zero		, one};
+            return Matrix4( side.getX() , vUp.getX() , -forward.getX()	, -side.dot(from),
+                            side.getY() , vUp.getY() , -forward.getY()	, -vUp.dot(from),
+                            side.getZ() , vUp.getZ() , -forward.getZ()	, forward.dot(from),
+                            zero	    , zero       ,  zero		    , one);
         }
 
         #pragma endregion //! static attribut
