@@ -30,6 +30,7 @@
 #pragma once
 
 #include "Matrix/SquareMatrix.hpp"
+#include "Macro/CrossInheritanceCompatibility.hpp"
 
 namespace FoxMath::Matrix
 {
@@ -37,6 +38,8 @@ namespace FoxMath::Matrix
     class Matrix2 :  public SquareMatrix<2, TType, TMatrixConvention>
     {
         private:
+
+        using Parent = SquareMatrix<2, TType, TMatrixConvention>;
 
         protected:
 
@@ -70,6 +73,8 @@ namespace FoxMath::Matrix
 
         constexpr inline
         Matrix2& operator=(Matrix2 && other) noexcept			= default;
+
+        DECLARE_CROSS_INHERITANCE_COMPATIBILTY(Matrix2, Parent, SquareMatrix)
 
         #pragma endregion //!constructor/destructor
 
