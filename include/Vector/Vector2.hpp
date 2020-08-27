@@ -84,30 +84,10 @@ namespace FoxMath::Vector
             : Vector<2, TType>(other) {}
 
         /**
-         * @brief Variadic templated constructor to init member
-         * @example `FoxMath::Vector::Vector<2, int> vec (1, 1, 3)` or `FoxMath::Vector::Vector<2, int> vec (1, 2)`
-         * @tparam T 
-         * @tparam Sfinae IsSame 
+         * @brief Use all base constructor
+         * 
          */
-        template<typename... T, Type::IsAllSame<TType, T...> = true,
-        Type::IsLessThanOrEqualTo<sizeof...(T), 2> = true>
-        explicit inline constexpr
-        Vector2 (T... args) noexcept
-            : Vector<2, TType>(args...) {}
-
-        /**
-         * @brief Variadic templated constructor to init member with vector and scalar
-         * @example `FoxMath::Vector::Vector<10, int> vect(FoxMath::Vector::Vector<5, int>(), 22, 31)`
-         * @tparam TLengthOther 
-         * @tparam TScalarArgs
-         */
-        template<size_t TLengthOther, typename... TScalarArgs, 
-        Type::IsAllSame<TType, TScalarArgs...> = true,
-        Type::IsLessThanOrEqualTo<sizeof...(TScalarArgs) + TLengthOther, 2> = true,
-        Type::IsLessThan<TLengthOther, 2> = true>
-        explicit inline constexpr
-        Vector2 (const Vector<TLengthOther, TType>& other, TScalarArgs... args) noexcept
-            : Vector<2, TType>(other, args...) {}
+        using Vector<2, TType>::Vector;
 
         #pragma endregion //!constructor/destructor
     
@@ -197,37 +177,10 @@ namespace FoxMath::Vector
         #pragma region operator
 
         /**
-         * @brief simple assignment
+         * @brief Use all base affectation operator
          * 
-         * @tparam TLengthOther 
-         * @tparam TType 
-         * @param other 
-         * @return constexpr Vector2& 
          */
-
-        template <size_t TLengthOther, typename TTypeOther>
-		inline constexpr
-		Vector2& operator=(const Vector<TLengthOther, TTypeOther>& other) noexcept
-        {
-            Vector<2, TType>::operator=(other);
-            return *this;
-        }
-
-        /**
-         * @brief simple assignment
-         * 
-         * @tparam TLengthOther 
-         * @tparam TType 
-         * @param other 
-         * @return constexpr Vector2& 
-         */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
-		inline constexpr
-		Vector2& operator=(TscalarType scalar) noexcept
-        {
-            Vector<2, TType>::operator=(scalar);
-            return *this;
-        }
+        using Vector<2, TType>::operator=;
 
         #pragma endregion //!operator
     
