@@ -31,6 +31,7 @@
 
 #include "Matrix/SquareMatrix.hpp"
 #include "Vector/Vector3.hpp"
+#include "Macro/CrossInheritanceCompatibility.hpp"
 
 namespace FoxMath::Matrix
 {
@@ -38,6 +39,8 @@ namespace FoxMath::Matrix
     class Matrix3 :  public SquareMatrix<3, TType, TMatrixConvention>
     {
         private:
+
+        using Parent = SquareMatrix<3, TType, TMatrixConvention>;
 
         protected:
 
@@ -72,6 +75,8 @@ namespace FoxMath::Matrix
         constexpr inline
         Matrix3& operator=(Matrix3 && other) noexcept			= default;
 
+        DECLARE_CROSS_INHERITANCE_COMPATIBILTY(Matrix3, Parent, SquareMatrix)
+
         #pragma endregion //!constructor/destructor
 
         #pragma region methods
@@ -92,13 +97,13 @@ namespace FoxMath::Matrix
         [[nodiscard]] static constexpr inline
         Matrix3 createLookAtView (const Vector::Vec3<TType> & from, const Vector::Vec3<TType> & to, const Vector::Vec3<TType> & up) noexcept
         {
-            const Vector::Vec3<TType> forward   ((to - from).getNormalize());
-            const Vector::Vec3<TType> side      (forward.getCross(up).getNormalize());
+            const Vector::Vec3<TType> forward   ((to - from).getNormalized());
+            const Vector::Vec3<TType> side      (forward.getCross(up).getNormalized());
             const Vector::Vec3<TType> vUp        (side.getCross(forward));
 
-            return {    side.x, vUp.x, -forward.x,
-                        side.y, vUp.y, -forward.y,
-                        side.z, vUp.z, -forward.z};
+            return {    side.getX(), vUp.getX(), -forward.getX(),
+                        side.getY(), vUp.getY(), -forward.getY(),
+                        side.getZ(), vUp.getZ(), -forward.getZ()};
         }
 
         #pragma endregion //! static attribut
