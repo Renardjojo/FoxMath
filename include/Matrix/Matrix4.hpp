@@ -30,6 +30,7 @@
 #pragma once
 
 #include "Matrix/SquareMatrix.hpp"
+#include "Vector/Vector3.hpp"
 
 namespace FoxMath::Matrix
 {
@@ -42,9 +43,6 @@ namespace FoxMath::Matrix
 
         #pragma region attribut
         #pragma endregion //!attribut
-
-        #pragma region static attribut
-        #pragma endregion //! static attribut
 
         #pragma region methods
         #pragma endregion //!methods
@@ -75,6 +73,35 @@ namespace FoxMath::Matrix
 
         #pragma region methods
         #pragma endregion //!methods
+
+        #pragma region static methods
+
+        /**
+         * @brief Create a Look At View objectreates a viewing matrix derived from an eye point, a reference point indicating the center of the scene, and an UP vector.
+         * 
+         * @note translation is apply 
+         * 
+         * @param from : Specifies the position of the from point.
+         * @param to : Specifies the position of the reference point.
+         * @param up : Specifies the direction of the up vector. 
+         * @return constexpr Matrix4 
+         */
+        [[nodiscard]] static constexpr inline
+        Matrix4 createLookAtView (const Vector::Vec3<TType> & from, const Vector::Vec3<TType> & to, const Vector::Vec3<TType> & up) noexcept
+        {
+            const Vector::Vec3<TType> forward((to - from).getNormalize());
+            const Vector::Vec3<TType> side(forward.getCross(up).getNormalize());
+            const Vector::Vec3<TType> vUp(side.getCross(forward));
+            const TType zero {static_cast<TType>(0)};
+            const TType one  {static_cast<TType>(1)};
+
+            return { side.x  , vUp.x , -forward.x	, -side.dotProduct(from),
+                     side.y  , vUp.y , -forward.y	, -vUp.dotProduct(from),
+                     side.z  , vUp.z , -forward.z	, forward.dotProduct(from),
+                     zero	  , zero  ,  zero		, one};
+        }
+
+        #pragma endregion //! static attribut
 
         #pragma region accessor
         #pragma endregion //!accessor
