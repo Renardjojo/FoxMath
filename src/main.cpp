@@ -124,21 +124,43 @@ int main()
             Vector<3, float>  baseVec3ff = vec3f;
             Vector<4, float>  baseVec4ff = vec4f;
 
-            Vec2f  vec2ff = baseVec2f;
-            Vec3f  vec3ff = baseVec3f;
-            Vec4f  vec4ff = baseVec4f;
+            Vec2f  vec2ff;
+            vec2ff = baseVec2f;
+            vec2ff = 0.f;
 
-            Vector<3, float>  baseVec3fff = vec2f;
-            Vector<4, float>  baseVec4fff = vec3f;
+            Vec3f  vec3ff;
+            vec3ff = baseVec3f;
+            vec3ff = 0.f;
 
-            Vec3f  vec3fff = baseVec2f;
-            Vec4f  vec4fff = baseVec3f;
+            Vec4f  vec4ff;
+            vec4ff = baseVec4f;
+            vec4ff = 0.f;
 
-            Vector<2, float>  baseVec2ffff = vec3f;
-            Vector<3, float>  baseVec3ffff = vec4f;
+            Vector<3, float>  baseVec3fff;
+            baseVec3fff = vec2f;
 
-            Vec2f  vec2ffff = baseVec3f;
-            Vec3f  vec3ffff = baseVec4f;
+            Vector<4, float>  baseVec4fff;
+            baseVec4fff = vec3f;
+
+            Vec3f  vec3fff;
+            vec3fff = baseVec2f;
+
+            Vec4f  vec4fff;
+            vec4fff = baseVec3f;
+
+            Vector<2, float>  baseVec2ffff;
+            baseVec2ffff = vec3f;
+
+            Vector<3, float>  baseVec3ffff;
+            baseVec3ffff = vec4f;
+
+
+            Vec2f  vec2ffff;
+            vec2ffff = baseVec3f;
+
+            Vec3f  vec3ffff;
+            vec3ffff = baseVec4f;
+
         }
 
         std::cout << vec2f << std::endl;
@@ -228,7 +250,7 @@ int main()
                                                                                                     4., 2., -1.,
                                                                                                     2., -1., 1.);
         
-        constexpr SquareMatrix<3, double, EMatrixConvention::RowMajor> matConstRowMajorSqrt = matConstColumnMajorSqrt;
+        constexpr SquareMatrix<3, double, EMatrixConvention::RowMajor> matConstRowMajorSqrt (matConstColumnMajorSqrt);
 
         std::cout << std::endl << std::endl << matConstColumnMajorSqrt << std::endl;
         std::cout << std::endl << std::endl << matConstRowMajorSqrt << std::endl;
@@ -241,6 +263,9 @@ int main()
         std::cout << SquareMatrix<3, double, EMatrixConvention::ColumnMajor>::createTranslationMatrix(Vec3f(1.f, 2.f, 3.f)) << std::endl;
         std::cout << SquareMatrix<3, double, EMatrixConvention::ColumnMajor>::createScaleMatrix(Vec3f(1.f, 2.f, 3.f)) << std::endl;
         std::cout << SquareMatrix<3, double, EMatrixConvention::ColumnMajor>::createRotationArroundAxisMatrix(Vec3f(0.f, 1.f, 0.f), 90_deg) << std::endl;
+
+        std::cout << Matrix4<float, EMatrixConvention::ColumnMajor>::createLookAtView(Vec3f(0.f, 1.f, 0.f), Vec3f(8.f, 8.f, 5.f), Vec3f(0.f, 1.f, 0.f)) << std::endl;
+        
     }
 
     /*Compatibility sandbox*/
@@ -253,10 +278,12 @@ int main()
         Vector<2, float>  baseVec2f (1.f, 2.f);;
         Vector<3, float>  baseVec3f (baseVec2f, 3.f);
         Vector<4, float>  baseVec4f (baseVec3f, 4.f);
+        
         /*constuctor*/
         {
             std::cout << std::endl << std::endl << "constuctor" << std::endl;
             GenericMatrix<2, 2, float>   baseMat3f (vec3f, vec3f);
+
             SquareMatrix <3, float>      sqrMat3f (vec3f, vec3f);
 
             GenericMatrix<4, 4, float>   baseMat3ff (vec2f, baseVec3f, vec4f);
@@ -276,8 +303,8 @@ int main()
         {
             std::cout << std::endl << std::endl << "operator =" << std::endl;
 
-            GenericMatrix<3, 3, int>   baseMat3fff;
-            SquareMatrix <4, int>      sqrMat3fff;
+            GenericMatrix<2, 2, float>   baseMat3fff;
+            SquareMatrix <3, float>      sqrMat3fff;
 
             GenericMatrix<2, 2, float>   baseMat3fffff;
             baseMat3fffff = baseMat3fff;
@@ -285,5 +312,5 @@ int main()
             SquareMatrix <3, float>      sqrMat3fffff;
             sqrMat3fffff = sqrMat3fff;
         }
-    }
+     }
 }
