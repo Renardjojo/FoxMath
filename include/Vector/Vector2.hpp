@@ -31,13 +31,16 @@
 
 #include "Vector/GenericVector.hpp"
 #include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
+#include "Macro/CrossInheritanceCompatibility.hpp"
 
 namespace FoxMath::Vector
 {
     template <typename TType = float>
-    class Vector2 : public Vector<2, TType>
+    class Vector2 : public GenericVector<2, TType>
     {
         private:
+
+        using Parent = GenericVector<2, TType>;
     
         protected:
     
@@ -72,58 +75,11 @@ namespace FoxMath::Vector
         constexpr inline
         Vector2& operator=(Vector2 && other) noexcept		= default;
 
-        /**
-         * @brief Construct a new vector with it's base type
-         * 
-         * @tparam TTlengthOther 
-         * @param other 
-         */
-        template <size_t TTlengthOther>
-        inline constexpr
-        Vector2 (const Vector<TTlengthOther, TType>& other) noexcept
-            : Vector<2, TType>(other) {}
-
-        /**
-         * @brief Use all base constructor
-         * 
-         */
-        using Vector<2, TType>::Vector;
+        DECLARE_CROSS_INHERITANCE_COMPATIBILTY(Vector2, Parent, GenericVector)
 
         #pragma endregion //!constructor/destructor
     
         #pragma region methods
-
-
-        // /**
-        //  * @brief turn Vec2 in counterclockwise
-        //  * 
-        //  * @param angleDeg 
-        //  * @return Vec2& 
-        //  */
-        // inline constexpr
-        // Vec2& 	rotate			(const Angle::Angle<Angle::EAngleType::Radian, TType>& angle) noexcept;
-
-        // [[nodiscard]] inline constexpr
-        // Vec2  	getRotate 		(const Angle::Angle<Angle::EAngleType::Radian, TType>& angle) const noexcept;
-
-        // inline constexpr
-        // Vec2&  	rotated90 		() noexcept;
-    
-        // [[nodiscard]] inline constexpr
-        // Vec2  	getRotated90 	() const noexcept;
-
-        // inline constexpr
-        // Vec2&  	rotated180 		() noexcept;
-
-        // [[nodiscard]] inline constexpr
-        // Vec2  	getRotated180	() const noexcept;
-
-        // inline constexpr
-        // Vec2&  	rotated270 		() noexcept;
-
-        // [[nodiscard]] inline constexpr
-        // Vec2  	getRotated270 	() const noexcept;
-
         #pragma endregion //!methods
     
         #pragma region accessor
@@ -134,7 +90,7 @@ namespace FoxMath::Vector
          * @return constexpr TType 
          */
         [[nodiscard]] inline constexpr
-        TType getX() const noexcept { return Vector<2, TType>::m_data[0];}
+        TType getX() const noexcept { return Parent::m_data[0];}
 
         /**
          * @brief get member Y
@@ -142,9 +98,11 @@ namespace FoxMath::Vector
          * @return constexpr TType 
          */
         [[nodiscard]] inline constexpr
-        TType getY() const noexcept { return Vector<2, TType>::m_data[1];}
+        TType getY() const noexcept { return Parent::m_data[1];}
 
         #pragma endregion //!accessor
+    
+        #pragma region mutator
 
         /**
          * @brief Set member X
@@ -156,7 +114,7 @@ namespace FoxMath::Vector
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
         inline constexpr
-        Vector2& setX(TscalarType newX) noexcept { Vector<2, TType>::m_data[0] = static_cast<TType>(newX);}
+        Vector2& setX(TscalarType newX) noexcept { Parent::m_data[0] = static_cast<TType>(newX);}
 
         /**
          * @brief Set member Y
@@ -168,21 +126,9 @@ namespace FoxMath::Vector
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
         inline constexpr
-        Vector2& setY(TscalarType newY) noexcept { Vector<2, TType>::m_data[1] = static_cast<TType>(newY);}
-    
-        #pragma region mutator
+        Vector2& setY(TscalarType newY) noexcept { Parent::m_data[1] = static_cast<TType>(newY);}
 
         #pragma endregion //!mutator
-    
-        #pragma region operator
-
-        /**
-         * @brief Use all base affectation operator
-         * 
-         */
-        using Vector<2, TType>::operator=;
-
-        #pragma endregion //!operator
     
         #pragma region convertor        
         #pragma endregion //!convertor
