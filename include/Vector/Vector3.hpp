@@ -31,14 +31,17 @@
 
 #include "Vector/GenericVector.hpp"
 #include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
+#include "Macro/CrossInheritanceCompatibility.hpp"
 
 namespace FoxMath::Vector
 {
     template <typename TType = float>
-    class Vector3 : public Vector<3, TType>
+    class Vector3 : public GenericVector<3, TType>
     {
         private:
     
+        using Parent = GenericVector<3, TType>;
+
         protected:
     
         #pragma region attribut
@@ -72,23 +75,7 @@ namespace FoxMath::Vector
         constexpr inline
         Vector3& operator=(Vector3 && other) noexcept		= default;
 
-        /**
-         * @brief Construct a new vector with it's base type
-         * 
-         * @tparam TTlengthOther 
-         * @param other 
-         */
-        template <size_t TTlengthOther>
-        constexpr inline
-        Vector3 (const Vector<TTlengthOther, TType>& other) noexcept
-            : Vector<3, TType>(other) {}
-
-
-        /**
-         * @brief Use all base constructor
-         * 
-         */
-        using Vector<3, TType>::Vector;
+        DECLARE_CROSS_INHERITANCE_COMPATIBILTY(Vector3, Parent, GenericVector)
 
         #pragma endregion //!constructor/destructor
     
@@ -103,7 +90,7 @@ namespace FoxMath::Vector
          * @return constexpr TType 
          */
         [[nodiscard]] inline constexpr
-        TType getX() const noexcept { return Vector<3, TType>::m_data[0];}
+        TType getX() const noexcept { return Parent::m_data[0];}
 
         /**
          * @brief get member Y
@@ -111,7 +98,7 @@ namespace FoxMath::Vector
          * @return constexpr TType 
          */
         [[nodiscard]] inline constexpr
-        TType getY() const noexcept { return Vector<3, TType>::m_data[1];}
+        TType getY() const noexcept { return Parent::m_data[1];}
 
         /**
          * @brief get member Z
@@ -119,9 +106,11 @@ namespace FoxMath::Vector
          * @return constexpr TType 
          */
         [[nodiscard]] inline constexpr
-        TType getZ() const noexcept { return Vector<3, TType>::m_data[2];}
+        TType getZ() const noexcept { return Parent::m_data[2];}
 
         #pragma endregion //!accessor
+    
+        #pragma region mutator
 
         /**
          * @brief Set member X
@@ -133,7 +122,7 @@ namespace FoxMath::Vector
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
         inline constexpr
-        Vector3& setX(TscalarType newX) noexcept { Vector<3, TType>::m_data[0] = static_cast<TType>(newX);}
+        Vector3& setX(TscalarType newX) noexcept { Parent::m_data[0] = static_cast<TType>(newX);}
 
         /**
          * @brief Set member Y
@@ -145,7 +134,7 @@ namespace FoxMath::Vector
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
         inline constexpr
-        Vector3& setY(TscalarType newY) noexcept { Vector<3, TType>::m_data[1] = static_cast<TType>(newY);}
+        Vector3& setY(TscalarType newY) noexcept { Parent::m_data[1] = static_cast<TType>(newY);}
 
         /**
          * @brief Set member Z
@@ -157,19 +146,9 @@ namespace FoxMath::Vector
          */
         template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
         inline constexpr
-        Vector3& setZ(TscalarType newZ) noexcept { Vector<3, TType>::m_data[2] = static_cast<TType>(newZ);}
-    
-        #pragma region mutator
-    
-        #pragma region operator
+        Vector3& setZ(TscalarType newZ) noexcept { Parent::m_data[2] = static_cast<TType>(newZ);}
 
-        /**
-         * @brief Use all base affectation operator
-         * 
-         */
-        using Vector<3, TType>::operator=;
-
-        #pragma endregion //!operator
+        #pragma endregion //!inheritance compatibility
     
         #pragma region convertor
 
