@@ -33,6 +33,7 @@
 #include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
 #include "Types/Implicit.hpp" //implicit
 #include "Angle/Angle.hpp"
+#include "Macro/CrossInheritanceCompatibility.hpp"
 
 namespace FoxMath::Matrix
 {
@@ -42,6 +43,8 @@ namespace FoxMath::Matrix
     {
         private:
     
+            using Parent = GenericMatrix<TSize, TSize, TType, TMatrixConvention>;
+
         protected:
     
         #pragma region attribut
@@ -111,47 +114,7 @@ namespace FoxMath::Matrix
         constexpr inline
         SquareMatrix& operator=(SquareMatrix && other) noexcept			    = default;
     
-        /**
-         * @brief Construct a new matrix with it's base type
-         * 
-         * @tparam TTlengthOther 
-         * @param other 
-         */
-        constexpr inline
-        SquareMatrix (const GenericMatrix<TSize, TSize, TType, TMatrixConvention>& other) noexcept;
-
-        /**
-         * @brief Aggregate initialization for scalar
-         * 
-         * @note : If the number of initializer clauses is less than the number of members or initializer list is completely empty, the remaining members are value-initialized. 
-         * If a member of a reference type is one of these remaining members, the program is ill-formed.
-         * 
-         * @example `FoxMath::Matrix::SquareMatrix<2, int> mat (1, 1, 3)` or `FoxMath::Matrix::SquareMatrix<2, int> mat (1, 2)`
-         * 
-         * @tparam T 
-         * @tparam true 
-         * @tparam true 
-         */
-        template<typename... T, Type::IsAllSame<TType, T...> = true>
-        explicit inline constexpr
-        SquareMatrix (T... args) noexcept;
-
-        /**
-         * @brief Aggregate initialization for vector
-         * 
-         * @note : If the number of initializer clauses is less than the number of members or initializer list is completely empty, the remaining members are value-initialized. 
-         * If a member of a reference type is one of these remaining members, the program is ill-formed.
-         * 
-         * @example `FoxMath::Matrix::SquareMatrix<2, int> mat (Vec2f(1, 1), Vec2f(3))` or `FoxMath::Matrix::SquareMatrix<2, int> mat (Vec2f(1.f, 2.f))`
-         * 
-         * @tparam T 
-         * @tparam true 
-         * @tparam true 
-         */
-        template<typename... T>
-        explicit inline constexpr
-        SquareMatrix (T... args) noexcept;
-
+        DECLARE_CROSS_INHERITANCE_COMPATIBILTY(SquareMatrix, Parent, GenericMatrix)
 
         #pragma endregion //!constructor/destructor
     

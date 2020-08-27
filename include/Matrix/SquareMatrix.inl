@@ -30,26 +30,6 @@
 #pragma once
 
 template <size_t TSize, typename TType, EMatrixConvention TMatrixConvention>
-constexpr inline
-SquareMatrix<TSize, TType, TMatrixConvention>::SquareMatrix (const GenericMatrix<TSize, TSize, TType, TMatrixConvention>& other) noexcept
-    : GenericMatrix<TSize, TSize, TType, TMatrixConvention>(other)
-{}
-
-template <size_t TSize, typename TType, EMatrixConvention TMatrixConvention>
-template<typename... T, Type::IsAllSame<TType, T...>>
-inline constexpr
-SquareMatrix<TSize, TType, TMatrixConvention>::SquareMatrix (T... args) noexcept
-    : GenericMatrix<TSize, TSize, TType, TMatrixConvention>(args...)
-{}
-
-template <size_t TSize, typename TType, EMatrixConvention TMatrixConvention>
-template<typename... T>
-inline constexpr
-SquareMatrix<TSize, TType, TMatrixConvention>::SquareMatrix (T... args) noexcept
-    : GenericMatrix<TSize, TSize, TType, TMatrixConvention>(args...)
-{}
-
-template <size_t TSize, typename TType, EMatrixConvention TMatrixConvention>
 inline constexpr  
 TType		SquareMatrix<TSize, TType, TMatrixConvention>::getMinor		(size_t i, size_t j) const noexcept
 {
@@ -69,7 +49,7 @@ TType		SquareMatrix<TSize, TType, TMatrixConvention>::getMinor		(size_t i, size_
 			if (jSubMatrix == j)
 				coefRowFound = true;
 
-			subMatrix.getData(iSubMatrix * newSizesubMatrix + jSubMatrix) = GenericMatrix<TSize, TSize, TType, TMatrixConvention>::m_data[(iSubMatrix + coefLineFound) * TSize + jSubMatrix + coefRowFound];
+			subMatrix.getData(iSubMatrix * newSizesubMatrix + jSubMatrix) = Parent::m_data[(iSubMatrix + coefLineFound) * TSize + jSubMatrix + coefRowFound];
 		}
 		coefRowFound = false;
 	}
@@ -117,7 +97,7 @@ SquareMatrix<TSize, TType, TMatrixConvention>& SquareMatrix<TSize, TType, TMatri
     {
         for ( size_t j = 0; j < TSize; j++ )
         {
-            GenericMatrix<TSize, TSize, TType, TMatrixConvention>::m_data[i * TSize + j] = ((i == j) ? static_cast<TType>(1) : static_cast<TType>(0));
+            Parent::m_data[i * TSize + j] = ((i == j) ? static_cast<TType>(1) : static_cast<TType>(0));
         }
     }
 
@@ -136,19 +116,19 @@ SquareMatrix<TSize, TType, TMatrixConvention>&		SquareMatrix<TSize, TType, TMatr
         for (size_t j = shift; j < TSize; j++)
         {
 #if __cplusplus >= 201709L //TODO: constexpr swap
-            std::swap(GenericMatrix<TSize, TSize, TType, TMatrixConvention>::m_data[i * TSize + j], GenericMatrix<TSize, TSize, TType, TMatrixConvention>::m_data[j * TSize + i]);
+            std::swap(Parent::m_data[i * TSize + j], Parent::m_data[j * TSize + i]);
 #else
             if constexpr (std::is_floating_point_v<TType>)
             {
-                TType temp = GenericMatrix<TSize, TSize, TType, TMatrixConvention>::m_data[i * TSize + j];
-                GenericMatrix<TSize, TSize, TType, TMatrixConvention>::m_data[i * TSize + j] = GenericMatrix<TSize, TSize, TType, TMatrixConvention>::m_data[j * TSize + i];
-                GenericMatrix<TSize, TSize, TType, TMatrixConvention>::m_data[j * TSize + i] = temp;
+                TType temp = Parent::m_data[i * TSize + j];
+                Parent::m_data[i * TSize + j] = Parent::m_data[j * TSize + i];
+                Parent::m_data[j * TSize + i] = temp;
             }
             else
             {
-                GenericMatrix<TSize, TSize, TType, TMatrixConvention>::m_data[i * TSize + j] ^= GenericMatrix<TSize, TSize, TType, TMatrixConvention>::m_data[j * TSize + i];
-                GenericMatrix<TSize, TSize, TType, TMatrixConvention>::m_data[j * TSize + i] ^= GenericMatrix<TSize, TSize, TType, TMatrixConvention>::m_data[i * TSize + j];
-                GenericMatrix<TSize, TSize, TType, TMatrixConvention>::m_data[i * TSize + j] ^= GenericMatrix<TSize, TSize, TType, TMatrixConvention>::m_data[j * TSize + i];
+                Parent::m_data[i * TSize + j] ^= Parent::m_data[j * TSize + i];
+                Parent::m_data[j * TSize + i] ^= Parent::m_data[i * TSize + j];
+                Parent::m_data[i * TSize + j] ^= Parent::m_data[j * TSize + i];
             }
 #endif
         }
@@ -163,7 +143,7 @@ template <size_t TSize, typename TType, EMatrixConvention TMatrixConvention>
 inline constexpr  
 bool		SquareMatrix<TSize, TType, TMatrixConvention>::isOrtho		() const noexcept
 {
-	const SquareMatrix<TSize, TType, TMatrixConvention> mT (GenericMatrix<TSize, TSize, TType, TMatrixConvention>::getTransposed());
+	const SquareMatrix<TSize, TType, TMatrixConvention> mT (Parent::getTransposed());
 
 	return mT * (*this) == identity();
 }
@@ -174,7 +154,7 @@ TType		SquareMatrix<TSize, TType, TMatrixConvention>::getDeterminant		() const n
 {
     if constexpr (TSize * TSize == 1) //Check if matrix 1*1
     {
-        return GenericMatrix<TSize, TSize, TType, TMatrixConvention>::getData(0);
+        return Parent::getData(0);
     }
     else
     {
@@ -186,7 +166,7 @@ TType		SquareMatrix<TSize, TType, TMatrixConvention>::getDeterminant		() const n
             signed int signe = pow(-1, 0 + i);
 
             //found coef
-            TType coef = signe * GenericMatrix<TSize, TSize, TType, TMatrixConvention>::m_data[i * TSize];
+            TType coef = signe * Parent::m_data[i * TSize];
         
             //create submatrix
             const size_t subMatrixSize = TSize - 1;
@@ -202,7 +182,7 @@ TType		SquareMatrix<TSize, TType, TMatrixConvention>::getDeterminant		() const n
 
                 for (size_t jSubMatrix = 0; jSubMatrix < subMatrixSize; jSubMatrix++)
                 { 
-                    subMatrix.getData(iSubMatrix * subMatrixSize + jSubMatrix) = GenericMatrix<TSize, TSize, TType, TMatrixConvention>::m_data[(iSubMatrix + coefLineFound) * TSize + jSubMatrix + 1];
+                    subMatrix.getData(iSubMatrix * subMatrixSize + jSubMatrix) = Parent::m_data[(iSubMatrix + coefLineFound) * TSize + jSubMatrix + 1];
                 }
             }
 
@@ -225,7 +205,7 @@ SquareMatrix<TSize, TType, TMatrixConvention>		SquareMatrix<TSize, TType, TMatri
 
 	if (isOrtho() == true)
 	{
-		return GenericMatrix<TSize, TSize, TType, TMatrixConvention>::getTransposed();
+		return Parent::getTransposed();
 	}
 
 	const TType determinant = getDeterminant();
