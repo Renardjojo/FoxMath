@@ -95,4 +95,73 @@ namespace FoxMath::Matrix
 
     };
 
+    template <typename TType = float, EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    using Mat2          = Matrix2<TType, TMatrixConvention>;
+
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    using Matrix2f      = Matrix2<float, TMatrixConvention>;
+    
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    using Mat2f         = Matrix2f<TMatrixConvention>;
+
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    using Matrix2d      = Matrix2<double, TMatrixConvention>;
+    
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    using Mat2d         = Matrix2d<TMatrixConvention>;
+
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    using Matrix2ld     = Matrix2<long double, TMatrixConvention>;
+    
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    using Mat2ld        = Matrix2ld<TMatrixConvention>;
+
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    using Matrix2uc     = Matrix2<unsigned char, TMatrixConvention>;
+    
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    using Mat2uc        = Matrix2uc<TMatrixConvention>;
+
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    using Matrix2c      = Matrix2<char, TMatrixConvention>;
+    
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    using Mat2c         = Matrix2c<TMatrixConvention>;
+
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    using Matrix2ui     = Matrix2<unsigned int, TMatrixConvention>;
+    
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    using Mat2ui        = Matrix2ui<TMatrixConvention>;
+
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    using Matrix2i      = Matrix2<int, TMatrixConvention>;
+    
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    using Mat2i         = Matrix2i<TMatrixConvention>;
+
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    using Matrix2lui    = Matrix2<long unsigned int, TMatrixConvention>;
+    
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    using Mat2lui       = Matrix2lui<TMatrixConvention>;
+
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    using Matrix2st     = Matrix2<size_t, TMatrixConvention>;
+    
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    using Mat2st        = Matrix2st<TMatrixConvention>;
+
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    using Matrix2li     = Matrix2<long int, TMatrixConvention>;
+    
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    using Mat2li        = Matrix2li<TMatrixConvention>;
+    
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    using Matrix2b      = Matrix2<bool, TMatrixConvention>;
+    
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    using Mat2b         = Matrix2b<TMatrixConvention>;
+
 } /*namespace FoxMath::Matrix*/
