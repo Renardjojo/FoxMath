@@ -17,11 +17,16 @@ Read [Makefile](Makefile) to see all command and compile with C++ 2017 or 2020
 ## TODO:
 
 - [x] GenericVector
-- [x] Vector2, 3 and 4
+- [x] Vector 2, 3 and 4
 - [x] strong_type implementation
 - [x] Angle inherance of strong type
 - [x] add angle to vector
-- [ ] rework matrix
+- [x] Generic matrix
+- [x] Square matrix
+- [x] Matrix 2, 3 and 4
+- [ ] Space matrix or transform matrix
+- [ ] create LengthedVector and normalizedAndLengthedVector class to optimize vector computation
+- [ ] create lengthedVector_df and normalizedAndLengthedVector_df class to optimize vector computation. "df" for dirty feature or dirty flag.
 - [ ] add roate, translate and sclae function to generic vector
 - [ ] add differente space unit like distance (meter, cm...), wigth (kg), volume...
 - [ ] create floating point and integral unlimited type
