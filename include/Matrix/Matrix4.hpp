@@ -32,6 +32,7 @@
 #include "Matrix/SquareMatrix.hpp"
 #include "Vector/Vector3.hpp"
 #include "Macro/CrossInheritanceCompatibility.hpp"
+#include "Angle/Angle.hpp"
 
 namespace FoxMath::Matrix
 {
@@ -105,6 +106,96 @@ namespace FoxMath::Matrix
                             side.getZ() , vUp.getZ() , -forward.getZ()	, forward.dot(from),
                             zero	    , zero       ,  zero		    , one);
         }
+
+        /**
+         * @brief Create a Ortho Matrix object. This matrix correspond to an orthographic camera. Parameter define the camera's frustum
+         * 
+         * @param left 
+         * @param right
+         * @param bottom 
+         * @param top 
+         * @param nearVal 
+         * @param farVal 
+         * @return constexpr Matrix4 
+         */
+        [[nodiscard]] static constexpr inline
+        Matrix4 createOrthoMatrix	(TType left, TType right, TType bottom, TType top, TType nearVal, TType farVal) noexcept
+        {
+            const TType zero    {static_cast<TType>(0)};
+            const TType one     {static_cast<TType>(1)};
+            const TType two     {static_cast<TType>(2)};
+
+            const TType a11 = two / (right - left);
+            const TType a22 = two / (top - bottom);
+            const TType a33 = -two / (farVal - nearVal);
+
+            const TType tx = (right + left) / (right - left);
+            const TType ty = (top + bottom) / (top - bottom);  
+            const TType tz = (farVal + nearVal)/ (farVal - nearVal);
+
+            return Matrix4 (    a11,    zero,   zero,   tx,
+                                zero,   a22,    zero,   ty,
+                                zero,   zero,   a33,    tz,
+                                zero,   zero,   zero,   one);
+        }
+
+        /**
+         * @brief Create a Perspective Matrix object. This matrix correspond to an perspective camera. Parameter define the camera's frustum
+         * 
+         * @param aspect 
+         * @param near 
+         * @param far 
+         * @param fov 
+         * @return constexpr Matrix4 
+         */
+        [[nodiscard]] static constexpr inline
+        Matrix4 createPerspectiveMatrix 	(TType aspect, TType near, TType far, Angle::Angle<Angle::EAngleType::Radian, TType> fov) noexcept
+        {
+            const TType zero    {static_cast<TType>(0)};
+            const TType one     {static_cast<TType>(1)};
+            const TType two     {static_cast<TType>(2)};
+
+            const TType scale = std:::tanf(static_cast<TType>(fov) / two) * near;
+            const TType rigth = aspect * scale;
+
+            const TType left   = -rigth;
+            const TType top    = scale;
+            const TType bottom = -scale;
+
+            const TType a11 = two * near / (rigth - left);
+            const TType a22 = two * near / (top - bottom);
+            const TType a31 = (rigth + left) / (rigth - left);
+            const TType a32 = (top + bottom) / (top - bottom);
+            const TType a33 = -(far + near) / (far - near);
+            const TType a43 = -two * far * near / (far - near);
+            const TType zDir = -one;
+
+
+            return Matrix4( a11,    zero,   zero,   zero,
+                            zero,   a22,    zero,   zero,
+                            a31,    a32,    a33,    a43,
+                            zero,   zero,   zDir,   zero);
+        }
+
+        /**
+         * @brief Create a Projection Matrix object. Create projection Mat4 to pass from 3D to 2D.
+         * 
+         * @param distance the distance between pin hole and user
+         * @return constexpr Matrix4 
+         */
+        [[nodiscard]] static constexpr inline
+        Matrix4 createProjectionMatrix		(TType distance) noexcept
+        {
+            const TType zero    {static_cast<TType>(0)};
+            const TType one     {static_cast<TType>(1)};
+            const TType p       {one / distance};
+
+            return Matrix4( one,    zero,   zero,   zero,
+                            zero,   one,    zero,   zero,
+                            zero,   zero,   one,    zero,
+                            zero,   zero,   p  ,    zero);
+        }
+
 
         #pragma endregion //! static attribut
 
