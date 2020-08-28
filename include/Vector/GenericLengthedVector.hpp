@@ -86,11 +86,149 @@ namespace FoxMath::Vector
         #pragma region methods
 
         /**
+         * @brief Fill generic vector's member with scalar value
+         * 
+         * @tparam TscalarType 
+         * @tparam true 
+         * @param scalar 
+         * @return constexpr GenericLengthedVector& 
+         */
+        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        inline constexpr  
+        GenericLengthedVector& fill (const TscalarType scalar) noexcept
+        {
+            m_lengthIsDirty = true;
+            return GenericVector<TLength, TType>::fill(scalar);
+        }
+
+        /**
          * @brief Deprecated to avoid compare distance hack (Less optimized than check directly the length). 
          * If you really want the squart length ask it explicitely with length() * length()
          * 
          */
         TType squartLength () const noexcept = delete;
+
+        /**
+         * @brief Homogenize vector to the lower dimension
+         * @note devise each component by the last
+         * @example to convert vector 4 to vector 3 it must be homogenize to lose it fourth dimension
+         * 
+         * @return constexpr GenericLengthedVector& 
+         */
+        inline constexpr
+		GenericLengthedVector& 	    homogenize	        () noexcept
+        {
+            m_length /= Parent::m_data[TLength - 1];
+            return GenericVector<TLength, TType>::homogenize();
+        }
+
+        /**
+         * @brief Normalize the generic vector. If the generic vector is null (all components are set to 0), nothing is done.
+         * 
+         * @return constexpr GenericLengthedVector& 
+         */
+        inline constexpr
+		GenericLengthedVector& 	    normalize	        () noexcept
+        {
+            if (m_length) [[likely]]
+            {
+                for (size_t i = 0; i < TLength; i++)
+                    Parent::m_data[i] /= m_length;
+            }
+
+            m_length = static_cast<TType>(1);
+
+            return *this;
+        }
+
+        /**
+         * @brief Clamp the generic vector's length to max value
+         * 
+         * @param maxLength 
+         * @return constexpr GenericLengthedVector& 
+         */
+        inline constexpr
+        GenericLengthedVector&         clampLength         (TType maxLength) noexcept
+        {
+            if (m_length > maxLength) [[likely]]
+            {
+                const TType coef = maxLength / m_length;
+                *this *= coef;
+
+                m_length = maxLength;
+            }
+            return *this;
+        }
+
+        /**
+         * @brief perform cross product with another generic vector
+         * 
+         * @param other 
+         * @return constexpr GenericLengthedVector& 
+         */
+        inline constexpr
+        GenericLengthedVector&         cross	            (const GenericVector<TLength, TType>& other) noexcept
+        {
+            m_lengthIsDirty = true;
+            return GenericVector<TLength, TType>::cross(other);
+        }
+
+        /**
+         * @brief Performs a linear interpolation between 2 generic vectors of the same type.
+         * 
+         * @param other 
+         * @param t 
+         * @return constexpr GenericLengthedVector& 
+         */
+        inline constexpr
+        GenericLengthedVector& 	    lerp		        (const GenericVector<TLength, TType>& other, TType t) noexcept
+        {
+            m_lengthIsDirty = true;
+            return GenericVector<TLength, TType>::lerp(other, t);
+        }
+
+        /**
+         * @brief Performs a reflection with a normal generic vector
+         * 
+         * @param normalNormalized : Normal must be normalized
+         * @return constexpr GenericLengthedVector& 
+         */
+        inline constexpr
+        GenericLengthedVector&         reflect		        (const GenericVector<TLength, TType>& normalNormalized) noexcept
+        {
+            m_lengthIsDirty = true;
+            return GenericVector<TLength, TType>::reflect(normalNormalized);
+        }
+
+        /**
+         * @brief Set the magnitude of the current generic vector
+         * 
+         * @param newLength 
+         * @return constexpr GenericLengthedVector& 
+         */
+        inline constexpr
+        GenericLengthedVector& 	    setLength		     (TType newLength) noexcept
+        {
+            const TType coef = newLength / m_length;
+            *this *= coef;
+
+            m_length = newLength;
+
+            return *this;
+        }
+
+        /**
+         * @brief rotate generic vector around another unit generic vector. This function assert if axis is not unit
+         * 
+         * @param unitAxis 
+         * @param angleRad 
+         */
+        inline constexpr
+		GenericLengthedVector& rotateAroundAxis (const GenericVector<TLength, TType>& unitAxis, const Angle::Angle<Angle::EAngleType::Radian, TType>& angle) noexcept
+        {
+            m_lengthIsDirty = true;
+            return GenericVector<TLength, TType>::rotateAroundAxis(unitAxis, angle);
+        }
 
         #pragma endregion //!methods
 
@@ -99,10 +237,10 @@ namespace FoxMath::Vector
         /**
          * @brief return magnitude of the generic vector 
          * 
-         * @return constexpr TType 
+         * @return constexpr cnost TType 
          */
         [[nodiscard]] inline constexpr
-        TType length () const noexcept
+        const TType length () noexcept
         {
             if (m_lengthIsDirty)
             {
@@ -110,6 +248,19 @@ namespace FoxMath::Vector
                 m_lengthIsDirty = false;
             }
 
+            return m_length;
+        }
+
+        /**
+         * @brief return magnitude of the generic vector 
+         * 
+         * @note TODO: When vector is create, constructor must compute the vector length
+         * 
+         * @return constexpr cnost TType 
+         */
+        [[nodiscard]] inline constexpr
+        const TType length () const noexcept
+        {
             return m_length;
         }
 
