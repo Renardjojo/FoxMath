@@ -237,15 +237,15 @@ GenericVector<TLength, TType>         GenericVector<TLength, TType>::getCross	  
         switch (i)
         {
         case 0:
-            rst[i] = m_data[i + 1] * other[TLength - 1] - other[i + 1] * m_data[TLength - 1];
+            rst.setData(i, m_data[i + 1] * other[TLength - 1] - other[i + 1] * m_data[TLength - 1]);
             break;
         
         case TLength - 1:
-            rst[i] = m_data[0] * other[i - 1] - other[0] * m_data[i - 1];
+            rst.setData(i, m_data[0] * other[i - 1] - other[0] * m_data[i - 1]);
             break;
 
         default:
-            rst[i] = m_data[i + 1] * other[i - 1] - other[i + 1] * m_data[i - 1];
+            rst.setData(i, m_data[i + 1] * other[i - 1] - other[i + 1] * m_data[i - 1]);
             break;
         }
     }
@@ -281,9 +281,9 @@ GenericVector<TLength, TType> GenericVector<TLength, TType>::getLerp		        (c
     for (size_t i = 0; i < TLength; i++)
     {
 #if __cplusplus == 201709L //Constexpr std::lerp
-        rst[i] = std::lerp(m_data[i], other[i], t);
+        rst.setData(i, std::lerp(m_data[i], other[i], t));
 #else
-        rst[i] = m_data[i] + t * (other[i] - m_data[i]);
+        rst.setData(i, m_data[i] + t * (other[i] - m_data[i]));
 #endif
     }
 
@@ -416,23 +416,27 @@ void outOfRangeThrow()
 }
 
 template <size_t TLength, typename TType>
+template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
-TType&  GenericVector<TLength, TType>::at (size_t index) throw ()
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::setDataAt(size_t index, TscalarType scalar) throw ()
 {
-    if (index < TLength)
-        return m_data[index];
+    if (index < TLength) [[likely]]
+    {
+        m_data[index] = static_cast<TType>(scalar);
+        return *this;
+    }
 
     std::__throw_out_of_range_fmt(__N("GenericVector::at: index"
-				       "(which is %zu) >= TLength "
-				       "(which is %zu)"),
-				        index, TLength);
+                    "(which is %zu) >= TLength "
+                    "(which is %zu)"),
+                        index, TLength);
 }
 
 template <size_t TLength, typename TType>
 inline constexpr
-const TType&    GenericVector<TLength, TType>::at (size_t index) const throw ()
+const TType    GenericVector<TLength, TType>::at (size_t index) const throw ()
 {
-    if (index < TLength)
+    if (index < TLength) [[likely]]
         return m_data[index];
 
     std::__throw_out_of_range_fmt(__N("GenericVector::at: index "
@@ -450,16 +454,19 @@ GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator=(TscalarT
 }
 
 template <size_t TLength, typename TType>
+template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
 inline constexpr
-TType&  GenericVector<TLength, TType>::operator[]	(size_t index) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::setData(size_t index, TscalarType scalar) noexcept
 {
     assert(index < TLength);
-    return m_data[index];
+
+    m_data[index] = static_cast<TType>(scalar);
+    return *this;
 }
 
 template <size_t TLength, typename TType>
 inline constexpr
-const TType&    GenericVector<TLength, TType>::operator[]	(size_t index) const noexcept
+const TType    GenericVector<TLength, TType>::operator[]	(size_t index) const noexcept
 {
     assert(index < TLength);
     return m_data[index];
@@ -777,7 +784,7 @@ GenericVector<TLength, TType>::operator GenericVector<TLengthOther, TTypeOther>(
 
     for (size_t i = 0; i < minLenght; i++)
     {
-        result[i] = static_cast<TTypeOther>(m_data[i]);
+        result.setData(i, static_cast<TTypeOther>(m_data[i]));
     }
 
 #if __cplusplus >= 201709L
@@ -786,7 +793,7 @@ GenericVector<TLength, TType>::operator GenericVector<TLengthOther, TTypeOther>(
 #endif
         for (size_t i = minLenght; i < TLengthOther; i++)
         {
-            result[i] = static_cast<TTypeOther>(0);
+            result.setData(i, static_cast<TTypeOther>(0));
         }
 #if __cplusplus >= 201709L 
     }
@@ -827,7 +834,7 @@ GenericVector<TLength, TType> operator+(TTypeScalar scalar, GenericVector<TLengt
 {
     for (size_t i = 0; i < TLength; i++)
     {
-        vec[i] = static_cast<TType>(scalar) + vec[i];
+        vec.setData(i, static_cast<TType>(scalar) + vec[i]);
     }
     
     return vec;
@@ -853,7 +860,7 @@ GenericVector<TLength, TType> operator-(TTypeScalar scalar, GenericVector<TLengt
 {
     for (size_t i = 0; i < TLength; i++)
     {
-        vec[i] = static_cast<TType>(scalar) - vec[i];
+        vec.setData(i, static_cast<TType>(scalar) - vec[i]);
     }
     
     return vec;
@@ -879,7 +886,7 @@ GenericVector<TLength, TType> operator*(TTypeScalar scalar, GenericVector<TLengt
 {
     for (size_t i = 0; i < TLength; i++)
     {
-        vec[i] = static_cast<TType>(scalar) * vec[i];
+        vec.setData(i, static_cast<TType>(scalar) * vec[i]);
     }
     
     return vec;
@@ -905,7 +912,7 @@ GenericVector<TLength, TType> operator/(TTypeScalar scalar, GenericVector<TLengt
 {
     for (size_t i = 0; i < TLength; i++)
     {
-        vec[i] = static_cast<TType>(scalar) / vec[i];
+        vec.setData(i, static_cast<TType>(scalar) / vec[i]);
     }
     
     return vec;
@@ -931,7 +938,7 @@ GenericVector<TLength, TType> operator%(TTypeScalar scalar, GenericVector<TLengt
 {
     for (size_t i = 0; i < TLength; i++)
     {
-        vec[i] = static_cast<TType>(scalar) % vec[i];
+        vec.setData(i, static_cast<TType>(scalar) % vec[i]);
     }
     
     return vec;
@@ -957,7 +964,7 @@ GenericVector<TLength, TType> operator&(TTypeScalar scalar, GenericVector<TLengt
 {
     for (size_t i = 0; i < TLength; i++)
     {
-        vec[i] = static_cast<TType>(scalar) & vec[i];
+        vec.setData(i, static_cast<TType>(scalar) & vec[i]);
     }
     
     return vec;
@@ -983,7 +990,7 @@ GenericVector<TLength, TType> operator|(TTypeScalar scalar, GenericVector<TLengt
 {
     for (size_t i = 0; i < TLength; i++)
     {
-        vec[i] = static_cast<TType>(scalar) | vec[i];
+        vec.setData(i, static_cast<TType>(scalar) | vec[i]);
     }
     
     return vec;
@@ -1009,7 +1016,7 @@ GenericVector<TLength, TType> operator^(TTypeScalar scalar, GenericVector<TLengt
 {
     for (size_t i = 0; i < TLength; i++)
     {
-        vec[i] = static_cast<TType>(scalar) ^ vec[i];
+        vec.setData(i, static_cast<TType>(scalar) ^ vec[i]);
     }
     
     return vec;
@@ -1036,7 +1043,7 @@ GenericVector<TLength, TType> operator<<(TTypeScalar scalar, GenericVector<TLeng
 {
     for (size_t i = 0; i < TLength; i++)
     {
-        vec[i] = static_cast<TType>(scalar) << vec[i];
+        vec.setData(i, static_cast<TType>(scalar) << vec[i]);
     }
     
     return vec;
@@ -1063,7 +1070,7 @@ GenericVector<TLength, TType> operator>>(TTypeScalar scalar, GenericVector<TLeng
 {
     for (size_t i = 0; i < TLength; i++)
     {
-        vec[i] = static_cast<TType>(scalar) >> vec[i];
+        vec.setData(i, static_cast<TType>(scalar) >> vec[i]);
     }
     
     return vec;
@@ -1083,7 +1090,7 @@ GenericVector<TLength, TType> operator~(GenericVector<TLength, TType> vec) noexc
 {
     for (size_t i = 0; i < TLength; i++)
     {
-        vec[i] = ~vec[i];
+        vec.setData(i, ~vec[i]);
     }
     
     return vec;
@@ -1095,7 +1102,7 @@ GenericVector<TLength, bool> operator!(GenericVector<TLength, bool> vec) noexcep
 {
     for (size_t i = 0; i < TLength; i++)
     {
-        vec[i] = !vec[i];
+        vec.setData(i, !vec[i]);
     }
     
     return vec;
@@ -1139,7 +1146,7 @@ bool operator==(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthO
 
     for (size_t i = 0; i < TLength && rst; i++)
     {
-        rst &= lhs[i] == static_cast<TType>(rhs[i]);
+        rst &= lhs.setData(i, static_cast<TType>(rhs[i]));
     }
 
     return rst;

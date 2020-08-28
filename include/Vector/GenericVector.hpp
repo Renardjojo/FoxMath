@@ -481,32 +481,57 @@ namespace FoxMath::Vector
         #pragma region accessor
 
         /**
-         * @brief   Returns a reference to the data at index in the GenericVector
-         * 
-         * The function automatically checks whether index is within the bounds of valid elements in the GenericVector, throwing an out_of_range exception if it is not (i.e., if n is greater than, or equal to, its size).
-         * This is in contrast with member operator[], that does not check against bounds.
-         * 
-         * @param index 
-         * @return constexpr TType& 
-         */
-        [[nodiscard]] inline constexpr
-		TType& 	    at (size_t index) throw ();
-
-        /**
          * @brief   Returns a const reference to the data at index in the GenericVector
          * 
          * The function automatically checks whether index is within the bounds of valid elements in the GenericVector, throwing an out_of_range exception if it is not (i.e., if n is greater than, or equal to, its size).
          * This is in contrast with member operator[], that does not check against bounds.
          * 
          * @param index 
-         * @return constexpr const TType& 
+         * @return constexpr const TType (avoid at([...]) = [...])
          */
         [[nodiscard]] inline constexpr
-		const TType& 	at (size_t index) const throw ();
+		const TType 	at (size_t index) const throw ();
 
         #pragma endregion //!accessor
     
         #pragma region mutator
+
+        /**
+         * @brief Set the Data a index
+         * 
+         * A similar member function, GenericVector::setDataAt, has the same behavior as this operator function,
+         * except that GenericVector::setDataAt is bound-checked and signals if the requested position is out of range by throwing an out_of_range exception.
+         * 
+         * Portable programs should never call this function with an argument index that is out of range,
+         * since this causes undefined behavior.
+         * 
+         * @tparam TscalarType 
+         * @tparam true 
+         * @param index 
+         * @param scalar 
+         * @return constexpr GenericVector& 
+         */
+        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+		inline constexpr
+		GenericVector& setData(size_t index, TscalarType scalar) noexcept;
+
+        /**
+         * @brief Set the Data at index
+         * 
+         * The function automatically checks whether index is within the bounds of valid elements in the GenericVector, throwing an out_of_range exception if it is not (i.e., if n is greater than, or equal to, its size).
+         * This is in contrast with function GenericVector::setData, that does not check against bounds.
+         * 
+         * @tparam TscalarType 
+         * @tparam true 
+         * @param index 
+         * @param scalar 
+         * @return constexpr GenericVector& 
+         */
+        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+		inline constexpr
+		GenericVector& setDataAt(size_t index, TscalarType scalar) throw ();
+
+
         #pragma endregion //!mutator
     
         #pragma region operator
@@ -522,25 +547,10 @@ namespace FoxMath::Vector
          * since this causes undefined behavior.
          * 
          * @param index 
-         * @return constexpr TType& 
+         * @return constexpr const TType (avoid vec[...] = [...])
          */
         [[nodiscard]] inline constexpr
-		TType& 	    operator[]	(size_t index) noexcept;
-
-        /**
-         * @brief Returns a reference to the element at position index in the GenericVector.
-         * 
-         * A similar member function, GenericVector::at, has the same behavior as this operator function,
-         * except that GenericVector::at is bound-checked and signals if the requested position is out of range by throwing an out_of_range exception.
-         * 
-         * Portable programs should never call this function with an argument index that is out of range,
-         * since this causes undefined behavior.
-         * 
-         * @param index 
-         * @return constexpr const TType& 
-         */
-        [[nodiscard]] inline constexpr
-		const TType& 	    operator[]	(size_t index) const noexcept;
+		const TType 	    operator[]	(size_t index) const noexcept;
 
         #pragma endregion //!member access operators
         #pragma region  assignment operators
