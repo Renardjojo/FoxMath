@@ -271,60 +271,171 @@ namespace FoxMath::Matrix
         #pragma region accessor
 
         /**
-         * @brief   Returns a reference to the InternalVector at index in the GenericMatrix
+         * @brief Returns a reference to the data at index in the GenericMatrix
          * 
-         * The function automatically checks whether index is within the bounds of valid elements in the GenericMatrix, throwing an out_of_range exception if it is not (i.e., if n is greater than, or equal to, its size).
-         * This is in contrast with member operator[], that does not check against bounds.
+         * A similar member function, GenericMatrix::getDataAt, has the same behavior as this operator function,
+         * except that GenericMatrix::getDataAt is bound-checked and signals if the requested position is out of range by throwing an out_of_range exception.
          * 
-         * @note : use at(indexVector).at(indexElem) to access at the element
-         * 
-         * @param index 
-         * @return constexpr InternalVector& 
-         */
-        [[nodiscard]] inline constexpr
-		InternalVector& 	    at (size_t index) throw ();
-
-        /**
-         * @brief   Returns a const reference to the InternalVector at index in the GenericMatrix
-         * 
-         * The function automatically checks whether index is within the bounds of valid elements in the GenericMatrix, throwing an out_of_range exception if it is not (i.e., if n is greater than, or equal to, its size).
-         * This is in contrast with member operator[], that does not check against bounds.
-         * 
-         * @note : use at(indexVector).at(indexElem) to access at the element
-         * 
-         * @param index 
-         * @return constexpr const InternalVector& 
-         */
-        [[nodiscard]] inline constexpr
-		const InternalVector& 	at (size_t index) const throw ();
-
-        /**
-         * @brief   Returns a reference to the element at index in the GenericMatrix
-         * 
-         * The function automatically checks whether index is within the bounds of valid elements in the GenericMatrix, throwing an out_of_range exception if it is not (i.e., if n is greater than, or equal to, its size).
-         * This is in contrast with member operator[], that does not check against bounds.
-         * 
-         * @note : to avoid this check, use that form [indexVec][indexElem]. These both operators are inline and have no impact on read latency 
+         * Portable programs should never call this function with an argument index that is out of range,
+         * since this causes undefined behavior.
          * 
          * @param index 
          * @return constexpr TType& 
          */
         [[nodiscard]] inline constexpr
-		TType& 	    getData	(size_t index) throw();
+		TType& 	    getData	(size_t index) noexcept;
 
         /**
-         * @brief   Returns a const reference to the element at index in the GenericMatrix
+         * @brief Returns a reference to the data at index in the GenericMatrix
          * 
-         * The function automatically checks whether index is within the bounds of valid elements in the GenericMatrix, throwing an out_of_range exception if it is not (i.e., if n is greater than, or equal to, its size).
-         * This is in contrast with member operator[], that does not check against bounds.
+         * A similar member function, GenericMatrix::getDataAt, has the same behavior as this operator function,
+         * except that GenericMatrix::getDataAt is bound-checked and signals if the requested position is out of range by throwing an out_of_range exception.
          * 
-         * @note : to avoid this check, use that form [indexVec][indexElem]. These both operators are inline and have no impact on read latency 
+         * Portable programs should never call this function with an argument index that is out of range,
+         * since this causes undefined behavior.
          * 
-         * @param index 
-         * @return constexpr const TType& 
+         * @param i : vector index
+         * @param j : data on vector index
+         * @return constexpr TType& 
          */
         [[nodiscard]] inline constexpr
-		const TType& 	    getData	(size_t index) const throw ();
+		TType& 	    getData	(size_t i, size_t j) noexcept;
+
+        /**
+         * @brief Returns a reference to the data at index in the GenericMatrix
+         * 
+         * A similar member function, GenericMatrix::getDataAt, has the same behavior as this operator function,
+         * except that GenericMatrix::getDataAt is bound-checked and signals if the requested position is out of range by throwing an out_of_range exception.
+         * 
+         * Portable programs should never call this function with an argument index that is out of range,
+         * since this causes undefined behavior.
+         * 
+         * @param index 
+         * @return constexpr const TType (avoid getData([...]) = [...])
+         */
+        [[nodiscard]] inline constexpr
+		const TType	    getData	(size_t index) const noexcept;
+
+        /**
+         * @brief Returns a reference to the data at index in the GenericMatrix
+         * 
+         * A similar member function, GenericMatrix::getDataAt, has the same behavior as this operator function,
+         * except that GenericMatrix::getDataAt is bound-checked and signals if the requested position is out of range by throwing an out_of_range exception.
+         * 
+         * Portable programs should never call this function with an argument index that is out of range,
+         * since this causes undefined behavior.
+         * 
+         * 
+         * @param i : vector index
+         * @param j : data on vector index
+         * @return constexpr const TType (avoid getData([...]) = [...]) 
+         */
+        [[nodiscard]] inline constexpr
+		const TType	    getData	(size_t i, size_t j) const noexcept;
+
+        /**
+         * @brief   Returns a const data to the vector at index in the GenericMatrix
+         * 
+         * The function automatically checks whether index is within the bounds of valid elements in the GenericMatrix, throwing an out_of_range exception if it is not (i.e., if n is greater than, or equal to, its size).
+         * This is in contrast with member GenericMatrix::getData(), that does not check against bounds.
+         * 
+         * @param index 
+         * @return constexpr TType& 
+         */
+        [[nodiscard]] inline constexpr
+		TType& 	    getDataAt	(size_t index) throw();
+
+        /**
+         * @brief   Returns a const data to the vector at index in the GenericMatrix
+         * 
+         * The function automatically checks whether index is within the bounds of valid elements in the GenericMatrix, throwing an out_of_range exception if it is not (i.e., if n is greater than, or equal to, its size).
+         * This is in contrast with member GenericMatrix::getData(), that does not check against bounds.
+         * 
+         * @param i : vector index
+         * @param j : data on vector index
+         * @return constexpr TType& 
+         */
+        [[nodiscard]] inline constexpr
+		TType& 	    getDataAt	(size_t i, size_t j) throw();
+
+        /**
+         * @brief   Returns a const data to the vector at index in the GenericMatrix
+         * 
+         * The function automatically checks whether index is within the bounds of valid elements in the GenericMatrix, throwing an out_of_range exception if it is not (i.e., if n is greater than, or equal to, its size).
+         * This is in contrast with member GenericMatrix::getData(), that does not check against bounds.
+         * 
+         * @param index 
+         * @return constexpr const TType (avoid getData([...]) = [...])
+         */
+        [[nodiscard]] inline constexpr
+		const TType	    getDataAt	(size_t index) const throw ();
+
+        /**
+         * @brief   Returns a const data to the vector at index in the GenericMatrix
+         * 
+         * The function automatically checks whether index is within the bounds of valid elements in the GenericMatrix, throwing an out_of_range exception if it is not (i.e., if n is greater than, or equal to, its size).
+         * This is in contrast with member GenericMatrix::getData(), that does not check against bounds.
+         * 
+         * @param i : vector index
+         * @param j : data on vector index
+         * @return constexpr const Type (avoid getData([...]) = [...])
+         */
+        [[nodiscard]] inline constexpr
+		const TType	    getDataAt	(size_t i, size_t j) const throw();
+
+        /**
+         * @brief Returns a reference to the vector at index in the GenericMatrix
+         * 
+         * A similar member function, GenericMatrix::getVectorAt, has the same behavior as this operator function,
+         * except that GenericMatrix::getVectorAt is bound-checked and signals if the requested position is out of range by throwing an out_of_range exception.
+         * 
+         * Portable programs should never call this function with an argument index that is out of range,
+         * since this causes undefined behavior.
+         * 
+         * @param index 
+         * @return constexpr InternalVector& 
+         */
+        [[nodiscard]] inline constexpr
+		InternalVector& 	    getVector	(size_t index) throw();
+
+        /**
+         * @brief Returns a reference to the vector at index in the GenericMatrix
+         * 
+         * A similar member function, GenericMatrix::getVectorAt, has the same behavior as this operator function,
+         * except that GenericMatrix::getVectorAt is bound-checked and signals if the requested position is out of range by throwing an out_of_range exception.
+         * 
+         * Portable programs should never call this function with an argument index that is out of range,
+         * since this causes undefined behavior.
+         * 
+         * @param index 
+         * @return constexpr const InternalVector& 
+         */
+        [[nodiscard]] inline constexpr
+		const InternalVector& 	    getVector	(size_t index) const throw ();    
+
+        /**
+         * @brief   Returns a const reference to the vector at index in the GenericMatrix
+         * 
+         * The function automatically checks whether index is within the bounds of valid elements in the GenericMatrix, throwing an out_of_range exception if it is not (i.e., if n is greater than, or equal to, its size).
+         * This is in contrast with member GenericMatrix::getVector(), that does not check against bounds.
+         * 
+         * @param index 
+         * @return constexpr InternalVector& 
+         */
+        [[nodiscard]] inline constexpr
+		InternalVector& 	    getVectorAt	(size_t index) throw();
+
+        /**
+         * @brief   Returns a const reference to the vector at index in the GenericMatrix
+         * 
+         * The function automatically checks whether index is within the bounds of valid elements in the GenericMatrix, throwing an out_of_range exception if it is not (i.e., if n is greater than, or equal to, its size).
+         * This is in contrast with member GenericMatrix::getVector(), that does not check against bounds.
+         * 
+         * @param index 
+         * @return constexpr const InternalVector& 
+         */
+        [[nodiscard]] inline constexpr
+		const InternalVector& 	    getVectorAt	(size_t index) const throw ();
         
         #pragma endregion //!accessor
     
@@ -335,32 +446,38 @@ namespace FoxMath::Matrix
         #pragma region member access operators
 
         /**
-         * @brief   Returns a reference to the InternalVector at index in the GenericMatrix
+         * @brief Returns a pointer to the data at index in the GenericMatrix
          * 
-         * The function automatically checks whether index is within the bounds of valid elements in the GenericMatrix, throwing an out_of_range exception if it is not (i.e., if n is greater than, or equal to, its size).
-         * This is in contrast with member operator[], that does not check against bounds.
+         * A similar member function, GenericMatrix::at, has the same behavior as this operator function,
+         * except that GenericMatrix::at is bound-checked and signals if the requested position is out of range by throwing an out_of_range exception.
          * 
-         * @note : use at[indexVector][indexElem] to access at the element
+         * Portable programs should never call this function with an argument index that is out of range,
+         * since this causes undefined behavior.
+         * 
+         * @note : use [indexVector][indexElem] to access at the element
          * 
          * @param index 
-         * @return constexpr InternalVector& 
+         * @return constexpr TType*
          */
-        [[nodiscard]] inline constexpr
-		InternalVector& 	    operator[]	(size_t index) noexcept;
+        [[nodiscard,]] inline constexpr
+		TType* 	    operator[]	(size_t index) noexcept;
 
         /**
-         * @brief   Returns a reference to the InternalVector at index in the GenericMatrix
+         * @brief Returns a pointer to the data at index in the GenericMatrix
          * 
-         * The function automatically checks whether index is within the bounds of valid elements in the GenericMatrix, throwing an out_of_range exception if it is not (i.e., if n is greater than, or equal to, its size).
-         * This is in contrast with member operator[], that does not check against bounds.
+         * A similar member function, GenericMatrix::getDataAt, has the same behavior as this operator function,
+         * except that GenericMatrix::getDataAt is bound-checked and signals if the requested position is out of range by throwing an out_of_range exception.
          * 
-         * @note : use at[indexVector][indexElem] to access at the element
+         * Portable programs should never call this function with an argument index that is out of range,
+         * since this causes undefined behavior.
+         * 
+         * @note : use [indexVector][indexElem] to access at the element
          * 
          * @param index 
-         * @return constexpr const InternalVector& 
+         * @return constexpr const const TType*
          */
         [[nodiscard]] inline constexpr
-		const InternalVector& 	    operator[]	(size_t index) const noexcept;
+		const TType* 	    operator[]	(size_t index) const noexcept;
 
         #pragma endregion //!member access operators
         #pragma region  assignment operators

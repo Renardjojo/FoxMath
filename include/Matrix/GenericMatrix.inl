@@ -104,34 +104,37 @@ GenericMatrix<TColumnSize, TRowSize, TType, TMatrixConventionOther>		GenericMatr
 
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
 inline constexpr
-typename GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::InternalVector&  GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::at (size_t index) throw ()
+TType& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getData	(size_t index) noexcept
 {
-
-    if (index < numberOfInternalVector()) [[likely]]
-        return m_vector[index];
-
-    std::__throw_out_of_range_fmt(__N("GenericMatrix::at: index"
-				       "(which is %zu) >= numberOfInternalVector() "
-				       "(which is %zu)"),
-				        index, numberOfInternalVector());
+    assert(index < numberOfData());
+    return m_data[index];
 }
 
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
 inline constexpr
-const typename GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::InternalVector& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::at (size_t index) const throw ()
+TType& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getData	(size_t i, size_t j) noexcept
 {
-    if (index < numberOfInternalVector()) [[likely]]
-        return m_vector[index];
-
-    std::__throw_out_of_range_fmt(__N("GenericMatrix::at: index "
-				        "(which is %zu) >= numberOfInternalVector() "
-				       "(which is %zu)"),
-				        index, numberOfInternalVector());
+    return getData(i * vectorLength() + j);
 }
 
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
 inline constexpr
-TType&  GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getData (size_t index) throw ()
+const TType GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getData	(size_t index) const noexcept
+{
+    assert(index < numberOfData());
+    return m_data[index];
+}
+
+template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
+inline constexpr
+const TType GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getData	(size_t i, size_t j) const noexcept
+{
+    return getData(i * vectorLength() + j);
+}
+
+template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
+inline constexpr
+TType& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getDataAt	(size_t index) throw()
 {
     if (index < numberOfData()) [[likely]]
         return m_data[index];
@@ -144,20 +147,34 @@ TType&  GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getData 
 
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
 inline constexpr
-const TType&    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getData (size_t index) const throw ()
+TType& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getDataAt	(size_t i, size_t j) throw()
+{
+    return getDataAt(i * vectorLength() + j);
+}
+
+template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
+inline constexpr
+const TType GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getDataAt	(size_t index) const throw ()
 {
     if (index < numberOfData()) [[likely]]
         return m_data[index];
 
-    std::__throw_out_of_range_fmt(__N("GenericMatrix::at: index "
-				        "(which is %zu) >= numberOfData() "
+    std::__throw_out_of_range_fmt(__N("GenericMatrix::at: index"
+				       "(which is %zu) >= numberOfData() "
 				       "(which is %zu)"),
 				        index, numberOfData());
 }
 
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
 inline constexpr
-typename GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::InternalVector&  GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::operator[]	(size_t index) noexcept
+const TType GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getDataAt	(size_t i, size_t j) const throw()
+{
+    return getDataAt(i * vectorLength() + j);
+}
+
+template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
+inline constexpr
+typename GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::InternalVector& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getVector	(size_t index) throw()
 {
     assert(index < numberOfInternalVector());
     return m_vector[index];
@@ -165,10 +182,26 @@ typename GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::Interna
 
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
 inline constexpr
-const typename GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::InternalVector&    GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::operator[]	(size_t index) const noexcept
+const typename GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::InternalVector& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getVector	(size_t index) const throw ()
 {
     assert(index < numberOfInternalVector());
     return m_vector[index];
+}
+
+template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
+inline constexpr
+TType* GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::operator[]	(size_t index) noexcept
+{
+    assert(index < numberOfData());
+    return &m_data[index];
+}
+
+template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
+inline constexpr
+const TType* GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::operator[]	(size_t index) const noexcept
+{
+    assert(index < numberOfData());
+    return &m_data[index];
 }
 
 
