@@ -25,7 +25,8 @@ Read [Makefile](Makefile) to see all command and compile with C++ 2017 or 2020
 - [x] Square matrix
 - [x] Matrix 2, 3 and 4
 - [ ] Space matrix or transform matrix child of matrix 4
-- [ ] create LengthedVector and normalizedAndLengthedVector class to optimize vector computation
+- [x] create LengthedVector class to optimize vector computation
+- [ ] (optional )normalizedAndLengthedVector class to optimize vector computation
 - [ ] Create benchmark feature and test all feature
 - [ ] add roate, translate and sclae function to generic vector
 - [ ] Benchmark and optimize Vector and matrix
