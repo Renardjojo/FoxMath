@@ -170,8 +170,8 @@ GenericVector<TLength, TType>&         GenericVector<TLength, TType>::clampLengt
 
     if (magnitude > maxLength) [[likely]]
     {
-		*this /= magnitude;
-		*this *= maxLength;
+        const TType coef = maxLength / magnitude;
+        *this *= coef;
     }
     return *this;
 }
@@ -319,13 +319,8 @@ template <size_t TLength, typename TType>
 inline constexpr
 GenericVector<TLength, TType>& GenericVector<TLength, TType>::setLength		     (TType newLength) noexcept
 {
-	TType magnitude {length()};
-
-    if (magnitude) [[likely]]
-    {
-		*this /= magnitude;
-		*this *= newLength;
-    }
+    const TType coef = newLength / length();
+    *this *= coef;
 
     return *this;
 }

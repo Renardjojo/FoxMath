@@ -59,7 +59,6 @@ namespace FoxMath::Vector
     template <size_t TLength, typename TType>
     class GenericVector<TLength, TType>
     {
-        
         private:
     
         protected:
@@ -69,12 +68,6 @@ namespace FoxMath::Vector
         std::array<TType, TLength> m_data {};
 
         #pragma endregion //!attribut
-    
-        #pragma region static attribut
-        #pragma endregion //! static attribut
-    
-        #pragma region methods
-        #pragma endregion //!methods
     
         public:
     
