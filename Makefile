@@ -49,10 +49,19 @@ $(OUTPUT): $(OBJS)
 
 run : $(OUTPUT) 
 	./$(OUTPUT)
+	
+#use command of benchmark makefile
+benchmarkRun : 
+	$(MAKE) -C benchmark -f Makefile run
+	
+benchmarkCleanAll : 
+	$(MAKE) -C benchmark -f Makefile cleanAll
 
 debug:
+	echo not implemented yet
 
 buid:
+	echo not implemented yet
 
 #debugger. Use "run" to start
 gdb :
@@ -98,10 +107,3 @@ cleanAll:
 #SRC_FILES = $(filter-out src/bar.cpp, $(wildcard src/*.cpp))
 clean :
 	rm -f $(filter-out $(EXCLUDE) $(EXCLUDE:.o=.d),$(OBJS:.o=.d) $(OBJS))
-
-re : clean all
-
-med : 
-	find ./Ressources -name "*" > ./Ressources.txt
-	g++ -Wall -Werror mediaCreator.cpp -o mediaCreator && ./mediaCreator
-	rm ./Ressources.txt && rm ./mediaCreator
