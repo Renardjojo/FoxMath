@@ -224,13 +224,29 @@ SquareMatrix<TSize, TType, TMatrixConvention>		SquareMatrix<TSize, TType, TMatri
 
 template <size_t TSize, typename TType, EMatrixConvention TMatrixConvention>
 inline constexpr 
-void		SquareMatrix<TSize, TType, TMatrixConvention>::reverse		() noexcept
+SquareMatrix<TSize, TType, TMatrixConvention>&		SquareMatrix<TSize, TType, TMatrixConvention>::reverse		() noexcept
 {
 	assert ((*this) != static_cast<TType>(0));
 
-	SquareMatrix<TSize, TType, TMatrixConvention> reversedMatrix = getReverse();
+	if (isOrtho() == true)
+	{
+        transpose();
+		return *this;
+	}
 
-	(*this) = reversedMatrix;
+	const TType determinant = getDeterminant();
+	
+	if (Numeric::isSameAsZero<TType>(determinant)) //in two step for more perform
+    {
+        Parent::fill(static_cast<TType>(0));
+		return *this;
+    }
+
+	(*this) = getCoMatrix();
+	tranformCoMatToAdjointMat();
+	(*this) /= determinant;
+
+    return *this;
 }
 
 template <size_t TSize, typename TType, EMatrixConvention TMatrixConvention>

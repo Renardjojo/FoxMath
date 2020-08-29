@@ -171,7 +171,7 @@ namespace FoxMath::Matrix
          * 
          */
         inline constexpr 
-        void		reverse		() noexcept;
+        SquareMatrix&		reverse		() noexcept;
 
         #pragma endregion //!methods
 
