@@ -1,25 +1,13 @@
-#pragma once
+#ifndef _VEC_H
+#define _VEC_H
 
 #include <iostream>
 #include <string>
 #include <math.h>
-#include <type_traits>
-#include "Types/SFINAShorthand.hpp"
 
 //Engine::Core::Maths::[..]
-namespace RenardMath
+namespace Engine::Core::Maths
 {
-	template <size_t TLength, typename TType = float, IsArithmetic<TType> = true>
-	typedef struct Vector
-	{
-		union 
-		{
-			struct {float x, y;};
-			float data[TLength];
-		};
-
-	} Vec;
-
 	typedef struct Vec2
 	{
 
@@ -331,6 +319,7 @@ namespace RenardMath
 
 	::std::ostream& 	operator<<		(::std::ostream& out, const Vec4& vec);
 
-
-
+	#include "vec.inl"
 } //namespace Engine::Core::Maths
+
+#endif // _VEC_H

@@ -230,7 +230,7 @@ Vec2& Vec2::operator=(const Vec2 & vec)
 inline
 float& Vec2::operator[](int val)
 {
-	GE_assert(val < 2);
+	assert(val < 2);
 	return e[val]; 
 }
 
@@ -459,7 +459,7 @@ float Vec3::getAreaTriangle		(const Vec3& pos1, const Vec3& pos2, const Vec3& po
 inline
 void Vec3::rotateArroundAxis (const Vec3& unitAxis, float angleRad)
 {
-	GE_assert(unitAxis.length() == 1.f);
+	assert(unitAxis.length() == 1.f);
 
 	(*this) = getRotateArroundAxis(unitAxis, angleRad);
 }
@@ -467,7 +467,7 @@ void Vec3::rotateArroundAxis (const Vec3& unitAxis, float angleRad)
 inline
 Vec3 Vec3::getRotateArroundAxis (const Vec3& k, float angleRad) const
 {
-	GE_assert(k.length() == 1.f);
+	assert(k.length() == 1.f);
 
 	float cosA = cosf(angleRad);
 	const Vec3& v = (*this);
@@ -577,7 +577,7 @@ Vec3& Vec3::operator=(const Vec3 & vec)
 inline
 float& Vec3::operator[](unsigned int val)
 {
-	GE_assert(val < 3);
+	assert(val < 3);
 	return e[val]; 
 }
 
@@ -684,7 +684,7 @@ float Vec4::dotProduct (const Vec4& other) const
 inline
 float Vec4::length () const
 {
-	GE_assert(w != 0);
+	assert(w != 0);
 
 	float xHomo = x / w;
 	float yHomo = y / w;
@@ -700,7 +700,7 @@ float Vec4::length () const
 inline
 void Vec4::homogenize		()
 {
-	GE_assert(w != 0);
+	assert(w != 0);
 	(*this) /= w;
 }
 
@@ -825,7 +825,7 @@ Vec4& Vec4::operator=(const Vec4 & vec)
 inline
 float& Vec4::operator[](unsigned int val)
 {
-	GE_assert(val < 4);
+	assert(val < 4);
 	return e[val];
 }
 
