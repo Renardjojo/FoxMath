@@ -103,6 +103,7 @@ launcher :
 
 cleanAll:
 	rm -f $(OBJS) $(OBJS:.o=.d) $(OUTPUT)
+	$(MAKE) -C benchmark -f Makefile cleanAll
 
 #SRC_FILES = $(filter-out src/bar.cpp, $(wildcard src/*.cpp))
 clean :
