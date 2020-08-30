@@ -39,6 +39,7 @@
 
 namespace FoxMath::Angle
 {
+    template <EAngleType TAngleType>
     struct AnglePhantom {};
 
     /*Use of IsArithmetic*/
@@ -47,7 +48,7 @@ namespace FoxMath::Angle
 
     template <EAngleType TAngleType, typename TType>
     class Angle<TAngleType, TType> 
-    :   public Type::StrongType <TType, AnglePhantom>,
+    :   public Type::StrongType <TType, AnglePhantom<TAngleType>>,
         public Type::Operator::Arithmetic       <Angle<TAngleType, TType>>,
         public Type::Operator::Comparison       <Angle<TAngleType, TType>>,
         public Type::Operator::Bitwise          <Angle<TAngleType, TType>>
@@ -56,7 +57,7 @@ namespace FoxMath::Angle
     
         protected:
 
-        using Base = Type::StrongType <TType, AnglePhantom>;
+        using Base = Type::StrongType <TType, AnglePhantom<TAngleType>>;
     
         #pragma region attribut
 
@@ -93,16 +94,21 @@ namespace FoxMath::Angle
     
         #pragma region constructor/destructor
     
-        Angle ()					            = default;
-        Angle (const Angle& other)			    = default;
-        Angle (Angle&& other)				    = default;
-        ~Angle ()				                = default;
-        Angle& operator=(Angle const& other)	= default;
-        Angle& operator=(Angle && other)		= default;
+        Angle () noexcept				                = default;
 
-         template<typename TTypeScalar, Type::IsArithmetic<TType> = true>
-         explicit inline constexpr
-         Angle (TTypeScalar angle) noexcept;
+        Angle (const Angle& other) noexcept				= default;
+
+        Angle (Angle&& other) noexcept				    = default;
+
+        ~Angle () noexcept				                = default;
+        
+        Angle& operator=(Angle const& other) noexcept	= default;
+
+        Angle& operator=(Angle && other) noexcept       = default;
+
+        template<typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+        explicit inline constexpr
+        Angle (TTypeScalar angle) noexcept;
     
         #pragma endregion //!constructor/destructor
     

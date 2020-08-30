@@ -27,34 +27,25 @@
  * SOFTWARE.
  */
 
-template <typename TBase, typename TPhantom>
+template <typename TBase, class TPhantom>
 template <typename ...TArgs, Type::IsConstructible<TBase, TArgs...>>
 constexpr StrongType<TBase, TPhantom>::StrongType(TArgs&&... in_args) noexcept(noexcept(TBase(std::forward<TArgs>(in_args)...)))
 :	m_value {TBase(std::forward<TArgs>(in_args)...)}
 {}
 
-template <typename TBase, typename TPhantom>
+template <typename TBase, class TPhantom>
 constexpr StrongType<TBase, TPhantom>::StrongType(TBase const& in_base) noexcept(noexcept(TBase(in_base)))
 :	m_value {in_base}
 {}
 
-
-template <typename TBase, typename TPhantom>
-template<typename TOtherType>
-constexpr StrongType<TBase, TPhantom>::operator TOtherType() noexcept
-{
-	return static_cast<TOtherType>(m_value);
-}
-
-template <typename TBase, typename TPhantom>
+template <typename TBase, class TPhantom>
 constexpr StrongType<TBase, TPhantom>::operator TBase&() noexcept
 {
 	return m_value;
 }
 
-template <typename TBase, typename TPhantom>
+template <typename TBase, class TPhantom>
 constexpr StrongType<TBase, TPhantom>::operator TBase const& () const noexcept
 {
-	
 	return m_value;	
 }

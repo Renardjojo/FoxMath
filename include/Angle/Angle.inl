@@ -30,10 +30,10 @@
 #pragma once
 
 template <EAngleType TAngleType, typename TType>
-template<typename TTypeScalar, Type::IsArithmetic<TType> = true>
+template<typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
 Angle<TAngleType, TType>::Angle (TTypeScalar angle) noexcept
-    :   Type::StrongType <TType, AnglePhantom> {angle}
+    :   Type::StrongType <TType, AnglePhantom<TAngleType>> {angle}
 {}
 
 template <EAngleType TAngleType, typename TType>

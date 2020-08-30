@@ -72,11 +72,11 @@ namespace FoxMath::Type
         #pragma region constructor/destructor
 
         constexpr inline StrongType ()	 noexcept(std::is_nothrow_constructible_v<TBase>) = default;
-        
         /**
          * @brief This operator is noexcept if the corresponding base type operator is noexcept itself
          * 
          */
+
         constexpr inline StrongType (const StrongType& other) noexcept(std::is_nothrow_copy_constructible_v<TBase>) = default;
 
         /**
@@ -92,7 +92,7 @@ namespace FoxMath::Type
          * 
          */
         constexpr inline StrongType& operator=(StrongType const& other)	noexcept(std::is_nothrow_copy_assignable_v<TBase>) = default;
-
+        
         /**
          * @brief This operator is noexcept if the corresponding base type operator is noexcept itself
          * 
@@ -106,7 +106,7 @@ namespace FoxMath::Type
 		 * @param in_args arguments
 		 */
 		template <typename ...TArgs, Type::IsConstructible<TBase, TArgs...> = true>
-		constexpr StrongType(TArgs&&... in_args) noexcept(noexcept(TBase(std::forward<TArgs>(in_args)...)));
+		explicit constexpr StrongType(TArgs&&... in_args) noexcept(noexcept(TBase(std::forward<TArgs>(in_args)...)));
 
 		/**
 		 * @brief Base init constructor
@@ -130,14 +130,10 @@ namespace FoxMath::Type
 
         #pragma region convertor
 
-        template <typename TOtherType>
-		explicit constexpr inline 
-        operator TOtherType       ()	noexcept;
-
-		explicit constexpr inline 
+		constexpr explicit inline 
         operator TBase&       ()	    noexcept;
 		
-        explicit constexpr inline 
+        constexpr explicit inline 
         operator TBase const& () const  noexcept;
 
         #pragma endregion //!convertor
