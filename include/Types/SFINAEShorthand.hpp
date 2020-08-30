@@ -124,6 +124,16 @@ namespace FoxMath::Type
     template<typename TBase, typename ...TArgs>
     using IsConstructible = std::enable_if_t<std::is_constructible_v<TBase, TArgs...>, bool>;
 
+
+    /**
+     * @brief Sfinae shorthand for std::is_convertible_v
+     * 
+     * @tparam TTypeFrom 
+     * @tparam TTypeTo 
+     */
+    template<typename TTypeFrom, typename TTypeTo>
+    using IsConvertible = std::enable_if_t<std::is_convertible_v<TTypeFrom, TTypeTo>, bool>;
+
     /**
      * @brief Sfinae shorthand for operator==
      * @note usage :
