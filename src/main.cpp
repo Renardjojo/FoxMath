@@ -187,7 +187,7 @@ int main()
     {
         std::cout << std::endl << std::endl << "Angle sandbox" << std::endl;
 
-        int a = 5;
+        float a = 6.28;
         Angle<EAngleType::Degree, float> angle = 3_deg;
         std::cout << angle << std::endl;
         
@@ -203,7 +203,10 @@ int main()
         Angle<EAngleType::Radian, float> rad (angle);
         std::cout << rad << std::endl;
 
-        angle += rad;
+        Angle<EAngleType::Radian, float> rad2 (a);
+        std::cout << rad2 << std::endl;
+
+        angle += rad2;
         std::cout << angle << std::endl;
     }
 
