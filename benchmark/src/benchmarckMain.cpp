@@ -87,7 +87,7 @@ static void BM_NewTRSMatrixAtCompileTime(benchmark::State& state)
         constexpr Vec3f scale (3.f, 5.f, 6.f);
 
         SquareMatrix<3, float, EMatrixConvention::ColumnMajor> rst =  matConstColumnMajorSqrt.createScaleMatrix(scale) * 
-                                                                      matConstColumnMajorSqrt.createRotationArroundAxisMatrix(rotation, 60_deg) *
+                                                                      //matConstColumnMajorSqrt.createRotationArroundAxisMatrix(rotation, 60_deg) *
                                                                       matConstColumnMajorSqrt.createScaleMatrix(scale);
         benchmark::DoNotOptimize(rst);
         //benchmark::ClobberMemory();
@@ -142,6 +142,39 @@ static void BM_OldTRSMatrixAtRunTime(benchmark::State& state)
 
 BENCHMARK(BM_OldTRSMatrixAtRunTime);
 BENCHMARK(_);
+
+static void BM_NewAngle(benchmark::State& state)
+{
+  std::srand (time(NULL));
+
+  for (auto _ : state)
+  {
+    FoxMath::Angle::Angle<FoxMath::Angle::EAngleType::Radian, float> rst(FoxMath::Angle::Angle<FoxMath::Angle::EAngleType::Degree, float>(RAND_FLOAT));
+    float rstRad = static_cast<float>(rst);
+    
+    benchmark::DoNotOptimize(rstRad);
+    //benchmark::ClobberMemory();
+  }
+}
+
+BENCHMARK(BM_NewAngle);
+
+static void BM_OldAngle(benchmark::State& state)
+{
+  std::srand (time(NULL));
+
+  for (auto _ : state)
+  {
+    float rstRad = RAND_FLOAT *  M_PI / 180.f;
+
+    benchmark::DoNotOptimize(rstRad);
+    //benchmark::ClobberMemory();
+  }
+}
+
+BENCHMARK(BM_OldAngle);
+
+
 
 BENCHMARK_MAIN();
 

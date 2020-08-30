@@ -5,7 +5,7 @@
 #include "Matrix/Matrix.hpp"
 #include "Angle/Angle.hpp"
 
-
+#include "Types/SFINAEShorthand.hpp"
 
 using namespace FoxMath::Matrix;
 using namespace FoxMath::Vector;
@@ -180,9 +180,6 @@ int main()
         Vec2i vec(0, 1);
         Vec2i vecU(1, 0);
 
-        int a = static_cast<int>(3_deg);
-        std::cout << a << std::endl;
-
         std::cout << vec.getRotationAroundAxis(vecU, 3_deg) << std::endl;
     }
 
@@ -203,7 +200,10 @@ int main()
         angle += 50.6_deg;
         std::cout << angle << std::endl;
         
-        angle += Angle<EAngleType::Radian, float>(a);
+        Angle<EAngleType::Radian, float> rad (angle);
+        std::cout << rad << std::endl;
+
+        angle += rad;
         std::cout << angle << std::endl;
     }
 
