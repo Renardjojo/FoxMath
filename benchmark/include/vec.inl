@@ -370,7 +370,7 @@ float Vec3::length () const
 }
 
 inline
-float Vec3::squartLength () const
+float Vec3::squareLength () const
 {
 	return x * x + y * y + z * z;
 }
@@ -378,7 +378,7 @@ float Vec3::squartLength () const
 inline
 bool Vec3::isFartherThan(const Vec3& other) const
 {
-	return squartLength() > other.squartLength();
+	return squareLength() > other.squareLength();
 }
 
 inline
@@ -643,25 +643,25 @@ bool operator!=(Vec3 const& vec1, Vec3 const& vec2)
 inline
 bool operator<(Vec3 const& vec1, Vec3 const& vec2)
 {
-	return vec1.squartLength() < vec2.squartLength();
+	return vec1.squareLength() < vec2.squareLength();
 }
 
 inline
 bool operator<=(Vec3 const& vec1, Vec3 const& vec2)
 {
-	return vec1.squartLength() <= vec2.squartLength();
+	return vec1.squareLength() <= vec2.squareLength();
 }
 
 inline
 bool operator>(Vec3 const& vec1, Vec3 const& vec2)
 {
-	return vec1.squartLength() > vec2.squartLength();
+	return vec1.squareLength() > vec2.squareLength();
 }
 
 inline
 bool operator>=(Vec3 const& vec1, Vec3 const& vec2)
 {
-	return vec1.squartLength() >= vec2.squartLength();
+	return vec1.squareLength() >= vec2.squareLength();
 }
 
 inline

@@ -98,7 +98,7 @@ GenericVector<TLength, TType>& GenericVector<TLength, TType>::fill(const Tscalar
 
 template <size_t TLength, typename TType>
 inline constexpr
-TType GenericVector<TLength, TType>::squartLength () const noexcept
+TType GenericVector<TLength, TType>::squareLength () const noexcept
 {
     TType sqrtLength {static_cast<TType>(0)};
 
@@ -116,7 +116,7 @@ template <size_t TLength, typename TType>
 inline constexpr
 TType GenericVector<TLength, TType>::length () const noexcept
 {
-    return std::sqrt(squartLength());
+    return std::sqrt(squareLength());
 }
 
 template <size_t TLength, typename TType>
@@ -329,7 +329,7 @@ template <size_t TLength, typename TType>
 inline constexpr
 bool GenericVector<TLength, TType>::isColinearTo	(const GenericVector<TLength, TType>& other) const noexcept
 {
-	return Numeric::isSameAsZero(getCross(other).squartLength()); //hack to avoid sqrt
+	return Numeric::isSameAsZero(getCross(other).squareLength()); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType>
@@ -1133,7 +1133,7 @@ bool operator==(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthO
 {
 #ifdef VECTOR_OPERATOR_EGALE_COMPARE_LENGTH
 
-    return Numeric::isSame<TType>(lhs.squartLength(), static_cast<TType>(rhs.squartLength()));
+    return Numeric::isSame<TType>(lhs.squareLength(), static_cast<TType>(rhs.squareLength()));
 
 #else
 
@@ -1153,14 +1153,14 @@ template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmet
 inline constexpr
 bool operator==(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
 {
-    return Numeric::isSame<TType>(vec.squartLength(), static_cast<TType>(scalar) * static_cast<TType>(scalar)); //hack to avoid sqrt
+    return Numeric::isSame<TType>(vec.squareLength(), static_cast<TType>(scalar) * static_cast<TType>(scalar)); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
 bool operator==(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept
 {
-    return Numeric::isSame<TType>(static_cast<TType>(scalar) * static_cast<TType>(scalar), vec.squartLength()); //hack to avoid sqrt
+    return Numeric::isSame<TType>(static_cast<TType>(scalar) * static_cast<TType>(scalar), vec.squareLength()); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
@@ -1188,70 +1188,70 @@ template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOth
 [[nodiscard]] inline constexpr
 bool operator<(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
-    return lhs.squartLength() < static_cast<TType>(rhs.squartLength());
+    return lhs.squareLength() < static_cast<TType>(rhs.squareLength());
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
 bool operator<(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
 {
-    return vec.squartLength() < static_cast<TType>(scalar) * static_cast<TType>(scalar); //hack to avoid sqrt
+    return vec.squareLength() < static_cast<TType>(scalar) * static_cast<TType>(scalar); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
 bool operator<(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept
 {
-    return static_cast<TType>(scalar) * static_cast<TType>(scalar) < vec.squartLength(); //hack to avoid sqrt
+    return static_cast<TType>(scalar) * static_cast<TType>(scalar) < vec.squareLength(); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 [[nodiscard]] inline constexpr
 bool operator>(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
-    return lhs.squartLength() > static_cast<TType>(rhs.squartLength());
+    return lhs.squareLength() > static_cast<TType>(rhs.squareLength());
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
 bool operator>(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
 {
-    return vec.squartLength() > static_cast<TType>(scalar) * static_cast<TType>(scalar); //hack to avoid sqrt
+    return vec.squareLength() > static_cast<TType>(scalar) * static_cast<TType>(scalar); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
 bool operator>(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept
 {
-    return static_cast<TType>(scalar) * static_cast<TType>(scalar) > vec.squartLength(); //hack to avoid sqrt
+    return static_cast<TType>(scalar) * static_cast<TType>(scalar) > vec.squareLength(); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 [[nodiscard]] inline constexpr
 bool operator<=(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
-    return lhs.squartLength() <= static_cast<TType>(rhs.squartLength());
+    return lhs.squareLength() <= static_cast<TType>(rhs.squareLength());
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
 bool operator<=(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
 {
-    return vec.squartLength() <= static_cast<TType>(scalar) * static_cast<TType>(scalar); //hack to avoid sqrt
+    return vec.squareLength() <= static_cast<TType>(scalar) * static_cast<TType>(scalar); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
 bool operator<=(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept
 {
-    return static_cast<TType>(scalar) * static_cast<TType>(scalar) <= vec.squartLength(); //hack to avoid sqrt
+    return static_cast<TType>(scalar) * static_cast<TType>(scalar) <= vec.squareLength(); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
 [[nodiscard]] inline constexpr
 bool operator>=(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept
 {
-    return lhs.squartLength() >= static_cast<TType>(rhs.squartLength());
+    return lhs.squareLength() >= static_cast<TType>(rhs.squareLength());
 }
 
 
@@ -1259,14 +1259,14 @@ template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmet
 [[nodiscard]] inline constexpr
 bool operator>=(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
 {
-    return vec.squartLength() >= static_cast<TType>(scalar) * static_cast<TType>(scalar); //hack to avoid sqrt
+    return vec.squareLength() >= static_cast<TType>(scalar) * static_cast<TType>(scalar); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
 bool operator>=(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept
 {
-    return static_cast<TType>(scalar) * static_cast<TType>(scalar) >= vec.squartLength(); //hack to avoid sqrt
+    return static_cast<TType>(scalar) * static_cast<TType>(scalar) >= vec.squareLength(); //hack to avoid sqrt
 }
 
 

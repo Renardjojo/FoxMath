@@ -142,12 +142,12 @@ namespace FoxMath::Vector
         GenericVector& fill (const TscalarType scalar) noexcept;
 
         /**
-         * @brief Return squartLength of generic vector. More optimize to compare distance than length
+         * @brief Return squareLength of generic vector. More optimize to compare distance than length
          * 
          * @return constexpr TType 
          */
         [[nodiscard]] inline constexpr
-        TType squartLength () const noexcept;
+        TType squareLength () const noexcept;
 
         /**
          * @brief return magnitude of the generic vector 

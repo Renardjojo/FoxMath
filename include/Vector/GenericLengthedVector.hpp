@@ -106,7 +106,7 @@ namespace FoxMath::Vector
          * If you really want the squart length ask it explicitely with length() * length()
          * 
          */
-        TType squartLength () const noexcept = delete;
+        TType squareLength () const noexcept = delete;
 
         /**
          * @brief Homogenize vector to the lower dimension

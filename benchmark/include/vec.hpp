@@ -166,7 +166,7 @@ namespace Engine::Core::Maths
 
 		//same as get magnitude
 		float 		length		 		() 			 const;
-		float 		squartLength 		() 			 const;
+		float 		squareLength 		() 			 const;
 		bool 		isFartherThan(const Vec3& other) const;
 
 		//creat unit vector
