@@ -167,13 +167,13 @@ Mat3		Mat3::getTranspose	() const
 inline
 float Mat3::foundDeterminant		() const
 {
-	float determinantMat1 = (*this)[1][1] * (*this)[2][2] - (*this)[2][1] * (*this)[1][2];
-	float determinantMat2 = (*this)[0][1] * (*this)[2][2] - (*this)[2][1] * (*this)[0][2];
-	float determinantMat3 = (*this)[0][1] * (*this)[1][2] - (*this)[1][1] * (*this)[0][2];
+	const float determinantMat1 = mat[1 * 3 + 1] * mat[2 * 3 + 2] - mat[2 * 3 + 1] * mat[1 * 3 + 2];
+	const float determinantMat2 = mat[0 * 3 + 1] * mat[2 * 3 + 2] - mat[2 * 3 + 1] * mat[0 * 3 + 2];
+	const float determinantMat3 = mat[0 * 3 + 1] * mat[1 * 3 + 2] - mat[1 * 3 + 1] * mat[0 * 3 + 2];
 
-	return 	  (*this)[0][0] * determinantMat1 
-			- (*this)[1][0] * determinantMat2 
-			+ (*this)[2][0] * determinantMat3;
+	return 	  mat[0 * 3 + 0] * determinantMat1 
+			- mat[1 * 3 + 0] * determinantMat2 
+			+ mat[2 * 3 + 0] * determinantMat3;
 }
 
 inline
