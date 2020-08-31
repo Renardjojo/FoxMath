@@ -163,7 +163,7 @@ TType		SquareMatrix<TSize, TType, TMatrixConvention>::getDeterminant		() const n
         for (size_t i = 0; i < TSize; i++)
         {
             //found signe
-            signed int signe = Algorythm::powSign(0 + i);
+            signed char signe = Algorythm::powSign(0 + i);
 
             //found coef
             TType coef = signe * Parent::m_data[i * TSize];
