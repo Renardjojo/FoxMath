@@ -46,7 +46,7 @@ static void BM_NewReverseMatrixAtRunTime(benchmark::State& state)
         rst.reverse();
 
         benchmark::DoNotOptimize(rst);
-        //benchmark::ClobberMemory();
+        benchmark::ClobberMemory();
   }
 }
 // Register the function as a benchmark
@@ -66,7 +66,7 @@ static void BM_OldReverseMatrixAtRunTime(benchmark::State& state)
         rst.inverse(rst);
 
         benchmark::DoNotOptimize(rst);
-        //benchmark::ClobberMemory();
+        benchmark::ClobberMemory();
   }
 }
 
