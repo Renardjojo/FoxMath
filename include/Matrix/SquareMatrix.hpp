@@ -34,6 +34,7 @@
 #include "Types/Implicit.hpp" //implicit
 #include "Angle/Angle.hpp"
 #include "Macro/CrossInheritanceCompatibility.hpp"
+#include "Algorythm/Numeric.hpp" //powSigned
 
 namespace FoxMath::Matrix
 {
@@ -221,43 +222,28 @@ namespace FoxMath::Matrix
             const TType c = std::cos(static_cast<TType>(angle));
             const TType t = (static_cast<TType>(1) - c);
 
-            signed char sign;
-            
-            if constexpr (TSize % 2 == 0)
-                sign = 1;
-            else
-                sign = -1;
-
             for (size_t i = 0; i < TSize; i++)
             {
-                if constexpr (TSize % 2 == 0)
-                    sign = -sign;
-
                 for (size_t j = 0; j < TSize; j++)
                 {
                     const TType rotTrigo = (i == j) ? c : s * unitAxis[(TSize - i) - j];
 
-                    sign = -sign;
-
                     if constexpr (TMatrixConvention == EMatrixConvention::ColumnMajor)
                     {
-                        if (i < j)
-                            rst.getData(i * TSize + j) = t * unitAxis[i] * unitAxis[j] - sign * rotTrigo;
-                        else
-                            rst.getData(i * TSize + j) = t * unitAxis[i] * unitAxis[j] + sign * rotTrigo;
+                        const char sign = (i < j) ? -Algorythm::powSign(i + j) : Algorythm::powSign(i + j);
+                        rst.getData(i * TSize + j) = t * unitAxis[i] * unitAxis[j] + sign * rotTrigo;
                     }
                     else
                     {
-                        if (i > j)
-                            rst.getData(i * TSize + j) = t * unitAxis[i] * unitAxis[j] - sign * rotTrigo;
-                        else
-                            rst.getData(i * TSize + j) = t * unitAxis[i] * unitAxis[j] + sign * rotTrigo;
+                        const char sign = (i > j) ? -Algorythm::powSign(i + j) : Algorythm::powSign(i + j);
+                        rst.getData(i * TSize + j) = t * unitAxis[i] * unitAxis[j] + sign * rotTrigo;
                     }
                 }
             }
 
             return rst;
         }
+
 
         /**
          * @brief Create a Translation Matrix object
