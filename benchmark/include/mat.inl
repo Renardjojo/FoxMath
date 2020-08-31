@@ -103,19 +103,20 @@ Mat3 Mat3::createZRotationMatrix		(float rotRadz)
 inline
 Mat3 Mat3::createRotationArroundAxisMatrix	(const Vec3& unitAxis, float angleRad)
 {
-	float s, c;
-	sincosf(angleRad, &s, &c); //comput sin and cos in same time
-	float t = (1 - c);
-	float txy = t * unitAxis.x * unitAxis.y;
-	float txz = t * unitAxis.x * unitAxis.z;
-	float tyz = t * unitAxis.y * unitAxis.z;
-	float txx = t * unitAxis.x * unitAxis.x;
-	float tyy = t * unitAxis.y * unitAxis.y;
-	float tzz = t * unitAxis.z * unitAxis.z;
+	const float s = std::sin(angleRad);
+	const float c = std::sin(angleRad);
 
-	float sx = s * unitAxis.x;
-	float sy = s * unitAxis.y;
-	float sz = s * unitAxis.z;
+	const float t = (1 - c);
+	const float txy = t * unitAxis.x * unitAxis.y;
+	const float txz = t * unitAxis.x * unitAxis.z;
+	const float tyz = t * unitAxis.y * unitAxis.z;
+	const float txx = t * unitAxis.x * unitAxis.x;
+	const float tyy = t * unitAxis.y * unitAxis.y;
+	const float tzz = t * unitAxis.z * unitAxis.z;
+
+	const float sx = s * unitAxis.x;
+	const float sy = s * unitAxis.y;
+	const float sz = s * unitAxis.z;
 
 	return { txx + c , txy - sz, txz + sy,
              txy + sz, tyy + c , tyz - sx,
