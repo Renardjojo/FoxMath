@@ -216,27 +216,42 @@ namespace FoxMath::Matrix
             assert(unitAxis == static_cast<TType>(1)); //assert if axis is not unit
 
             SquareMatrix rst;
-            rst.fill(static_cast<TType>(0));
 
             const TType s = std::sin(static_cast<TType>(angle));
             const TType c = std::cos(static_cast<TType>(angle));
-            const TType t = (1 - c);
+            const TType t = (static_cast<TType>(1) - c);
+
+            signed char sign;
+            
+            if constexpr (TSize % 2 == 0)
+                sign = 1;
+            else
+                sign = -1;
 
             for (size_t i = 0; i < TSize; i++)
             {
+                if constexpr (TSize % 2 == 0)
+                    sign = -sign;
+
                 for (size_t j = 0; j < TSize; j++)
                 {
                     const TType rotTrigo = (i == j) ? c : s * unitAxis[(TSize - i) - j];
 
+                    sign = -sign;
+
                     if constexpr (TMatrixConvention == EMatrixConvention::ColumnMajor)
                     {
-                        const int sign = (i < j) ? -std::pow(-1, i + j) : std::pow(-1, i + j);
-                        rst.getData(i * TSize + j) = t * unitAxis[i] * unitAxis[j] + sign * rotTrigo;
+                        if (i < j)
+                            rst.getData(i * TSize + j) = t * unitAxis[i] * unitAxis[j] - sign * rotTrigo;
+                        else
+                            rst.getData(i * TSize + j) = t * unitAxis[i] * unitAxis[j] + sign * rotTrigo;
                     }
                     else
                     {
-                        const int sign = (i > j) ? -std::pow(-1, i + j) : std::pow(-1, i + j);
-                        rst.getData(i * TSize + j) = t * unitAxis[i] * unitAxis[j] + sign * rotTrigo;
+                        if (i > j)
+                            rst.getData(i * TSize + j) = t * unitAxis[i] * unitAxis[j] - sign * rotTrigo;
+                        else
+                            rst.getData(i * TSize + j) = t * unitAxis[i] * unitAxis[j] + sign * rotTrigo;
                     }
                 }
             }
