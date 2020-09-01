@@ -196,6 +196,51 @@ namespace FoxMath::Matrix
                             zero,   zero,   p  ,    zero);
         }
 
+        //few static function that return rotation in x, y or z axis arround origin. Rotation is in degres
+        [[nodiscard]] static constexpr inline 
+        Matrix4 createXRotationMatrix		(Angle::Angle<Angle::EAngleType::Radian, TType> rotRadx) //rot of axis Y to axis Z arround X
+        {
+            TType cosT = cos(static_cast<TType>(rotRadx));
+            TType sinT = sin(static_cast<TType>(rotRadx));
+
+            return Matrix4 {    1.f, 0.f , 0.f , 0.f,
+                                0.f, cosT,-sinT, 0.f,
+                                0.f, sinT, cosT, 0.f,
+                                0.f, 0.f , 0.f , 1.f};
+        }
+
+        [[nodiscard]] static constexpr inline 
+        Matrix4 createYRotationMatrix		(Angle::Angle<Angle::EAngleType::Radian, TType> rotRady) //rot of axis Z to axis X arround Y
+        {
+            TType cosT = cos(static_cast<TType>(rotRady));
+            TType sinT = sin(static_cast<TType>(rotRady));
+
+            return Matrix4{     cosT , 0.f, sinT, 0.f,
+                                0.f  , 1.f, 0.f , 0.f,
+                                -sinT, 0.f, cosT, 0.f,
+                                0.f  , 0.f, 0.f , 1.f};
+        }
+
+        [[nodiscard]] static constexpr inline 
+        Matrix4 createZRotationMatrix		(Angle::Angle<Angle::EAngleType::Radian, TType> rotRadz) //rot of axis X to axis Y arround Z
+        {
+            TType cosT = cos(static_cast<TType>(rotRadz));
+            TType sinT = sin(static_cast<TType>(rotRadz));
+
+            return Matrix4{ cosT, -sinT, 0.f, 0.f,
+                            sinT,  cosT, 0.f, 0.f,
+                            0.f ,  0.f , 1.f, 0.f,
+                            0.f ,  0.f , 0.f, 1.f};
+        }
+
+        //static function that return euler rotation arround axis x, y and z give in parameter
+        [[nodiscard]] static constexpr inline
+        Matrix4 createFixedAngleEulerRotationMatrix	(const Vector::Vec3<TType>& rVec)
+        {
+            return createXRotationMatrix (Angle::Angle<Angle::EAngleType::Radian, TType>(rVec.getX())) *
+            createYRotationMatrix (Angle::Angle<Angle::EAngleType::Radian, TType>(rVec.getY())) * 
+            createZRotationMatrix (Angle::Angle<Angle::EAngleType::Radian, TType>(rVec.getZ()));
+        }
 
         #pragma endregion //! static attribut
 
