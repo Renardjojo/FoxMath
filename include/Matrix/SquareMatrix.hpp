@@ -255,7 +255,7 @@ namespace FoxMath::Matrix
         SquareMatrix<TSize + 1, TType, TMatrixConvention> createTranslationMatrix (const Vector::GenericVector<TSize, TType>& vecTranslation) noexcept
         {
             SquareMatrix<TSize + 1, TType, TMatrixConvention> rst;
-            rst.fill(static_cast<TType>(0));
+            rst.generateIdentity();
 
             const size_t lastVectorIndex = TSize * (TSize + 1);
 
@@ -284,6 +284,7 @@ namespace FoxMath::Matrix
             {
                 rst.getData(i * TSize + i) = vecScale[i];
             }
+            rst.getData(TSize * TSize - 1) = static_cast<TType>(1);
 
             return rst;
         }
