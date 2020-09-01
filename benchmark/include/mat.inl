@@ -104,7 +104,7 @@ inline
 Mat3 Mat3::createRotationArroundAxisMatrix	(const Vec3& unitAxis, float angleRad)
 {
 	const float s = std::sin(angleRad);
-	const float c = std::sin(angleRad);
+	const float c = std::cos(angleRad);
 
 	const float t = (1 - c);
 	const float txy = t * unitAxis.x * unitAxis.y;
@@ -132,9 +132,9 @@ Mat3 Mat3::createFixedAngleEulerRotationMatrix	(const Vec3& rVec)
 			createXRotationMatrix (rVec.x) *
 			createZRotationMatrix (rVec.z);
 #else
-	return 	createYRotationMatrix (rVec.z) * 
+	return 	createYRotationMatrix (rVec.y) * 
 			createXRotationMatrix (rVec.x) *
-			createZRotationMatrix (rVec.y);
+			createZRotationMatrix (rVec.z);
 #endif
 }
 
