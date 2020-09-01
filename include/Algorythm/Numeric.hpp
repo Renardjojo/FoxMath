@@ -46,13 +46,7 @@ namespace FoxMath::Algorythm
 [[nodiscard]] inline constexpr
 signed char powSign(size_t numberIt)
 {
-    signed char rst = 1;
-
-    for (size_t i = 0; i < numberIt; i++)
-    {
-        rst *= -1;
-    }
-    return rst;
+    return (numberIt % 2) ? -1 : 1;
 }
 
 } /*namespace FoxMath::Algorythm*/
