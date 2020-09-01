@@ -196,50 +196,237 @@ namespace FoxMath::Matrix
                             zero,   zero,   p  ,    zero);
         }
 
-        //few static function that return rotation in x, y or z axis arround origin. Rotation is in degres
+        /**
+         * @brief Create rotation on X axis only
+         * 
+         * @param rotRadz 
+         * @return constexpr Matrix4 
+         */
         [[nodiscard]] static constexpr inline 
         Matrix4 createXRotationMatrix		(Angle::Angle<Angle::EAngleType::Radian, TType> rotRadx) //rot of axis Y to axis Z arround X
         {
-            TType cosT = cos(static_cast<TType>(rotRadx));
-            TType sinT = sin(static_cast<TType>(rotRadx));
+            const TType cosT = std::cos(static_cast<TType>(rotRadx));
+            const TType sinT = std::sin(static_cast<TType>(rotRadx));
+            const TType zero  = static_cast<TType>(0);
+            const TType one  = static_cast<TType>(1);
 
-            return Matrix4 {    1.f, 0.f , 0.f , 0.f,
-                                0.f, cosT,-sinT, 0.f,
-                                0.f, sinT, cosT, 0.f,
-                                0.f, 0.f , 0.f , 1.f};
+            return Matrix4 {    one, zero , zero , zero,
+                                zero, cosT,-sinT, zero,
+                                zero, sinT, cosT, zero,
+                                zero, zero , zero , one};
         }
 
+        /**
+         * @brief Create rotation on Y axis only
+         * 
+         * @param rotRadz 
+         * @return constexpr Matrix4 
+         */
         [[nodiscard]] static constexpr inline 
         Matrix4 createYRotationMatrix		(Angle::Angle<Angle::EAngleType::Radian, TType> rotRady) //rot of axis Z to axis X arround Y
         {
-            TType cosT = cos(static_cast<TType>(rotRady));
-            TType sinT = sin(static_cast<TType>(rotRady));
+            const TType cosT = std::cos(static_cast<TType>(rotRady));
+            const TType sinT = std::sin(static_cast<TType>(rotRady));
+            const TType zero  = static_cast<TType>(0);
+            const TType one  = static_cast<TType>(1);
 
-            return Matrix4{     cosT , 0.f, sinT, 0.f,
-                                0.f  , 1.f, 0.f , 0.f,
-                                -sinT, 0.f, cosT, 0.f,
-                                0.f  , 0.f, 0.f , 1.f};
+            return Matrix4{     cosT , zero, sinT, zero,
+                                zero  , one, zero , zero,
+                                -sinT, zero, cosT, zero,
+                                zero  , zero, zero , one};
         }
 
+        /**
+         * @brief Create rotation on Z axis only
+         * 
+         * @param rotRadz 
+         * @return constexpr Matrix4 
+         */
         [[nodiscard]] static constexpr inline 
         Matrix4 createZRotationMatrix		(Angle::Angle<Angle::EAngleType::Radian, TType> rotRadz) //rot of axis X to axis Y arround Z
         {
-            TType cosT = cos(static_cast<TType>(rotRadz));
-            TType sinT = sin(static_cast<TType>(rotRadz));
+            const TType cosT = std::cos(static_cast<TType>(rotRadz));
+            const TType sinT = std::sin(static_cast<TType>(rotRadz));
+            const TType zero  = static_cast<TType>(0);
+            const TType one  = static_cast<TType>(1);
 
-            return Matrix4{ cosT, -sinT, 0.f, 0.f,
-                            sinT,  cosT, 0.f, 0.f,
-                            0.f ,  0.f , 1.f, 0.f,
-                            0.f ,  0.f , 0.f, 1.f};
+            return Matrix4{ cosT, -sinT, zero, zero,
+                            sinT,  cosT, zero, zero,
+                            zero ,  zero , one, zero,
+                            zero ,  zero , zero, one};
         }
 
-        //static function that return euler rotation arround axis x, y and z give in parameter
-        [[nodiscard]] static constexpr inline
+        /**
+         * @brief Create a Fixed Angle Euler Rotation Matrix object
+         * 
+         * @param rVec 
+         * @return constexpr Matrix4 
+         */
+        [[nodiscard]] static constexpr inline //TODO: Transform (space an right and and left hand referential!)
         Matrix4 createFixedAngleEulerRotationMatrix	(const Vector::Vec3<TType>& rVec)
         {
-            return createXRotationMatrix (Angle::Angle<Angle::EAngleType::Radian, TType>(rVec.getX())) *
-            createYRotationMatrix (Angle::Angle<Angle::EAngleType::Radian, TType>(rVec.getY())) * 
-            createZRotationMatrix (Angle::Angle<Angle::EAngleType::Radian, TType>(rVec.getZ()));
+            const TType cosTX = std::cos(static_cast<TType>(rVec.getX()));
+            const TType sinTX = std::sin(static_cast<TType>(rVec.getX()));
+            const TType cosTY = std::cos(static_cast<TType>(rVec.getY()));
+            const TType sinTY = std::sin(static_cast<TType>(rVec.getY()));
+            const TType cosTZ = std::cos(static_cast<TType>(rVec.getZ()));
+            const TType sinTZ = std::sin(static_cast<TType>(rVec.getZ()));
+            const TType zero  = static_cast<TType>(0);
+            const TType one  = static_cast<TType>(1);
+
+            /*Right hand convention*/
+            const TType r1 = cosTY * cosTZ;
+            const TType r2 = -cosTX * sinTZ + sinTX * sinTY * cosTZ;
+            const TType r3 = sinTX * sinTZ + cosTX * sinTY * cosTZ ;
+            const TType r4 = cosTY * sinTZ;
+            const TType r5 = cosTX * cosTZ + sinTX * sinTY * sinTZ;
+            const TType r6 = -sinTX * cosTZ + cosTX * sinTY * sinTZ;
+            const TType r7 = -sinTY;
+            const TType r8 = sinTX * cosTY;
+            const TType r9 = cosTX * cosTY;
+
+            return Matrix4{ r1,   r2,   r3,   zero,
+                            r4,   r5,   r6,   zero,
+                            r7,   r8,   r9,   zero,
+                            zero, zero, zero, one};
+        }
+
+        /**
+         * @brief Create TRS matrix based on translation/rotation/Scale step. This matrix is differente than SRT
+         * 
+         * @param translVec 
+         * @param rotVec 
+         * @param scaleVec 
+         * @return constexpr Matrix4 
+         */
+        [[nodiscard]] static constexpr inline
+        Matrix4 createTRSMatrix(const Vector::Vec3<TType>& translVec, const Vector::Vec3<TType>& rotVec, const Vector::Vec3<TType>& scaleVec)
+        {
+            if constexpr (TMatrixConvention == EMatrixConvention::ColumnMajor)
+            {
+                const TType cosTX = std::cos(static_cast<TType>(rotVec.getX()));
+                const TType cosTY = std::cos(static_cast<TType>(rotVec.getY()));
+                const TType cosTZ = std::cos(static_cast<TType>(rotVec.getZ()));
+
+                const TType sinTX = std::sin(static_cast<TType>(rotVec.getX()));
+                const TType sinTY = std::sin(static_cast<TType>(rotVec.getY()));
+                const TType sinTZ = std::sin(static_cast<TType>(rotVec.getZ()));
+
+                const TType zero  = static_cast<TType>(0);
+                const TType one  = static_cast<TType>(1);
+
+                const TType sxR1 = cosTY * cosTZ * scaleVec.getX();
+                const TType sxR2 = (-cosTX * sinTZ + sinTX * sinTY * cosTZ) * scaleVec.getX();
+                const TType sxR3 = (sinTX * sinTZ + cosTX * sinTY * cosTZ) * scaleVec.getX();
+                const TType syR4 = cosTY * sinTZ * scaleVec.getY();
+                const TType syR5 = (cosTX * cosTZ + sinTX * sinTY * sinTZ) * scaleVec.getY();
+                const TType syR6 = (-sinTX * cosTZ + cosTX * sinTY * sinTZ) * scaleVec.getY();
+                const TType szR7 = -sinTY * scaleVec.getZ();
+                const TType szR8 = sinTX * cosTY * scaleVec.getZ();
+                const TType szR9 = cosTX * cosTY * scaleVec.getZ();
+
+                const TType tx = translVec.getX() * sxR1 + translVec.getY() * sxR2 + translVec.getZ() * sxR3;
+                const TType ty = translVec.getX() * syR4 + translVec.getY() * syR5 + translVec.getZ() * syR6;
+                const TType tz = translVec.getX() * szR7 + translVec.getY() * szR8 + translVec.getZ() * szR9;
+
+                return Matrix4{ sxR1, sxR2, sxR3, tx,
+                                syR4, syR5, syR6, ty,
+                                szR7, szR8, szR9, tz,
+                                zero, zero, zero, one};
+            }
+            else
+            {
+                const TType cosTX = std::cos(static_cast<TType>(rotVec.getX()));
+                const TType cosTY = std::cos(static_cast<TType>(rotVec.getY()));
+                const TType cosTZ = std::cos(static_cast<TType>(rotVec.getZ()));
+
+                const TType sinTX = std::sin(static_cast<TType>(rotVec.getX()));
+                const TType sinTY = std::sin(static_cast<TType>(rotVec.getY()));
+                const TType sinTZ = std::sin(static_cast<TType>(rotVec.getZ()));
+
+                const TType zero  = static_cast<TType>(0);
+                const TType one  = static_cast<TType>(1);
+
+                const TType r1 = cosTY * cosTZ;
+                const TType r2 = -cosTX * sinTZ + sinTX * sinTY * cosTZ;
+                const TType r3 = sinTX * sinTZ + cosTX * sinTY * cosTZ ;
+                const TType r4 = cosTY * sinTZ;
+                const TType r5 = cosTX * cosTZ + sinTX * sinTY * sinTZ;
+                const TType r6 = -sinTX * cosTZ + cosTX * sinTY * sinTZ;
+                const TType r7 = -sinTY;
+                const TType r8 = sinTX * cosTY;
+                const TType r9 = cosTX * cosTY;
+
+                return Matrix4{ r1 * scaleVec.getX(), r2 * scaleVec.getY(), r3 * scaleVec.getZ(), translVec.getX(),
+                                r4 * scaleVec.getX(), r5 * scaleVec.getY(), r6 * scaleVec.getZ(), translVec.getY(),
+                                r7 * scaleVec.getX(), r8 * scaleVec.getY(), r9 * scaleVec.getZ(), translVec.getZ(),
+                                zero                , zero                , zero                , one};
+            }
+        }
+
+        [[nodiscard]] static constexpr inline
+        Matrix4 createSRTMatrix(const Vector::Vec3<TType>& scaleVec, const Vector::Vec3<TType>& rotVec, const Vector::Vec3<TType>& translVec)
+        {
+            if constexpr (TMatrixConvention == EMatrixConvention::ColumnMajor)
+            {
+                const TType cosTX = std::cos(static_cast<TType>(rotVec.getX()));
+                const TType cosTY = std::cos(static_cast<TType>(rotVec.getY()));
+                const TType cosTZ = std::cos(static_cast<TType>(rotVec.getZ()));
+
+                const TType sinTX = std::sin(static_cast<TType>(rotVec.getX()));
+                const TType sinTY = std::sin(static_cast<TType>(rotVec.getY()));
+                const TType sinTZ = std::sin(static_cast<TType>(rotVec.getZ()));
+
+                const TType zero  = static_cast<TType>(0);
+                const TType one  = static_cast<TType>(1);
+
+                const TType r1 = cosTY * cosTZ;
+                const TType r2 = -cosTX * sinTZ + sinTX * sinTY * cosTZ;
+                const TType r3 = sinTX * sinTZ + cosTX * sinTY * cosTZ ;
+                const TType r4 = cosTY * sinTZ;
+                const TType r5 = cosTX * cosTZ + sinTX * sinTY * sinTZ;
+                const TType r6 = -sinTX * cosTZ + cosTX * sinTY * sinTZ;
+                const TType r7 = -sinTY;
+                const TType r8 = sinTX * cosTY;
+                const TType r9 = cosTX * cosTY;
+
+                return Matrix4{ r1 * scaleVec.getX(), r2 * scaleVec.getY(), r3 * scaleVec.getZ(), translVec.getX(),
+                                r4 * scaleVec.getX(), r5 * scaleVec.getY(), r6 * scaleVec.getZ(), translVec.getY(),
+                                r7 * scaleVec.getX(), r8 * scaleVec.getY(), r9 * scaleVec.getZ(), translVec.getZ(),
+                                zero                , zero                , zero                , one};
+            }
+            else
+            {
+                const TType cosTX = std::cos(static_cast<TType>(rotVec.getX()));
+                const TType cosTY = std::cos(static_cast<TType>(rotVec.getY()));
+                const TType cosTZ = std::cos(static_cast<TType>(rotVec.getZ()));
+
+                const TType sinTX = std::sin(static_cast<TType>(rotVec.getX()));
+                const TType sinTY = std::sin(static_cast<TType>(rotVec.getY()));
+                const TType sinTZ = std::sin(static_cast<TType>(rotVec.getZ()));
+
+                const TType zero  = static_cast<TType>(0);
+                const TType one  = static_cast<TType>(1);
+
+                const TType sxR1 = cosTY * cosTZ * scaleVec.getX();
+                const TType sxR2 = (-cosTX * sinTZ + sinTX * sinTY * cosTZ) * scaleVec.getX();
+                const TType sxR3 = (sinTX * sinTZ + cosTX * sinTY * cosTZ) * scaleVec.getX();
+                const TType syR4 = cosTY * sinTZ * scaleVec.getY();
+                const TType syR5 = (cosTX * cosTZ + sinTX * sinTY * sinTZ) * scaleVec.getY();
+                const TType syR6 = (-sinTX * cosTZ + cosTX * sinTY * sinTZ) * scaleVec.getY();
+                const TType szR7 = -sinTY * scaleVec.getZ();
+                const TType szR8 = sinTX * cosTY * scaleVec.getZ();
+                const TType szR9 = cosTX * cosTY * scaleVec.getZ();
+
+                const TType tx = translVec.getX() * sxR1 + translVec.getY() * sxR2 + translVec.getZ() * sxR3;
+                const TType ty = translVec.getX() * syR4 + translVec.getY() * syR5 + translVec.getZ() * syR6;
+                const TType tz = translVec.getX() * szR7 + translVec.getY() * szR8 + translVec.getZ() * szR9;
+
+                return Matrix4{ sxR1, sxR2, sxR3, tx,
+                                syR4, syR5, syR6, ty,
+                                szR7, szR8, szR9, tz,
+                                zero, zero, zero, one};
+            }
         }
 
         #pragma endregion //! static attribut
