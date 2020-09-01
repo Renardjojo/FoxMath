@@ -263,7 +263,6 @@ namespace FoxMath::Matrix
             {
                 rst.getData(lastVectorIndex + i) = vecTranslation[i];
             }
-            rst.getData(lastVectorIndex + TSize) = static_cast<TType>(1);
 
             return rst;
         }
