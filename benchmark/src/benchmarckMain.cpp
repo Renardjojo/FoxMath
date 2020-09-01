@@ -102,16 +102,14 @@ static void BM_NewTRSMatrixAtRunTime(benchmark::State& state)
 
   for (auto _ : state)
   {
-        SquareMatrix<3, float, EMatrixConvention::ColumnMajor> matConstColumnMajorSqrt;
+        Mat4f<EMatrixConvention::ColumnMajor> matConstColumnMajorSqrt;
         matConstColumnMajorSqrt.generateIdentity();
 
         const Vec3f translation  (RAND_FLOAT, RAND_FLOAT, RAND_FLOAT);
         const Vec3f rotation     (RAND_FLOAT, RAND_FLOAT, RAND_FLOAT);
         const Vec3f scale        (RAND_FLOAT, RAND_FLOAT, RAND_FLOAT);
 
-        SquareMatrix<3, float, EMatrixConvention::ColumnMajor> rst =  SquareMatrix<3, float, EMatrixConvention::ColumnMajor>::createScaleMatrix(scale) * 
-                                                                      SquareMatrix<3, float, EMatrixConvention::ColumnMajor>::createRotationArroundAxisMatrix(rotation.getNormalized(), FoxMath::Angle::Angle<FoxMath::Angle::EAngleType::Radian, float>(RAND_FLOAT)) *
-                                                                      SquareMatrix<3, float, EMatrixConvention::ColumnMajor>::createScaleMatrix(scale);
+        Mat4f<EMatrixConvention::ColumnMajor> rst = Mat4f<EMatrixConvention::ColumnMajor>::createTRSMatrix(translation, rotation, scale);
         benchmark::DoNotOptimize(rst);
         //benchmark::ClobberMemory();
   }
@@ -126,15 +124,13 @@ static void BM_OldTRSMatrixAtRunTime(benchmark::State& state)
 
   for (auto _ : state)
   {
-        Engine::Core::Maths::Mat3 matConstColumnMajorSqrt();
+        Engine::Core::Maths::Mat4 matConstColumnMajorSqrt();
 
         const Engine::Core::Maths::Vec3 translation  {RAND_FLOAT, RAND_FLOAT, RAND_FLOAT};
         const Engine::Core::Maths::Vec3 rotation     {RAND_FLOAT, RAND_FLOAT, RAND_FLOAT};
         const Engine::Core::Maths::Vec3 scale        {RAND_FLOAT, RAND_FLOAT, RAND_FLOAT};
 
-        Engine::Core::Maths::Mat3 rst =   Engine::Core::Maths::Mat3::createScaleMatrix(scale) *
-                                          Engine::Core::Maths::Mat3::createRotationArroundAxisMatrix(rotation.getNormalize(), RAND_FLOAT) *
-                                          Engine::Core::Maths::Mat3::createScaleMatrix(scale);
+        Engine::Core::Maths::Mat4 rst = Engine::Core::Maths::Mat4::createTRSMatrix(scale, rotation, translation);
         benchmark::DoNotOptimize(rst);
         //benchmark::ClobberMemory();
   }
