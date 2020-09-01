@@ -102,9 +102,6 @@ static void BM_NewTRSMatrixAtRunTime(benchmark::State& state)
 
   for (auto _ : state)
   {
-        Mat4f<EMatrixConvention::ColumnMajor> matConstColumnMajorSqrt;
-        matConstColumnMajorSqrt.generateIdentity();
-
         const Vec3f translation  (RAND_FLOAT, RAND_FLOAT, RAND_FLOAT);
         const Vec3f rotation     (RAND_FLOAT, RAND_FLOAT, RAND_FLOAT);
         const Vec3f scale        (RAND_FLOAT, RAND_FLOAT, RAND_FLOAT);
@@ -124,8 +121,6 @@ static void BM_OldTRSMatrixAtRunTime(benchmark::State& state)
 
   for (auto _ : state)
   {
-        Engine::Core::Maths::Mat4 matConstColumnMajorSqrt();
-
         const Engine::Core::Maths::Vec3 translation  {RAND_FLOAT, RAND_FLOAT, RAND_FLOAT};
         const Engine::Core::Maths::Vec3 rotation     {RAND_FLOAT, RAND_FLOAT, RAND_FLOAT};
         const Engine::Core::Maths::Vec3 scale        {RAND_FLOAT, RAND_FLOAT, RAND_FLOAT};
