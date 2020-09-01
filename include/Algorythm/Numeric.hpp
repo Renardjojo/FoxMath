@@ -44,7 +44,7 @@ namespace FoxMath::Algorythm
  * @return constexpr signed char 
  */
 [[nodiscard]] inline constexpr
-bool powSign(size_t numberIt)
+signed char powSign(size_t numberIt)
 {
     signed char rst = 1;
 

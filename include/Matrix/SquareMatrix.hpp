@@ -230,12 +230,12 @@ namespace FoxMath::Matrix
 
                     if constexpr (TMatrixConvention == EMatrixConvention::ColumnMajor)
                     {
-                        const char sign = (i < j) ? -Algorythm::powSign(i + j) : Algorythm::powSign(i + j);
+                        const signed char sign = (i < j) ? -Algorythm::powSign(i + j) : Algorythm::powSign(i + j);
                         rst.getData(i * TSize + j) = t * unitAxis[i] * unitAxis[j] + sign * rotTrigo;
                     }
                     else
                     {
-                        const char sign = (i > j) ? -Algorythm::powSign(i + j) : Algorythm::powSign(i + j);
+                        const signed char sign = (i > j) ? -Algorythm::powSign(i + j) : Algorythm::powSign(i + j);
                         rst.getData(i * TSize + j) = t * unitAxis[i] * unitAxis[j] + sign * rotTrigo;
                     }
                 }
