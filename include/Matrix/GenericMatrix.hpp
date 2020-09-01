@@ -216,8 +216,25 @@ namespace FoxMath::Matrix
         template<typename... T, Type::IsAllSame<TType, T...> = true>
         explicit inline constexpr
         GenericMatrix (T... args) noexcept
-            : m_data {std::array<TType, numberOfData ()>{args...}}
-        {}
+            : m_data {}
+        {
+            if constexpr (TMatrixConvention == EMatrixConvention::ColumnMajor)
+            {
+                std::array<TType, numberOfData ()> dataRowMajor{args...};
+
+                for (size_t i = 0; i < numberOfInternalVector(); i++)
+                {
+                    for (size_t j = 0; j < vectorLength(); j++)
+                    {
+                        m_data[i * vectorLength() + j] = dataRowMajor[j * vectorLength() + i];
+                    }
+                }               
+            }
+            else
+            {
+                m_data = std::array<TType, numberOfData ()>{args...};
+            }
+        }
 
         /**
          * @brief Aggregate initialization for vector
