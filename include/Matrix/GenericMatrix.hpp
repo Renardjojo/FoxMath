@@ -226,7 +226,7 @@ namespace FoxMath::Matrix
                 {
                     for (size_t j = 0; j < vectorLength(); j++)
                     {
-                        m_data[i * vectorLength() + j] = dataRowMajor[j * vectorLength() + i];
+                        m_data[i * vectorLength() + j] = dataRowMajor[j * numberOfInternalVector() + i];
                     }
                 }               
             }
