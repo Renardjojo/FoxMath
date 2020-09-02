@@ -39,7 +39,7 @@
 namespace FoxMath::Matrix
 {
     /*By inherance size cannot be equal to zero and TType must be arythmetic*/
-    template <size_t TSize, typename TType = float, EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <size_t TSize, typename TType = float, EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     class SquareMatrix : public GenericMatrix<TSize, TSize, TType, TMatrixConvention>
     {
         private:

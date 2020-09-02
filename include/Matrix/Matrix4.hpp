@@ -36,7 +36,7 @@
 
 namespace FoxMath::Matrix
 {
-    template <typename TType = float, EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <typename TType = float, EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     class Matrix4 :  public SquareMatrix<4, TType, TMatrixConvention>
     {
         private:
@@ -446,73 +446,73 @@ namespace FoxMath::Matrix
     };
 
 
-    template <typename TType = float, EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <typename TType = float, EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Mat4          = Matrix4<TType, TMatrixConvention>;
 
-    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Matrix4f      = Matrix4<float, TMatrixConvention>;
     
-    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Mat4f         = Matrix4f<TMatrixConvention>;
 
-    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Matrix4d      = Matrix4<double, TMatrixConvention>;
     
-    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Mat4d         = Matrix4d<TMatrixConvention>;
 
-    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Matrix4ld     = Matrix4<long double, TMatrixConvention>;
     
-    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Mat4ld        = Matrix4ld<TMatrixConvention>;
 
-    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Matrix4uc     = Matrix4<unsigned char, TMatrixConvention>;
     
-    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Mat4uc        = Matrix4uc<TMatrixConvention>;
 
-    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Matrix4c      = Matrix4<char, TMatrixConvention>;
     
-    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Mat4c         = Matrix4c<TMatrixConvention>;
 
-    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Matrix4ui     = Matrix4<unsigned int, TMatrixConvention>;
     
-    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Mat4ui        = Matrix4ui<TMatrixConvention>;
 
-    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Matrix4i      = Matrix4<int, TMatrixConvention>;
     
-    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Mat4i         = Matrix4i<TMatrixConvention>;
 
-    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Matrix4lui    = Matrix4<long unsigned int, TMatrixConvention>;
     
-    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Mat4lui       = Matrix4lui<TMatrixConvention>;
 
-    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Matrix4st     = Matrix4<size_t, TMatrixConvention>;
     
-    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Mat4st        = Matrix4st<TMatrixConvention>;
 
-    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Matrix4li     = Matrix4<long int, TMatrixConvention>;
     
-    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Mat4li        = Matrix4li<TMatrixConvention>;
     
-    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Matrix4b      = Matrix4<bool, TMatrixConvention>;
     
-    template <EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Mat4b         = Matrix4b<TMatrixConvention>;
 
 } /*namespace FoxMath::Matrix*/

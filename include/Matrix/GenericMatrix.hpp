@@ -48,8 +48,8 @@
 
 namespace FoxMath::Matrix
 {
-    /*Use of IsArithmetic*/
-    template <size_t TRowSize, size_t TColumnSize, typename TType = float, EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor,
+    /*Define default template arg and apply template condition*/
+    template <size_t TRowSize, size_t TColumnSize, typename TType = float, EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor,
                 Type::IsNotEqualTo<TRowSize, 0> = true, 
                 Type::IsNotEqualTo<TColumnSize, 0> = true,
                 Type::IsArithmetic<TType> = true>
@@ -1436,10 +1436,10 @@ namespace FoxMath::Matrix
 
     #include "GenericMatrix.inl"
 
-    template <size_t TRowSize, size_t TColumnSize, typename TType = float, EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <size_t TRowSize, size_t TColumnSize, typename TType = float, EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Matrix = GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>;
 
-    template <size_t TRowSize, size_t TColumnSize, typename TType = float, EMatrixConvention TMatrixConvention = EMatrixConvention::ColumnMajor>
+    template <size_t TRowSize, size_t TColumnSize, typename TType = float, EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Mat = Matrix<TRowSize, TColumnSize, TType, TMatrixConvention>;
 
 } /*namespace FoxMath::Matrix*/

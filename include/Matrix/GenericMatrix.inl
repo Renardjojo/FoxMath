@@ -297,13 +297,13 @@ GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& GenericMatrix<TR
     GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> mRst;
     mRst.fill(0);
 
-    for ( size_t rowI = 0; rowI < TRowSize  ; rowI++ )
+    for ( size_t i = 0; i < numberOfInternalVector(); i++ )
     {
-        for ( size_t columnI = 0; columnI < TColumnSize; columnI++ )
+        for ( size_t j = 0; j < vectorLength(); j++ )
         {
             for ( size_t index = 0; index < squareCommonSize; index++)
             {
-                mRst.getData(columnI * mRst.vectorLength() + rowI) += (m_data[index * vectorLength() + rowI] * static_cast<TType>(other.getData(columnI * other.vectorLength() + index)));
+                mRst.getData(i * mRst.numberOfInternalVector() + j) += (m_data[index * numberOfInternalVector() + j] * static_cast<TType>(other.getData(i * other.numberOfInternalVector() + index)));
             }
         }
     }
