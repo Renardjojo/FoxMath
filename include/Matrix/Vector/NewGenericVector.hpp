@@ -33,17 +33,18 @@
 #include "Matrix/GenericMatrix.hpp" //GenericMatrix
 #include "Macro/CrossInheritanceCompatibility.hpp" //DECLARE_CROSS_INHERITANCE_COMPATIBILTY
 
-#define ROW_COUNT (convention, vectorSize) (TMatrixConvention == Matrix::EMatrixConvention::ColumnMajor ? vectorSize : 1)
-#define COLUMN_COUT (convention, vectorSize) (TMatrixConvention == Matrix::EMatrixConvention::ColumnMajor ? 1 : vectorSize)
-
 namespace FoxMath::Vector
 {
     template <size_t TSize, typename TType, Matrix::EMatrixConvention TMatrixConvention>
-    class NewGenericVector : public Matrix::GenericMatrix<ROW_VECTOR(TMatrixConvention, TSize), COLUMN_VECTOR(TMatrixConvention, TSize), TType, TMatrixConvention>
+    class NewGenericVector : public Matrix::GenericMatrix<((TMatrixConvention == Matrix::EMatrixConvention::ColumnMajor) ? TSize : 1), 
+                                                          ((TMatrixConvention == Matrix::EMatrixConvention::ColumnMajor) ? 1 : TSize),
+                                                          TType, TMatrixConvention>
     {
         private:
     
-        using Parent = Matrix::GenericMatrix<ROW_VECTOR(TMatrixConvention, TSize), COLUMN_VECTOR(TMatrixConvention, TSize)>;
+        using Parent = Matrix::GenericMatrix<(  (TMatrixConvention == Matrix::EMatrixConvention::ColumnMajor) ? TSize : 1), 
+                                                ((TMatrixConvention == Matrix::EMatrixConvention::ColumnMajor) ? 1 : TSize), 
+                                                TType, TMatrixConvention>;
 
         protected:
     
@@ -99,6 +100,3 @@ namespace FoxMath::Vector
     
     };
 } /*namespace FoxMath::Vector*/
-
-#undef ROW_COUNT
-#undef COLUMN_COUT
