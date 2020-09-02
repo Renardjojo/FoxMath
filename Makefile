@@ -8,7 +8,7 @@ IDIR=-Iinclude
 EXCLUDE=
 
 #Cpp version
-CPP_VERSION=-std=gnu++17
+CPP_VERSION=-std=c++17
 
 #Relase or debug option
 CXX_DEBUG=-Og $(CPP_VERSION) -g -W -Wall -pg -no-pie -MMD -Wno-unknown-pragmas $(IDIR)
