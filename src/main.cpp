@@ -18,6 +18,15 @@ using namespace FoxMath::Angle;
 
 int main() 
 {
+    Mat3<> test (  1.f, 5.f, 1.f,
+                                                        5.f, 4.f, 2.f,
+                                                        9.f, 8.f, 7.f);
+
+    NewGenericVector<3> te (8.f, 7.f, 1.f);
+    te *= test;
+
+    std::cout << te << std::endl; //Wrong rst
+
 
     return 0;
 }
