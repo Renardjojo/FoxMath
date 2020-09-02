@@ -35,6 +35,10 @@
 
 namespace FoxMath::Vector
 {
+    /*Define default template arg*/
+    template <size_t TSize, typename TType = float, Matrix::EMatrixConvention TMatrixConvention = Matrix::EMatrixConvention::RowMajor>
+    class NewGenericVector;
+
     template <size_t TSize, typename TType, Matrix::EMatrixConvention TMatrixConvention>
     class NewGenericVector : public Matrix::GenericMatrix<((TMatrixConvention == Matrix::EMatrixConvention::ColumnMajor) ? TSize : 1), 
                                                           ((TMatrixConvention == Matrix::EMatrixConvention::ColumnMajor) ? 1 : TSize),
@@ -79,7 +83,7 @@ namespace FoxMath::Vector
         constexpr inline
         NewGenericVector& operator=(NewGenericVector && other) noexcept		= default;
 
-        DECLARE_CROSS_INHERITANCE_COMPATIBILTY(NewGenericVector, Parent, Matrix::GenericMatrix)
+        DECLARE_CROSS_INHERITANCE_COMPATIBILTY(NewGenericVector, Parent, GenericMatrix)
     
         #pragma endregion //!constructor/destructor
     
