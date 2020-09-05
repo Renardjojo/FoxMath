@@ -46,6 +46,12 @@
 #include <type_traits> //std::is_constant_evaluated
 #endif
 
+namespace FoxMath::Vector
+{
+    template <size_t TSize, typename TType, Matrix::EMatrixConvention TMatrixConvention>
+    class NewGenericVector;
+}
+
 namespace FoxMath::Matrix
 {
     /*Define default template arg and apply template condition*/
@@ -166,13 +172,9 @@ namespace FoxMath::Matrix
 
         #pragma region attribut
 
-        using InternalVector = Vector::GenericVector<vectorLength (), TType>;
+        using InternalVector = Vector::NewGenericVector<vectorLength (), TType, TMatrixConvention>;
 
-        union
-        {
-            std::array<TType, numberOfData ()> m_data;
-            std::array<InternalVector, numberOfInternalVector ()>  m_vector;
-        };
+        std::array<TType, numberOfData ()> m_data;
 
         #pragma endregion //!attribut
     
@@ -248,12 +250,23 @@ namespace FoxMath::Matrix
          * @tparam true 
          * @tparam true 
          */
-
-        template<typename... T, std::enable_if_t<(std::is_convertible_v<T, InternalVector> && ...), bool> = true>
         explicit inline constexpr
-        GenericMatrix (T... args) noexcept
-            : m_vector {std::array<InternalVector, numberOfInternalVector ()>{args...}}
-        {}
+        GenericMatrix (const std::initializer_list<InternalVector>& vecs) noexcept
+            : m_data {}
+        {
+            assert (vecs.size() <= numberOfInternalVector());
+
+            auto itVecs = vecs.begin();
+
+            for (size_t i = 0; i < vecs.size(); i++)
+            {
+                for (size_t j = 0; j < vectorLength(); j++)
+                {
+                    m_data[i * numberOfInternalVector() + j] = itVecs->getData(j);
+                }
+                itVecs++;
+            }
+        }
 
         #pragma endregion //!constructor/destructor
     
@@ -413,7 +426,7 @@ namespace FoxMath::Matrix
          * @return constexpr InternalVector& 
          */
         [[nodiscard]] inline constexpr
-		InternalVector& 	    getVector	(size_t index) throw();
+		InternalVector& 	    getVector	(size_t index) noexcept;
 
         /**
          * @brief Returns a reference to the vector at index in the GenericMatrix
@@ -428,7 +441,7 @@ namespace FoxMath::Matrix
          * @return constexpr const InternalVector& 
          */
         [[nodiscard]] inline constexpr
-		const InternalVector& 	    getVector	(size_t index) const throw ();    
+		const InternalVector& 	    getVector	(size_t index) const noexcept;    
 
         /**
          * @brief   Returns a const reference to the vector at index in the GenericMatrix

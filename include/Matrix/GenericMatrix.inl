@@ -174,18 +174,34 @@ const TType GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getD
 
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
 inline constexpr
-typename GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::InternalVector& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getVector	(size_t index) throw()
+typename GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::InternalVector& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getVector	(size_t index) noexcept
 {
     assert(index < numberOfInternalVector());
-    return m_vector[index];
+    return reinterpret_cast<typename GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::InternalVector&>(m_data[index * numberOfInternalVector()]);
 }
 
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
 inline constexpr
-const typename GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::InternalVector& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getVector	(size_t index) const throw ()
+const typename GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::InternalVector& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getVector	(size_t index) const noexcept
 {
     assert(index < numberOfInternalVector());
-    return m_vector[index];
+    return reinterpret_cast<const typename GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::InternalVector&>(m_data[index * numberOfInternalVector()]);
+}
+
+template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
+inline constexpr
+typename GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::InternalVector& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getVectorAt	(size_t index) throw()
+{
+    assert(index < numberOfInternalVector());
+    return reinterpret_cast<typename GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::InternalVector&>(m_data[index * numberOfInternalVector()]);
+}
+
+template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
+inline constexpr
+const typename GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::InternalVector& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::getVectorAt	(size_t index) const throw()
+{
+    assert(index < numberOfInternalVector());
+    return reinterpret_cast<const typename GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::InternalVector&>(m_data[index * numberOfInternalVector()]);
 }
 
 template <size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConvention TMatrixConvention>
