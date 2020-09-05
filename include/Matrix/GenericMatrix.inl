@@ -292,18 +292,16 @@ template <size_t TRowSizeOther, size_t TColumnSizeOther, typename TTypeOther, Ty
 inline constexpr
 GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>::operator*=(const GenericMatrix<TRowSizeOther, TColumnSizeOther, TTypeOther, TMatrixConvention>& other) noexcept
 {
-    constexpr size_t squareCommonSize = TRowSizeOther; //Same as TColumnSize
-
     GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention> mRst;
     mRst.fill(0);
 
-    for ( size_t i = 0; i < numberOfInternalVector(); i++ )
+    for ( size_t i = 0; i < TRowSize; i++ )
     {
-        for ( size_t j = 0; j < vectorLength(); j++ )
+        for ( size_t j = 0; j < TColumnSize; j++ )
         {
-            for ( size_t index = 0; index < squareCommonSize; index++)
+            for ( size_t index = 0; index < TRowSizeOther; index++)
             {
-                mRst.getData(i * mRst.numberOfInternalVector() + j) += (m_data[index * numberOfInternalVector() + j] * static_cast<TType>(other.getData(i * other.numberOfInternalVector() + index)));
+                mRst.getData(i * TRowSize + j) += m_data[i * TRowSize + index] * static_cast<TType>(other.getData(index * other.vectorLength() + j));
             }
         }
     }
@@ -702,18 +700,23 @@ template <  size_t TRowSize, size_t TColumnSize, typename TType, EMatrixConventi
 inline constexpr
 GenericMatrix<TRowSize, TColumnSizeOther, TType, TMatrixConvention> operator*(const GenericMatrix<TRowSize, TColumnSize, TType, TMatrixConvention>& lhs, const GenericMatrix<TRowSizeOther, TColumnSizeOther, TType, TMatrixConvention>& rhs) noexcept
 {
-    constexpr size_t squareCommonSize = TRowSizeOther; //Same as TColumnSize
-
     GenericMatrix<TRowSize, TColumnSizeOther, TType, TMatrixConvention> mRst;
     mRst.fill(0);
 
-    for ( size_t rowI = 0; rowI < TRowSize  ; rowI++ )
+    for ( size_t i = 0; i < mRst.numberOfInternalVector() ; i++ )
     {
-        for ( size_t columnI = 0; columnI < TColumnSizeOther; columnI++ )
+        for ( size_t j = 0; j < mRst.vectorLength(); j++ )
         {
-            for ( size_t index = 0; index < squareCommonSize; index++)
+            for ( size_t index = 0; index < TRowSizeOther; index++)
             {
-                mRst.getData(columnI * mRst.vectorLength() + rowI) += lhs.getData(index * lhs.vectorLength() + rowI) * rhs.getData(columnI * rhs.vectorLength() + index);
+                if constexpr (TMatrixConvention == EMatrixConvention::ColumnMajor)
+                {
+                    mRst.getData(i, j) += lhs.getData(index, j) * rhs.getData(i, index);
+                }
+                else
+                {
+                    mRst.getData(i, j) += lhs.getData(i, index) * rhs.getData(index, j);         
+                }
             }
         }
     }
