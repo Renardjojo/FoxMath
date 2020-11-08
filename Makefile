@@ -11,6 +11,8 @@ EXCLUDE=
 CPP_VERSION=-std=c++17
 
 #Relase or debug option
+CXX?=g++
+CC?=gcc
 CXX_DEBUG=-Og $(CPP_VERSION) -g -W -Wall -pg -no-pie -MMD -Wno-unknown-pragmas $(IDIR)
 CXX_BUILD=-O3 $(CPP_VERSION) -DNDEBUG -MMD -Wno-unknown-pragmas $(IDIR)
 
@@ -22,7 +24,7 @@ C_BUILD=-O3 -DNDEBUG -MMD -Wno-unknown-pragmas $(IDIR)
 VFLAG=--leak-check=full --show-leak-kinds=all
 
 #Lib
-LDLIBS=
+LDLIBS=-lmingw32
 
 #Cpp and C wildcard
 SRCPPS=$(wildcard src/*.cpp) 
@@ -38,14 +40,14 @@ multi :
 -include $(OBJS:.o=.d)
 
 %.o: %.cpp
-	g++ -c $(CXX_DEBUG) $< -o $@
+	$(CXX) -c $(CXX_DEBUG) $< -o $@
 
 %.o: %.c
-	gcc -c $(C_DEBUG) $< -o $@
+	$(CC) -c $(C_DEBUG) $< -o $@
 
 $(OUTPUT): $(OBJS)
 	mkdir -p bin
-	g++ -pg -no-pie $^ $(LDLIBS) -o $@
+	$(CXX) -pg -no-pie $^ $(LDLIBS) -o $@
 
 run : $(OUTPUT) 
 	./$(OUTPUT)
