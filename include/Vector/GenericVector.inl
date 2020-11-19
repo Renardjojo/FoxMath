@@ -250,7 +250,7 @@ GenericVector<TLength, TType>         GenericVector<TLength, TType>::getCross	  
         }
     }
 
-    return *this;
+    return rst;
 }
 
 template <size_t TLength, typename TType>
