@@ -1076,6 +1076,9 @@ namespace FoxMath::Vector
 	[[nodiscard]] inline constexpr
     GenericVector<TLength, TType> operator%(GenericVector<TLength, TType> lhs, GenericVector<TLengthOther, TTypeOther> const& rhs) noexcept;
 
+    #pragma endregion //!arithmetic operators
+    #pragma region logical operators
+    
     /**
      * @brief bitwise AND
      * 
@@ -1283,9 +1286,7 @@ namespace FoxMath::Vector
 	[[nodiscard]] inline constexpr
     GenericVector<TLength, TType> operator~(GenericVector<TLength, TType> vec) noexcept;
 
-    #pragma endregion //!logical operators
-    #pragma region logical operators
-    
+
     /**
      * @brief negation
      * 
