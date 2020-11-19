@@ -32,9 +32,114 @@
 template <typename TType>
 inline constexpr
 Quaternion<TType>::Quaternion (const Vector::Vector3<TType>& axis, Angle::Angle<Angle::EAngleType::Radian, TType> angle) noexcept
-    :   m_axis  (axis),
-        m_angle (angle)
+    :   m_angle (angle),
+        m_axis  (axis)
 {}
+
+template <typename TType>
+inline constexpr
+TType Quaternion<TType>::getSquaredMagnitude() const noexcept
+{
+    return m_w * m_w + m_x * m_x + m_y * m_y + m_z * m_z;
+}
+
+template <typename TType>
+inline constexpr
+TType Quaternion<TType>::getMagnitude() const noexcept
+{
+    return std::sqrt(getSquaredMagnitude());
+}
+
+template <typename TType>
+inline constexpr
+bool Quaternion<TType>::isRotation(TType epsilon) const noexcept
+{
+    return std::abs(getSquaredMagnitude() - static_cast<TType>(1)) < epsilon * epsilon;
+}
+
+template <typename TType>
+inline constexpr
+Quaternion<TType>& Quaternion<TType>::normalize() noexcept
+{
+    const TType magnitude = getMagnitude();
+    m_x /= magnitude;
+    m_y /= magnitude;
+    m_z /= magnitude;
+    m_w /= magnitude;
+    return *this;
+}
+
+template <typename TType>
+template <typename TTypeOther>
+inline constexpr
+Quaternion<TType>& Quaternion<TType>::operator+=(const Quaternion<TTypeOther>& other) noexcept
+{
+    m_angle += other.getAngle();
+    m_axis  += other.getAxis();
+    return *this;
+}
+
+
+template <typename TType>
+template <typename TTypeOther>
+inline constexpr
+Quaternion<TType>& Quaternion<TType>::operator-=(const Quaternion<TTypeOther>& other) noexcept
+{
+    m_angle -= other.getAngle();
+    m_axis  -= other.getAxis();
+    return *this;
+}
+
+template <typename TType>
+template <typename TTypeOther>
+inline constexpr
+Quaternion<TType>& Quaternion<TType>::operator*=(const Quaternion<TTypeOther>& other) noexcept
+{
+    Angle::Angle<Angle::EAngleType::Radian, TType> angleTemp = m_angle * other.getAngle() - Angle::Angle<Angle::EAngleType::Radian, TType>(Vector::Vector3<TType>::dot(m_axis, other.getAxis()));
+    m_axis  =   static_cast<TType>(m_angle) * other.getAxis() +
+                static_cast<TType>(other.getAngle()) * m_axis +
+                Vector::Vector3<TType>::cross(m_axis, other.getAxis());
+    
+    m_angle = std::move(angleTemp);
+    
+    return *this;
+}
+
+template <typename TType>
+inline constexpr
+Quaternion<TType> operator+(const Quaternion<TType>& quat) noexcept
+{
+    return quat;
+}
+
+template <typename TType>
+inline constexpr
+Quaternion<TType> operator-(const Quaternion<TType>& quat) noexcept
+{
+    return Quaternion<TType>(-quat.getAxis(), -quat.getAngle());
+}
+
+template <typename TType, typename TTypeOther>
+inline constexpr
+Quaternion<TType> operator+(Quaternion<TType> lhs, const Quaternion<TTypeOther>& rhs) noexcept
+{
+    return lhs += rhs;
+}
+
+template <typename TType, typename TTypeOther>
+inline constexpr
+Quaternion<TType> operator-(Quaternion<TType> lhs, const Quaternion<TTypeOther>& rhs) noexcept
+{
+    return lhs -= rhs;
+}
+
+template <typename TType, typename TTypeOther>
+inline constexpr
+Quaternion<TType> operator*(Quaternion<TType> lhs, const Quaternion<TTypeOther>& rhs) noexcept
+{
+    return lhs *= rhs;
+}
+
 
 template <typename TType>
 inline constexpr

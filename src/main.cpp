@@ -31,8 +31,10 @@ int main()
 
     std::cout << te << std::endl; //Wrong rst*/
 
-    Quaternion<> q (Vector3<float>(0.f, 1.f, 2.f), 180_deg);
-    std::cout << q << std::endl;
+    Quaternion<> q1 (Vector3<>(0.f, 1.f, 2.f), 3_rad);
+    Quaternion<> q2 (Vector3<>(2.f, 1.f, 0.f), 6_rad);
+
+    std::cout << (q1.getMagnitude()) << std::endl;
 
     return 0;
 }
