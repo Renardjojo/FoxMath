@@ -32,6 +32,7 @@
 #include <array>
 #include <limits>
 #include "Vector/Vector3.hpp" //Vector::Vector3<TType>
+#include "Numeric/Limits.hpp" //Vector::Vector3<TType>
 #include "Angle/Angle.hpp" //Angle<Angle::EAngleType::Radian, TType>
 
 namespace FoxMath::Quaternion
@@ -101,15 +102,37 @@ namespace FoxMath::Quaternion
     
         #pragma region methods
         
+        /**
+         * @brief Get the Squared Magnitude of the quaternion
+         * 
+         * @return constexpr TType 
+         */
         [[nodiscard]] inline constexpr
         TType getSquaredMagnitude() const noexcept;
 
+        /**
+         * @brief Get the Magnitude of the quation
+         * 
+         * @return constexpr TType 
+         */
         [[nodiscard]] inline constexpr
         TType getMagnitude() const noexcept;
 
+        /**
+         * @brief Check if quaternion squared magnitude is less than epsilon. Quaternion can express rotaiton only if it is unit
+         * 
+         * @param epsilon 
+         * @return true 
+         * @return false 
+         */
         [[nodiscard]] inline constexpr
         bool isRotation(TType epsilon = std::numeric_limits<TType>::epsilon()) const noexcept;
 
+        /**
+         * @brief Normalize the quaternion
+         * 
+         * @return constexpr Quaternion& 
+         */
         [[nodiscard]] inline constexpr
         Quaternion& normalize() noexcept;
 

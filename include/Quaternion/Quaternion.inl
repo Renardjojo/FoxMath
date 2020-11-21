@@ -54,7 +54,7 @@ template <typename TType>
 inline constexpr
 bool Quaternion<TType>::isRotation(TType epsilon) const noexcept
 {
-    return std::abs(getSquaredMagnitude() - static_cast<TType>(1)) < epsilon * epsilon;
+    return std::abs(getSquaredMagnitude() - static_cast<TType>(1)) <= epsilon;
 }
 
 template <typename TType>
