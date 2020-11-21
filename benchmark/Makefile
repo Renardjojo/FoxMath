@@ -8,6 +8,8 @@ IDIR=-Iinclude -Iexternal/lib/GoogleBenchmark/include -I../include
 CPP_VERSION=-std=gnu++17
 
 #Relase or debug option
+CXX?=g++
+CC?=gcc
 CXX_DEBUG=-Og $(CPP_VERSION) -g -W -Wall -pg -no-pie -MMD -Wno-unknown-pragmas $(IDIR)
 CXX_BUILD=-O3 $(CPP_VERSION) -DNDEBUG -MMD -Wno-unknown-pragmas $(IDIR)
 
@@ -38,14 +40,14 @@ multi :
 -include $(OBJS:.o=.d)
 
 %.o: %.cpp
-	g++ -c $(CXX_BUILD) $< -o $@
+	$(CXX) -c $(CXX_BUILD) $< -o $@
 
 %.o: %.c
-	gcc -c $(C_BUILD) $< -o $@
+	$(CC) -c $(C_BUILD) $< -o $@
 
 $(OUTPUT): $(OBJS)
 	mkdir -p bin
-	g++ -pg -no-pie $^  $(LDLIBS) -lpthread -o $@
+	$(CXX) -pg -no-pie $^  $(LDLIBS) -lpthread -o $@
 
 run : $(OUTPUT) 
 	./$(OUTPUT)
