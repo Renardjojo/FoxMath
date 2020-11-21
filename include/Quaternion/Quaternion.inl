@@ -81,10 +81,45 @@ Quaternion<TType>& Quaternion<TType>::normalize() noexcept
 
 template <typename TType>
 inline constexpr
+Quaternion<TType> Quaternion<TType>::getNormalize() const noexcept
+{
+    Quaternion<TType> rst (*this);
+    rst.normalize();
+    return rst;
+}
+
+template <typename TType>
+inline constexpr
 Quaternion<TType>& Quaternion<TType>::conjugate() noexcept
 {
     m_xyz = -m_xyz;
     return *this;
+}
+
+template <typename TType>
+inline constexpr
+Quaternion<TType> Quaternion<TType>::getConjugate() const noexcept
+{
+    Quaternion<TType> rst (*this);
+    rst.conjugate();
+    return rst;
+}
+
+template <typename TType>
+inline constexpr
+Quaternion<TType>& Quaternion<TType>::inverse() noexcept
+{
+    *this = conjugate() / getSquaredMagnitude();
+    return *this;
+}
+
+template <typename TType>
+inline constexpr
+Quaternion<TType> Quaternion<TType>::getInverse() const noexcept
+{
+    Quaternion<TType> rst (*this);
+    rst.inverse();
+    return rst;
 }
 
 template <typename TType>
@@ -139,11 +174,22 @@ Quaternion<TType>& Quaternion<TType>::operator*=(const Quaternion<TTypeOther>& o
 }
 
 template <typename TType>
+template <typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 inline constexpr
-Quaternion<TType>& Quaternion<TType>::operator*=(TType scalar) noexcept
+Quaternion<TType>& Quaternion<TType>::operator*=(TTypeScalar scalar) noexcept
 {
-    m_xyz   *= scalar;
-    m_w     *= scalar;
+    m_xyz   *= static_cast<TType>(scalar);
+    m_w     *= static_cast<TType>(scalar);
+    return *this;
+}
+
+template <typename TType>
+template <typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+inline constexpr
+Quaternion<TType>& Quaternion<TType>::operator/=(TTypeScalar scalar) noexcept
+{
+    m_xyz   /= static_cast<TType>(scalar);
+    m_w     /= static_cast<TType>(scalar);
     return *this;
 }
 
@@ -194,6 +240,13 @@ inline constexpr
 Quaternion<TType> operator*(TTypeScalar scalar, Quaternion<TType> quat) noexcept
 {
     return quat *= static_cast<TType>(scalar);
+}
+
+template <typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+inline constexpr
+Quaternion<TType> operator/(Quaternion<TType> quat, TTypeScalar scalar) noexcept
+{
+    return quat /= static_cast<TType>(scalar);
 }
 
 template <typename TType>

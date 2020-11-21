@@ -44,6 +44,13 @@ int main()
     std::cout << q2 * q1 << std::endl;
     std::cout << q2 * 5 << std::endl;
     Quaternion<> q3 = q2 * 5.f;
-    std::cout << q3 << std::endl;
+    std::cout << q3.getMagnitude() << std::endl;
+    std::cout << q3.isRotation() << std::endl;
+    q3.normalize();
+    std::cout << q3.isRotation() << std::endl;
+    std::cout << q3.conjugate() << std::endl;
+    q1 = Quaternion<>(1.f, 2.f, 3.f, 4.f);
+    std::cout << q1 << std::endl;
+    std::cout << q1.inverse() << std::endl;
     return 0;
 }

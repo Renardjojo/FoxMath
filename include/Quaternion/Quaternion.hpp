@@ -135,20 +135,53 @@ namespace FoxMath::Quaternion
         bool isRotation(TType epsilon = std::numeric_limits<TType>::epsilon()) const noexcept;
 
         /**
-         * @brief Normalize the quaternion
+         * @brief Normalize the quaternion it self
          * 
          * @return constexpr Quaternion& 
          */
-        [[nodiscard]] inline constexpr
+        inline constexpr
         Quaternion& normalize() noexcept;
 
         /**
-         * @brief Perfgorm conjugate of the quaternion : q4 - iq1 - jq2 - kq3
+         * @brief get the normalize quaternion
          * 
          * @return constexpr Quaternion& 
          */
         [[nodiscard]] inline constexpr
+        Quaternion getNormalize() const noexcept;
+
+        /**
+         * @brief Perform conjugate of the quaternion in self : q4 - iq1 - jq2 - kq3
+         * 
+         * @return constexpr Quaternion& 
+         */
+        inline constexpr
         Quaternion& conjugate() noexcept;
+
+        /**
+         * @brief get the perform conjugate of the quaternion : q4 - iq1 - jq2 - kq3
+         * 
+         * @return constexpr Quaternion& 
+         */
+        [[nodiscard]] inline constexpr
+        Quaternion getConjugate() const noexcept;
+
+        /**
+         * @brief Perform the inverse of the quaternion in self : q^-1. If is uni
+         * 
+         * @return constexpr Quaternion& 
+         */
+        inline constexpr
+        Quaternion& inverse() noexcept;
+
+        /**
+         * @brief Perform the inverse of the quaternion : q^-1. If is uni
+         * 
+         * @return constexpr Quaternion& 
+         */
+        [[nodiscard]] inline constexpr
+        Quaternion getInverse() const noexcept;
+
 
         /**
          * @brief Compute the angle of the quaternion
@@ -230,11 +263,24 @@ namespace FoxMath::Quaternion
         /**
          * @brief multiplication with a scalar number
          * 
+         * @tparam TTypeScalar 
          * @param scalar 
          * @return constexpr Quaternion& 
          */
+        template <typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 		inline constexpr
-		Quaternion& operator*=(TType scalar) noexcept;
+		Quaternion& operator*=(TTypeScalar scalar) noexcept;
+
+        /**
+         * @brief division with a scalar number
+         * 
+         * @tparam TTypeScalar 
+         * @param scalar 
+         * @return constexpr Quaternion& 
+         */
+        template <typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+		inline constexpr
+		Quaternion& operator/=(TTypeScalar scalar) noexcept;
 
         #pragma endregion //!assignment operators
         #pragma endregion //!operator
@@ -318,6 +364,19 @@ namespace FoxMath::Quaternion
 	template <typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
     Quaternion<TType> operator*(Quaternion<TType> quat, TTypeScalar scalar) noexcept;
+
+    /**
+     * @brief division of quaternion with a scale
+     * 
+     * @tparam TType 
+     * @tparam TTypeScalar 
+     * @param quat 
+     * @param scalar 
+     * @return constexpr Quaternion<TType> 
+     */
+	template <typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	[[nodiscard]] inline constexpr
+    Quaternion<TType> operator/(Quaternion<TType> quat, TTypeScalar scalar) noexcept;
 
     /**
      * @brief multiplication of quaternion with a scale
