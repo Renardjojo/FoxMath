@@ -31,10 +31,19 @@ int main()
 
     std::cout << te << std::endl; //Wrong rst*/
 
-    Quaternion<> q1 (Vector3<>(0.f, 1.f, 2.f), 3_rad);
+    Quaternion<> q1 (Vector3<>(0.f, 0.5f, 0.5f), 3_rad);
     Quaternion<> q2 (Vector3<>(2.f, 1.f, 0.f), 6_rad);
 
-    std::cout << (q1.getMagnitude()) << std::endl;
+    std::cout << q1 << std::endl;
+    std::cout << q1.getAxis() << std::endl;    
+    std::cout << q1.getAngle() << std::endl;
 
+    std::cout << q1 + q2 << std::endl;
+    std::cout << q1 - q2 << std::endl;
+    std::cout << q1 * q2 << std::endl;
+    std::cout << q2 * q1 << std::endl;
+    std::cout << q2 * 5 << std::endl;
+    Quaternion<> q3 = q2 * 5.f;
+    std::cout << q3 << std::endl;
     return 0;
 }

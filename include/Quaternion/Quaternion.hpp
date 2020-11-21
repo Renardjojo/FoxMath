@@ -31,6 +31,7 @@
 
 #include <array>
 #include <limits>
+#include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>
 #include "Vector/Vector3.hpp" //Vector::Vector3<TType>
 #include "Numeric/Limits.hpp" //Vector::Vector3<TType>
 #include "Angle/Angle.hpp" //Angle<Angle::EAngleType::Radian, TType>
@@ -46,7 +47,7 @@ namespace FoxMath::Quaternion
     {
         private:
     
-        protected:
+        public:
             
         #pragma region attribut
 
@@ -54,20 +55,14 @@ namespace FoxMath::Quaternion
         {
             struct
             {
-                
-                Angle::Angle<Angle::EAngleType::Radian, TType>  m_angle;
-                Vector::Vector3<TType>                          m_axis;
-            };
-            
-            struct
-            {
-                TType m_w;
                 TType m_x;
                 TType m_y;
                 TType m_z;
+                TType m_w;
             };
-            
-            std::array<TType, 4> m_data {};
+
+            Vector::Vector3<TType>  m_xyz;
+            std::array<TType, 4>    m_data {};
         };
         
         #pragma endregion //!attribut
@@ -95,9 +90,20 @@ namespace FoxMath::Quaternion
 
         Quaternion& operator=(Quaternion && other) noexcept         = default;
 
+        /**
+         * @brief Create quaternion based on axis and angle
+         * 
+         */
         explicit inline constexpr
-        Quaternion (const Vector::Vector3<TType>& axis, Angle::Angle<Angle::EAngleType::Radian, TType> angle = Angle::Angle<Angle::EAngleType::Radian, TType>(0)) noexcept;
+        Quaternion (Vector::Vector3<TType> axis, Angle::Angle<Angle::EAngleType::Radian, TType> angle = Angle::Angle<Angle::EAngleType::Radian, TType>(0)) noexcept;
     
+        /**
+         * @brief Create quaternion based on it's paramter
+         * 
+         */
+        explicit inline constexpr
+        Quaternion (TType x, TType y, TType z, TType w) noexcept;
+
         #pragma endregion //!constructor/destructor
     
         #pragma region methods
@@ -136,15 +142,48 @@ namespace FoxMath::Quaternion
         [[nodiscard]] inline constexpr
         Quaternion& normalize() noexcept;
 
+        /**
+         * @brief Perfgorm conjugate of the quaternion : q4 - iq1 - jq2 - kq3
+         * 
+         * @return constexpr Quaternion& 
+         */
+        [[nodiscard]] inline constexpr
+        Quaternion& conjugate() noexcept;
+
+        /**
+         * @brief Compute the angle of the quaternion
+         * 
+         * @return constexpr Angle::Angle<Angle::EAngleType::Radian, TType> 
+         */
+        [[nodiscard]] inline constexpr
+        Angle::Angle<Angle::EAngleType::Radian, TType> getAngle() const noexcept;
+
+        /**
+         * @brief Compute the axis of the quaternion
+         * 
+         * @return constexpr Vector::Vector3<TType> 
+         */
+        [[nodiscard]] inline constexpr
+        Vector::Vector3<TType> getAxis() const noexcept;
+
         #pragma endregion //!methods
     
         #pragma region accessor
 
         [[nodiscard]] inline constexpr
-        Angle::Angle<Angle::EAngleType::Radian, TType> getAngle() const noexcept { return m_angle;}
+        TType getX() const noexcept { return m_x; }
 
         [[nodiscard]] inline constexpr
-        const Vector::Vector3<TType>& getAxis() const noexcept { return m_axis;}
+        TType getY() const noexcept { return m_y; }
+
+        [[nodiscard]] inline constexpr
+        TType getZ() const noexcept { return m_z; }
+
+        [[nodiscard]] inline constexpr
+        TType getW() const noexcept { return m_w; }
+
+        [[nodiscard]] inline constexpr
+        Vector::Vector3<TType> getXYZ() const noexcept { return m_xyz; }
 
         #pragma endregion //!accessor
     
@@ -188,12 +227,20 @@ namespace FoxMath::Quaternion
 		inline constexpr
 		Quaternion& operator*=(const Quaternion<TTypeOther>& other) noexcept;
 
+        /**
+         * @brief multiplication with a scalar number
+         * 
+         * @param scalar 
+         * @return constexpr Quaternion& 
+         */
+		inline constexpr
+		Quaternion& operator*=(TType scalar) noexcept;
+
         #pragma endregion //!assignment operators
         #pragma endregion //!operator
     
         #pragma region convertor
-        #pragma endregion //!convertor
-    
+        #pragma endregion //!convertor    
     };
 
     #pragma region arithmetic operators
@@ -259,6 +306,33 @@ namespace FoxMath::Quaternion
 	[[nodiscard]] inline constexpr
     Quaternion<TType> operator*(Quaternion<TType> lhs, const Quaternion<TTypeOther>& rhs) noexcept;
 
+    /**
+     * @brief multiplication of quaternion with a scale
+     * 
+     * @tparam TType 
+     * @tparam TTypeScalar 
+     * @param quat 
+     * @param scalar 
+     * @return constexpr Quaternion<TType> 
+     */
+	template <typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	[[nodiscard]] inline constexpr
+    Quaternion<TType> operator*(Quaternion<TType> quat, TTypeScalar scalar) noexcept;
+
+    /**
+     * @brief multiplication of quaternion with a scale
+     * 
+     * @tparam TType 
+     * @tparam TTypeScalar 
+     * @param scalar 
+     * @param quat 
+     * @return constexpr Quaternion<TType> 
+     */
+	template <typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	[[nodiscard]] inline constexpr
+    Quaternion<TType> operator*(TTypeScalar scalar, Quaternion<TType> quat) noexcept;
+
+
     #pragma endregion //!arithmetic operators
 
     #pragma region stream operators
@@ -274,18 +348,6 @@ namespace FoxMath::Quaternion
     template <typename TType>
     [[nodiscard]] inline constexpr
     std::ostream& 	operator<<		(std::ostream& out, const Quaternion<TType>& quaternion) noexcept;
-
-    /**
-     * @brief input streams
-     * 
-     * @tparam TType 
-     * @param in 
-     * @param angle 
-     * @return constexpr std::istream& 
-     */
-    template <typename TType>
-    [[nodiscard]] inline constexpr
-    std::istream& 	operator>>		(std::istream& in, const Quaternion<TType>& quaternion) noexcept;
 
     #pragma endregion //!stream operators
 
