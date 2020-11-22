@@ -21,16 +21,6 @@ using namespace FoxMath::Quaternion;
 
 int main() 
 {
-    /*
-    Mat3<> test (  1.f, 5.f, 1.f,
-                                                        5.f, 4.f, 2.f,
-                                                        9.f, 8.f, 7.f);
-
-    NewGenericVector<3> te (9.f, 7.f, 1.f);
-    te *= test;
-
-    std::cout << te << std::endl; //Wrong rst*/
-
     Quaternion<> q1 (Vector3<>(0.f, 0.5f, 0.5f), 3_rad);
     Quaternion<> q2 (Vector3<>(2.f, 1.f, 0.f), 6_rad);
 
@@ -51,6 +41,22 @@ int main()
     std::cout << q3.conjugate() << std::endl;
     q1 = Quaternion<>(1.f, 2.f, 3.f, 4.f);
     std::cout << q1 << std::endl;
-    std::cout << q1.inverse() << std::endl;
+    std::cout << q1.getInverse() << std::endl;
+    Vector3<double> vec {58., 1., -9.};
+    Vector3<double> vec2 {58., 1., -9.};
+    Vector3<double> axis {0., 0.5, 0.5};
+    std::cout << q1 * vec << std::endl;
+    axis.normalize();
+
+    Quaternion<double>::RotateVector(vec, axis, 3_rad);
+    Quaternion<double>::RotateVector2(vec2, axis, 3_rad);
+    std::cout << vec << std::endl;
+    std::cout << vec2 << std::endl;
+    std::cout << "-5.34911, 6.51895, 9.48105" << std::endl;
+
+
+    Quaternion<double> q4(Vector3<double>{0., 0.5, 0.5}, 3_rad);
+    std::cout << q4 << std::endl;
+    std::cout << q4.getRotationMatrix() << std::endl;
     return 0;
 }

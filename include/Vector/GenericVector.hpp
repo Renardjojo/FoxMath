@@ -375,7 +375,7 @@ namespace FoxMath::Vector
         #pragma endregion //!methods
     
         #pragma region static methods
-
+        
         /**
          * @brief Get the vector dimension
          * 

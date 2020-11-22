@@ -21,7 +21,7 @@ C_BUILD=-O3 -DNDEBUG -MMD -Wno-unknown-pragmas $(IDIR)
 VFLAG=--leak-check=full --show-leak-kinds=all
 
 #Lib
-LIB_GOOGLE_BENCHMARCK = external/lib/GoogleBenchmark/src/libbenchmark.a
+LIB_GOOGLE_BENCHMARCK = external\lib\GoogleBenchmark\src\libbenchmark.a
 LDLIBS= $(LIB_GOOGLE_BENCHMARCK)
 
 #Cpp and C wildcard

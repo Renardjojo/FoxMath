@@ -47,7 +47,7 @@ namespace FoxMath::Angle
     class Angle;
 
     template <EAngleType TAngleType, typename TType>
-    class Angle<TAngleType, TType> 
+    class Angle<TAngleType, TType>
     :   public Type::StrongType <TType, AnglePhantom<TAngleType>>,
         public Type::Operator::Arithmetic       <Angle<TAngleType, TType>>,
         public Type::Operator::Comparison       <Angle<TAngleType, TType>>,

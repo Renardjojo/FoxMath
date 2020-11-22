@@ -33,6 +33,7 @@
 #include <limits>
 #include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>
 #include "Vector/Vector3.hpp" //Vector::Vector3<TType>
+#include "Matrix/Matrix3.hpp" //Matrix::Matrix3
 #include "Numeric/Limits.hpp" //Vector::Vector3<TType>
 #include "Angle/Angle.hpp" //Angle<Angle::EAngleType::Radian, TType>
 
@@ -199,8 +200,178 @@ namespace FoxMath::Quaternion
         [[nodiscard]] inline constexpr
         Vector::Vector3<TType> getAxis() const noexcept;
 
+        /**
+         * @brief Get the Rotation Matrix of the quaternion
+         * 
+         * @tparam TMatrixConvention 
+         * @return constexpr Matrix::Matrix3<TType, TMatrixConvention> 
+         */
+        template <Matrix::EMatrixConvention TMatrixConvention = Matrix::EMatrixConvention::RowMajor>
+        [[nodiscard]] inline constexpr
+        Matrix::Matrix3<TType, TMatrixConvention> getRotationMatrix() const noexcept;
+
+        /**
+         * @brief Perform dot product between 2 quaternions
+         * 
+         * @param other 
+         * @return constexpr Vector::Vector3<TType> 
+         */
+        [[nodiscard]] inline constexpr
+        TType dot(const Quaternion<TType>& other) const noexcept;
+
+        /**
+         * @brief Rotate vector with current quaternion. Is optimized only for 1 vector, else use RotateVectos that use matricial forme.
+         *          Use Rodrigues formula and not q * v * q^-1 for optimization raison.
+         * 
+         * @param vec
+         */
+        template <typename TTypeVector>
+        inline constexpr
+        void RotateVector(Vector::Vector3<TTypeVector>& vec) const noexcept;
+
+        /**
+         * @brief Perform the rotation of the vector with the formula : (q1 * q2) * v * (q1 * q2)^-1.
+         *        Rotation is firstly on q2 and then on q1
+         * 
+         * @param vec
+         */
+        template <typename TTypeVector>
+        inline constexpr
+        void GlobalRotateVector(const Quaternion<TType>& otherQuat, Vector::Vector3<TTypeVector>& vec) const noexcept;
+
+        /**
+         * @brief Perform the rotation of the vector with the formula : (q2 * q1) * v * (q2 * q1)^-1.
+         *        Rotation is firstly on q1 and then on q2
+         * 
+         * @param vec
+         */
+        template <typename TTypeVector>
+        inline constexpr
+        void LocalRotateVector(const Quaternion<TType>& otherQuat, Vector::Vector3<TTypeVector>& vec) const noexcept;
+
+        /**
+         * @brief Get the Global Smallest Diffence With Other quaternion. Use formula : q2 * q1^-1
+         * 
+         * @param otherQuat 
+         * @return constexpr Quaternion<TType> 
+         */
+        [[nodiscard]] inline constexpr
+        Quaternion<TType> getGlobalSmallestDiffenceWithOther(const Quaternion<TType>& otherQuat) const noexcept;
+
+        /**
+         * @brief Get the Global Smallest Diffence With Other quaternion. Use formula : q1^-1 * q2
+         * 
+         * @param otherQuat 
+         * @return constexpr Quaternion<TType> 
+         */
+        [[nodiscard]] inline constexpr
+        Quaternion<TType> getLocalSmallestDiffenceWithOther(const Quaternion<TType>& otherQuat) const noexcept;
+
+        /**
+         * @brief Perform a cyllindric interpolation rotation between start and end.
+         *        cyllindric interpolation is better than lerp for exigute rotaion but more expensive.
+         *        Furthermore cyllindric interpolation maintain constante angular speed
+         * 
+         * @param startQuat 
+         * @param endQuat 
+         * @param t 
+         */
+        inline constexpr
+        void sLerp(const Quaternion<TType>& startQuat, const Quaternion<TType>& endQuat, TType t) noexcept;
+
+        /**
+         * @brief Perform a linear interpolation rotation between start and end
+         * 
+         * @param startQuat 
+         * @param endQuat 
+         * @param t 
+         */
+        inline constexpr
+        void lerp(const Quaternion<TType>& startQuat, const Quaternion<TType>& endQuat, TType t) noexcept;
+
         #pragma endregion //!methods
     
+        #pragma region static methods
+
+        /**
+         * @brief Rotate vector with current quaternion. Is optimized only for 1 vector, else use RotateVectos that use matricial forme
+         * 
+         * @param vec 
+         * @param unitAxis 
+         * @param angle 
+         */
+        template <typename TTypeVector, typename TTypeAxis>
+        static inline constexpr
+        void RotateVector(Vector::Vector3<TTypeVector>& vec, const Vector::Vector3<TTypeAxis>& unitAxis, Angle::Angle<Angle::EAngleType::Radian, TType> angle) noexcept
+        {
+            //Rodrigues formula with quaternion is better than quat * vec * quat.getInverse()
+            Quaternion<TType> quat (unitAxis, angle);
+            Vector::Vector3<TType> quatAxis = quat.getAxis();
+            vec = (static_cast<TType>(2) * quat.getW() * quat.getW() - static_cast<TType>(1)) * vec + static_cast<TType>(2) * quatAxis.dot(vec) * quatAxis + static_cast<TType>(2) * quat.getW() * quatAxis.getCross(vec);
+        }
+
+        template <typename TTypeVector, typename TTypeAxis>
+        static inline constexpr
+        void RotateVector2(Vector::Vector3<TTypeVector>& vec, const Vector::Vector3<TTypeAxis>& unitAxis, Angle::Angle<Angle::EAngleType::Radian, TType> angle) noexcept
+        {
+            Quaternion<TType> quat (unitAxis, angle);
+            std::cout << quat << std::endl;
+            quat = quat * vec * quat.getInverse();
+            vec = quat.getXYZ();
+        }
+
+        /**
+         * @brief Get the Global Smallest Diffence With Other quaternion. Use formula : q2 * q1^-1
+         * 
+         * @param otherQuat 
+         * @return constexpr Quaternion<TType> 
+         */
+        [[nodiscard]] inline constexpr
+        Quaternion<TType> getGlobalSmallestDiffenceWithOther(const Quaternion<TType>& q1, const Quaternion<TType>& q2) noexcept
+        {
+            return q1.getGlobalSmallestDiffenceWithOther(q2);
+        }
+
+        /**
+         * @brief Get the Global Smallest Diffence With Other quaternion. Use formula : q1^-1 * q2
+         * 
+         * @param otherQuat 
+         * @return constexpr Quaternion<TType> 
+         */
+        [[nodiscard]] inline constexpr
+        Quaternion<TType> getLocalSmallestDiffenceWithOther(const Quaternion<TType>& q1, const Quaternion<TType>& q2) noexcept
+        {
+            return q1.getLocalSmallestDiffenceWithOther(q2);
+        }
+
+        /**
+         * @brief Perform the rotation of the vector with the formula : (q1 * q2) * v * (q1 * q2)^-1.
+         *        Rotation is firstly on q2 and then on q1
+         * 
+         * @param vec
+         */
+        template <typename TTypeVector>
+        inline constexpr
+        void GlobalRotateVector(const Quaternion<TType>& q1, const Quaternion<TType>& q2, Vector::Vector3<TTypeVector>& vec) noexcept
+        {
+            q1.GlobalRotateVector(q2, vec);
+        }
+
+        /**
+         * @brief Perform the rotation of the vector with the formula : (q2 * q1) * v * (q2 * q1)^-1.
+         *        Rotation is firstly on q1 and then on q2
+         * 
+         * @param vec
+         */
+        template <typename TTypeVector>
+        inline constexpr
+        void LocalRotateVector(const Quaternion<TType>& q1, const Quaternion<TType>& q2, Vector::Vector3<TTypeVector>& vec) noexcept
+        {
+            q1.LocalRotateVector(q2, vec);
+        }
+
+        #pragma endregion //!static methods
+
         #pragma region accessor
 
         [[nodiscard]] inline constexpr
@@ -272,6 +443,17 @@ namespace FoxMath::Quaternion
 		Quaternion& operator*=(TTypeScalar scalar) noexcept;
 
         /**
+         * @brief multiplication with a vector
+         * 
+         * @tparam TTypeVector 
+         * @param vec 
+         * @return constexpr Quaternion& 
+         */
+        template <typename TTypeVector, Type::IsArithmetic<TTypeVector> = true>
+		inline constexpr
+		Quaternion& operator*=(Vector::Vector3<TTypeVector> vec) noexcept;
+
+        /**
          * @brief division with a scalar number
          * 
          * @tparam TTypeScalar 
@@ -287,6 +469,12 @@ namespace FoxMath::Quaternion
     
         #pragma region convertor
         #pragma endregion //!convertor    
+
+        #pragma region static attribut
+
+        static constexpr inline Quaternion identity  = Quaternion(static_cast<TType>(0), static_cast<TType>(0), static_cast<TType>(0), static_cast<TType>(1));
+
+        #pragma endregion //! static attribut
     };
 
     #pragma region arithmetic operators
@@ -364,6 +552,19 @@ namespace FoxMath::Quaternion
 	template <typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
     Quaternion<TType> operator*(Quaternion<TType> quat, TTypeScalar scalar) noexcept;
+
+    /**
+     * @brief multiplication of quaternion with a vector
+     * 
+     * @tparam TType 
+     * @tparam TTypeVector 
+     * @param quat 
+     * @param vec 
+     * @return constexpr Quaternion<TType> 
+     */
+	template <typename TType, typename TTypeVector, Type::IsArithmetic<TTypeVector> = true>
+	[[nodiscard]] inline constexpr
+    Quaternion<TType> operator*(Quaternion<TType> quat, const Vector::Vector3<TTypeVector>& vec) noexcept;
 
     /**
      * @brief division of quaternion with a scale

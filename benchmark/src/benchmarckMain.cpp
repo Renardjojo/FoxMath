@@ -3,6 +3,8 @@
 #include "Matrix/Matrix.hpp"
 #include "Angle/Angle.hpp"
 
+#include "Quaternion/Quaternion.hpp"
+
 #include "mat.hpp"
 #include "vec.hpp"
 
@@ -12,9 +14,42 @@
 using namespace FoxMath::Matrix;
 using namespace FoxMath::Vector;
 using namespace FoxMath::Angle;
+using namespace FoxMath::Quaternion;
 
 #define RAND_FLOAT (float)std::rand()
 static void _ (benchmark::State& state){}
+
+static void BM_QuaternionV1(benchmark::State& state) 
+{
+  for (auto _ : state)
+  {
+        Vector3<> vec {5.f, 10.f, 6.f};
+        Vector3<> axis {0.f, 0.5f, 0.5f};
+        axis.normalize();
+        Quaternion<>::RotateVector(vec, axis, 3_rad);
+
+        benchmark::DoNotOptimize(vec);
+        benchmark::ClobberMemory();
+  }
+}
+// Register the function as a benchmark
+BENCHMARK(BM_QuaternionV1);
+
+static void BM_QuaternionV2(benchmark::State& state) 
+{
+  for (auto _ : state)
+  {
+        Vector3<> vec {5.f, 10.f, 6.f};
+        Vector3<> axis {0.f, 0.5f, 0.5f};
+        axis.normalize();
+        Quaternion<>::RotateVector2(vec, axis, 3_rad);
+
+        benchmark::DoNotOptimize(vec);
+        benchmark::ClobberMemory();
+  }
+}
+// Register the function as a benchmark
+BENCHMARK(BM_QuaternionV2);
 
 static void BM_NewReverseMatrixAtCompileTime(benchmark::State& state) 
 {
