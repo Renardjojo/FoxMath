@@ -178,9 +178,11 @@ inline constexpr
 void Quaternion<TType>::RotateVector(Vector::Vector3<TTypeVector>& vec) const noexcept
 {
     //Rodrigues formula with quaternion is better than quat * vec * quat.getInverse()
-    const Vector::Vector3<TType> quatAxis = getAxis();
+    TType angle = static_cast<TType>(getAngle());
+    Vector::Vector3<TType> unitAxis = getAxis();
 
-    vec = (static_cast<TType>(2) * m_w * m_w - static_cast<TType>(1)) * vec + static_cast<TType>(2) * quatAxis.dot(vec) * quatAxis + static_cast<TType>(2) * m_w * quatAxis.getCross(vec);
+    const TType cosAngle = std::cos(static_cast<TType>(angle));
+    vec = cosAngle * vec + (static_cast<TType>(1) - cosAngle) * vec.dot(unitAxis) * unitAxis + std::sin(static_cast<TType>(angle)) * unitAxis.getCross(vec);
 }
 
 template <typename TType>
@@ -216,18 +218,38 @@ Quaternion<TType> Quaternion<TType>::getLocalSmallestDiffenceWithOther(const Qua
 }
 
 template <typename TType>
+template <bool TShortestPath, bool TClampedRatio>
 inline constexpr
 void Quaternion<TType>::sLerp(const Quaternion<TType>& startQuat, const Quaternion<TType>& endQuat, TType t) noexcept
 {
+    if constexpr (TShortestPath)
+        t = std::clamp<TType>(t, static_cast<TType>(0), static_cast<TType>(0));
+
     const TType angle = std::acos(startQuat.dot(endQuat));
-    *this = (startQuat * std::sin((static_cast<TType>(1) - t) * angle) + endQuat * std::sin(t * angle)) / std::sin(angle);
+    TType conjugateT = static_cast<TType>(1) - t;
+
+    /*if constexpr (TShortestPath)
+    {
+        conjugateT *=(startQuat.dot(endQuat) < static_cast<TType>(0) ? -static_cast<TType>(1) : static_cast<TType>(1);
+    }*/
+
+    *this = (startQuat * std::sin(conjugateT * angle) + endQuat * std::sin(t * angle)) / std::sin(angle);
 }
 
 template <typename TType>
+template <bool TShortestPath, bool TClampedRatio>
 inline constexpr
 void Quaternion<TType>::lerp(const Quaternion<TType>& startQuat, const Quaternion<TType>& endQuat, TType t) noexcept
 {
-    *this = startQuat + (endQuat - startQuat) * t;
+    if constexpr (TShortestPath)
+        t = std::clamp<TType>(t, static_cast<TType>(0), static_cast<TType>(0));
+
+    TType conjugateT = static_cast<TType>(1) - t;
+
+    if constexpr (TShortestPath)
+        conjugateT *= startQuat.dot(endQuat) < static_cast<TType>(0) ? -static_cast<TType>(1) : static_cast<TType>(1);
+
+    *this = conjugateT * startQuat + t * endQuat;
 }
 
 template <typename TType>

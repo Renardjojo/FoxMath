@@ -31,6 +31,7 @@
 
 #include <array>
 #include <limits>
+#include <algorithm> //std::clamp
 #include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>
 #include "Vector/Vector3.hpp" //Vector::Vector3<TType>
 #include "Matrix/Matrix3.hpp" //Matrix::Matrix3
@@ -272,20 +273,26 @@ namespace FoxMath::Quaternion
          *        cyllindric interpolation is better than lerp for exigute rotaion but more expensive.
          *        Furthermore cyllindric interpolation maintain constante angular speed
          * 
+         * @tparam TShortestPath : true if the ratio must use the shotedt path. Else more optimized but can go with the largest path to goal 
+         * @tparam TClampedRatio : true if the ratio must be clamped between 0 and 1. Else more optimized but can create erronate rotation if ratio is incorrect
          * @param startQuat 
          * @param endQuat 
          * @param t 
          */
+        template <bool TShortestPath = true, bool TClampedRatio = true>
         inline constexpr
         void sLerp(const Quaternion<TType>& startQuat, const Quaternion<TType>& endQuat, TType t) noexcept;
 
         /**
          * @brief Perform a linear interpolation rotation between start and end
          * 
+         * @tparam TShortestPath : true if the ratio must use the shotedt path. Else more optimized but can go with the largest path to goal 
+         * @tparam TClampedRatio : true if the ratio must be clamped between 0 and 1. Else more optimized but can create erronate rotation if ratio is incorrect
          * @param startQuat 
          * @param endQuat 
          * @param t 
          */
+        template <bool TShortestPath = true, bool TClampedRatio = true>
         inline constexpr
         void lerp(const Quaternion<TType>& startQuat, const Quaternion<TType>& endQuat, TType t) noexcept;
 
@@ -305,9 +312,8 @@ namespace FoxMath::Quaternion
         void RotateVector(Vector::Vector3<TTypeVector>& vec, const Vector::Vector3<TTypeAxis>& unitAxis, Angle::Angle<Angle::EAngleType::Radian, TType> angle) noexcept
         {
             //Rodrigues formula with quaternion is better than quat * vec * quat.getInverse()
-            Quaternion<TType> quat (unitAxis, angle);
-            Vector::Vector3<TType> quatAxis = quat.getAxis();
-            vec = (static_cast<TType>(2) * quat.getW() * quat.getW() - static_cast<TType>(1)) * vec + static_cast<TType>(2) * quatAxis.dot(vec) * quatAxis + static_cast<TType>(2) * quat.getW() * quatAxis.getCross(vec);
+            const TType cosAngle = std::cos(static_cast<TType>(angle));
+            vec = cosAngle * vec + (static_cast<TType>(1) - cosAngle) * vec.dot(unitAxis) * unitAxis + std::sin(static_cast<TType>(angle)) * unitAxis.getCross(vec);
         }
 
         template <typename TTypeVector, typename TTypeAxis>
@@ -315,7 +321,6 @@ namespace FoxMath::Quaternion
         void RotateVector2(Vector::Vector3<TTypeVector>& vec, const Vector::Vector3<TTypeAxis>& unitAxis, Angle::Angle<Angle::EAngleType::Radian, TType> angle) noexcept
         {
             Quaternion<TType> quat (unitAxis, angle);
-            std::cout << quat << std::endl;
             quat = quat * vec * quat.getInverse();
             vec = quat.getXYZ();
         }

@@ -2,10 +2,6 @@
 //VEC2
 /////////////////////
 
-#ifndef M_PI
-#define M_PI 3.14
-#endif
-
 inline
 float rad_to_degrees (float rad)
 {

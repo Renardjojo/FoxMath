@@ -38,6 +38,7 @@
 #include <stddef.h> //sizt_t
 #include <iostream> //ostream, istream
 #include <cassert> //assert
+#define _USE_MATH_DEFINES
 #include <math.h> //sqrt, lerp (if c++ 2020) //TODO: only include if C++ 20 when own sqrt implemented
 #include <stdexcept> //std::out_of_range
 
