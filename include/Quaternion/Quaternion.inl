@@ -162,7 +162,7 @@ Matrix::Matrix3<TType, TMatrixConvention> Quaternion<TType>::getRotationMatrix()
     const Vector::Vector3<TType> vec3 (twoXZ + twoYW, twoYZ - twoXW, one - twoXX - twoYY);
 
     Matrix::Mat3<TType, TMatrixConvention> rst ({vec1, vec2, vec3});
-    return rst / getSquaredMagnitude();
+    return rst;
 }
 
 template <typename TType>
@@ -175,7 +175,7 @@ TType Quaternion<TType>::dot(const Quaternion<TType>& other) const noexcept
 template <typename TType>
 template <typename TTypeVector>
 inline constexpr
-void Quaternion<TType>::RotateVector(Vector::Vector3<TTypeVector>& vec) const noexcept
+void Quaternion<TType>::rotateVector(Vector::Vector3<TTypeVector>& vec) const noexcept
 {
     //Rodrigues formula with quaternion is better than quat * vec * quat.getInverse()
     TType angle = static_cast<TType>(getAngle());
@@ -188,7 +188,7 @@ void Quaternion<TType>::RotateVector(Vector::Vector3<TTypeVector>& vec) const no
 template <typename TType>
 template <typename TTypeVector>
 inline constexpr
-void Quaternion<TType>::GlobalRotateVector(const Quaternion<TType>& otherQuat, Vector::Vector3<TTypeVector>& vec) const noexcept
+void Quaternion<TType>::globalRotateVector(const Quaternion<TType>& otherQuat, Vector::Vector3<TTypeVector>& vec) const noexcept
 {
     const Quaternion<TType> q1q2 = (*this) * otherQuat;
     vec = (q1q2 * vec * q1q2.getInverse()).getXYZ();
@@ -197,7 +197,7 @@ void Quaternion<TType>::GlobalRotateVector(const Quaternion<TType>& otherQuat, V
 template <typename TType>
 template <typename TTypeVector>
 inline constexpr
-void Quaternion<TType>::LocalRotateVector(const Quaternion<TType>& otherQuat, Vector::Vector3<TTypeVector>& vec) const noexcept
+void Quaternion<TType>::localRotateVector(const Quaternion<TType>& otherQuat, Vector::Vector3<TTypeVector>& vec) const noexcept
 {
     const Quaternion<TType> q2q1 = otherQuat * (*this);
     vec = (q2q1 * vec * q2q1.getInverse()).getXYZ();
@@ -222,18 +222,22 @@ template <bool TShortestPath, bool TClampedRatio>
 inline constexpr
 void Quaternion<TType>::sLerp(const Quaternion<TType>& startQuat, const Quaternion<TType>& endQuat, TType t) noexcept
 {
+    if constexpr (TClampedRatio)
+        t = std::clamp<TType>(t, static_cast<TType>(0), static_cast<TType>(1));
+
+    const TType dotQaQb = startQuat.dot(endQuat);
+
     if constexpr (TShortestPath)
-        t = std::clamp<TType>(t, static_cast<TType>(0), static_cast<TType>(0));
-
-    const TType angle = std::acos(startQuat.dot(endQuat));
-    TType conjugateT = static_cast<TType>(1) - t;
-
-    /*if constexpr (TShortestPath)
     {
-        conjugateT *=(startQuat.dot(endQuat) < static_cast<TType>(0) ? -static_cast<TType>(1) : static_cast<TType>(1);
-    }*/
-
-    *this = (startQuat * std::sin(conjugateT * angle) + endQuat * std::sin(t * angle)) / std::sin(angle);
+        const TType angle = std::acos(std::abs(dotQaQb));
+        const float sign = (dotQaQb >= static_cast<TType>(0)) * static_cast<TType>(2) - static_cast<TType>(1); //Hack to avoid branch (2x - 1) with x is bool
+        *this = (startQuat * sign * std::sin((static_cast<TType>(1) - t) * angle) + endQuat * std::sin(t * angle)) / std::sin(angle);
+    }
+    else
+    {
+        const TType angle = std::acos(dotQaQb);
+        *this = (startQuat * std::sin((static_cast<TType>(1) - t) * angle) + endQuat * std::sin(t * angle)) / std::sin(angle);
+    }   
 }
 
 template <typename TType>
@@ -241,15 +245,24 @@ template <bool TShortestPath, bool TClampedRatio>
 inline constexpr
 void Quaternion<TType>::lerp(const Quaternion<TType>& startQuat, const Quaternion<TType>& endQuat, TType t) noexcept
 {
-    if constexpr (TShortestPath)
-        t = std::clamp<TType>(t, static_cast<TType>(0), static_cast<TType>(0));
+    if constexpr (TClampedRatio)
+        t = std::clamp<TType>(t, static_cast<TType>(0), static_cast<TType>(1));
 
     TType conjugateT = static_cast<TType>(1) - t;
 
     if constexpr (TShortestPath)
-        conjugateT *= startQuat.dot(endQuat) < static_cast<TType>(0) ? -static_cast<TType>(1) : static_cast<TType>(1);
+        conjugateT *= (startQuat.dot(endQuat) >= static_cast<TType>(0)) * static_cast<TType>(2) - static_cast<TType>(1); //Hack to avoid branch (2x - 1) with x is bool
 
     *this = conjugateT * startQuat + t * endQuat;
+}
+
+template <typename TType>
+template <bool TShortestPath, bool TClampedRatio>
+inline constexpr
+void Quaternion<TType>::nLerp(const Quaternion<TType>& startQuat, const Quaternion<TType>& endQuat, TType t) noexcept
+{
+    lerp<TShortestPath, TClampedRatio>(startQuat, endQuat, t);
+    normalize();
 }
 
 template <typename TType>

@@ -228,7 +228,7 @@ namespace FoxMath::Quaternion
          */
         template <typename TTypeVector>
         inline constexpr
-        void RotateVector(Vector::Vector3<TTypeVector>& vec) const noexcept;
+        void rotateVector(Vector::Vector3<TTypeVector>& vec) const noexcept;
 
         /**
          * @brief Perform the rotation of the vector with the formula : (q1 * q2) * v * (q1 * q2)^-1.
@@ -238,7 +238,7 @@ namespace FoxMath::Quaternion
          */
         template <typename TTypeVector>
         inline constexpr
-        void GlobalRotateVector(const Quaternion<TType>& otherQuat, Vector::Vector3<TTypeVector>& vec) const noexcept;
+        void globalRotateVector(const Quaternion<TType>& otherQuat, Vector::Vector3<TTypeVector>& vec) const noexcept;
 
         /**
          * @brief Perform the rotation of the vector with the formula : (q2 * q1) * v * (q2 * q1)^-1.
@@ -248,7 +248,7 @@ namespace FoxMath::Quaternion
          */
         template <typename TTypeVector>
         inline constexpr
-        void LocalRotateVector(const Quaternion<TType>& otherQuat, Vector::Vector3<TTypeVector>& vec) const noexcept;
+        void localRotateVector(const Quaternion<TType>& otherQuat, Vector::Vector3<TTypeVector>& vec) const noexcept;
 
         /**
          * @brief Get the Global Smallest Diffence With Other quaternion. Use formula : q2 * q1^-1
@@ -284,7 +284,7 @@ namespace FoxMath::Quaternion
         void sLerp(const Quaternion<TType>& startQuat, const Quaternion<TType>& endQuat, TType t) noexcept;
 
         /**
-         * @brief Perform a linear interpolation rotation between start and end
+         * @brief Perform a linear interpolation rotation between start and end. Angulare speed and rotation is not safe
          * 
          * @tparam TShortestPath : true if the ratio must use the shotedt path. Else more optimized but can go with the largest path to goal 
          * @tparam TClampedRatio : true if the ratio must be clamped between 0 and 1. Else more optimized but can create erronate rotation if ratio is incorrect
@@ -295,6 +295,20 @@ namespace FoxMath::Quaternion
         template <bool TShortestPath = true, bool TClampedRatio = true>
         inline constexpr
         void lerp(const Quaternion<TType>& startQuat, const Quaternion<TType>& endQuat, TType t) noexcept;
+
+        /**
+         * @brief Perform a linear interpolation rotation between start and end qnd normalize the resulte. Angulare speed is not safe
+         * 
+         * @tparam TShortestPath : true if the ratio must use the shotedt path. Else more optimized but can go with the largest path to goal 
+         * @tparam TClampedRatio : true if the ratio must be clamped between 0 and 1. Else more optimized but can create erronate rotation if ratio is incorrect
+         * @param startQuat 
+         * @param endQuat 
+         * @param t 
+         */
+        template <bool TShortestPath = true, bool TClampedRatio = true>
+        inline constexpr
+        void nLerp(const Quaternion<TType>& startQuat, const Quaternion<TType>& endQuat, TType t) noexcept;
+
 
         #pragma endregion //!methods
     
@@ -309,7 +323,7 @@ namespace FoxMath::Quaternion
          */
         template <typename TTypeVector, typename TTypeAxis>
         static inline constexpr
-        void RotateVector(Vector::Vector3<TTypeVector>& vec, const Vector::Vector3<TTypeAxis>& unitAxis, Angle::Angle<Angle::EAngleType::Radian, TType> angle) noexcept
+        void rotateVector(Vector::Vector3<TTypeVector>& vec, const Vector::Vector3<TTypeAxis>& unitAxis, Angle::Angle<Angle::EAngleType::Radian, TType> angle) noexcept
         {
             //Rodrigues formula with quaternion is better than quat * vec * quat.getInverse()
             const TType cosAngle = std::cos(static_cast<TType>(angle));
@@ -318,7 +332,7 @@ namespace FoxMath::Quaternion
 
         template <typename TTypeVector, typename TTypeAxis>
         static inline constexpr
-        void RotateVector2(Vector::Vector3<TTypeVector>& vec, const Vector::Vector3<TTypeAxis>& unitAxis, Angle::Angle<Angle::EAngleType::Radian, TType> angle) noexcept
+        void rotateVector2(Vector::Vector3<TTypeVector>& vec, const Vector::Vector3<TTypeAxis>& unitAxis, Angle::Angle<Angle::EAngleType::Radian, TType> angle) noexcept
         {
             Quaternion<TType> quat (unitAxis, angle);
             quat = quat * vec * quat.getInverse();
@@ -357,7 +371,7 @@ namespace FoxMath::Quaternion
          */
         template <typename TTypeVector>
         inline constexpr
-        void GlobalRotateVector(const Quaternion<TType>& q1, const Quaternion<TType>& q2, Vector::Vector3<TTypeVector>& vec) noexcept
+        void globalRotateVector(const Quaternion<TType>& q1, const Quaternion<TType>& q2, Vector::Vector3<TTypeVector>& vec) noexcept
         {
             q1.GlobalRotateVector(q2, vec);
         }
@@ -370,7 +384,7 @@ namespace FoxMath::Quaternion
          */
         template <typename TTypeVector>
         inline constexpr
-        void LocalRotateVector(const Quaternion<TType>& q1, const Quaternion<TType>& q2, Vector::Vector3<TTypeVector>& vec) noexcept
+        void localRotateVector(const Quaternion<TType>& q1, const Quaternion<TType>& q2, Vector::Vector3<TTypeVector>& vec) noexcept
         {
             q1.LocalRotateVector(q2, vec);
         }

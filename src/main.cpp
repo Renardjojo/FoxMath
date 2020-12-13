@@ -34,10 +34,10 @@ int main()
 
 
     Vector3<> v1 (0.f, 1.f, 0.f);
-    Quaternion<>::RotateVector(v1, Vector3<>(1.f, 0.f, 0.f), Angle<EAngleType::Radian, float>(M_PI / 2.f));
+    Quaternion<>::rotateVector(v1, Vector3<>(1.f, 0.f, 0.f), Angle<EAngleType::Radian, float>(M_PI / 2.f));
     std::cout << "Vec : " << v1 << std::endl;
     v1 = Vector3<>(1.f, 0.f, -1.f);
-    Quaternion<>::RotateVector2(v1, Vector3<>(1.f, 0.f, 0.f), Angle<EAngleType::Radian, float>(M_PI / 2.f));
+    Quaternion<>::rotateVector2(v1, Vector3<>(1.f, 0.f, 0.f), Angle<EAngleType::Radian, float>(M_PI / 2.f));
     std::cout << "Vec : " << v1 << std::endl;
 
     std::cout << q1 << std::endl;
@@ -64,8 +64,8 @@ int main()
     std::cout << q1 * vec << std::endl;
     axis.normalize();
 
-    Quaternion<double>::RotateVector(vec, axis, 3_rad);
-    Quaternion<double>::RotateVector2(vec2, axis, 3_rad);
+    Quaternion<double>::rotateVector(vec, axis, 3_rad);
+    Quaternion<double>::rotateVector2(vec2, axis, 3_rad);
     std::cout << vec << std::endl;
     std::cout << vec2 << std::endl;
     std::cout << "-5.34911, 6.51895, 9.48105" << std::endl;
