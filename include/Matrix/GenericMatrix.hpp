@@ -172,7 +172,7 @@ namespace FoxMath::Matrix
 
         #pragma region attribut
 
-        using InternalVector = Vector::GenericVector<vectorLength (), TType>;
+        using InternalVector = Vector::NewGenericVector<vectorLength(), TType, TMatrixConvention>;
 
         std::array<TType, numberOfData ()> m_data;
 
