@@ -5,12 +5,12 @@
 #ifndef _SEGMENT_AABB_H
 #define _SEGMENT_AABB_H
 
-#include "GE/Core/Maths/vec.hpp"
+#include "Vector/Vector.hpp"
 #include "GE/Core/Maths/ShapeRelation/Intersection.hpp"
-#include "GE/Core/Maths/Shape3D/Segment.hpp"
-#include "GE/Core/Maths/Shape3D/AABB.hpp"
+#include "Shape3D/Segment.hpp"
+#include "Shape3D/AABB.hpp"
 
-namespace Engine::Core::Maths::ShapeRelation
+namespace FoxMath
 {
     class SegmentAABB
     {
@@ -43,6 +43,6 @@ namespace Engine::Core::Maths::ShapeRelation
         #pragma endregion //!static methods
     };
 
-} /*namespace Engine::Core::Maths::ShapeRelation*/
+} /*namespace FoxMath*/
 
 #endif //_SEGMENT_AABB_H

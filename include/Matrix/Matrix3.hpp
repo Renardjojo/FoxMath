@@ -34,7 +34,7 @@
 #include "Macro/CrossInheritanceCompatibility.hpp"
 #include "Matrix/EMatrixConvention.hpp" //EMatrixConvention
 
-namespace FoxMath::Matrix
+namespace FoxMath
 {
     template <typename TType = float, EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     class Matrix3 :  public SquareMatrix<3, TType, TMatrixConvention>
@@ -96,11 +96,11 @@ namespace FoxMath::Matrix
          * @return constexpr Matrix4 
          */
         [[nodiscard]] static constexpr inline
-        Matrix3 createLookAtView (const Vector::Vec3<TType> & from, const Vector::Vec3<TType> & to, const Vector::Vec3<TType> & up) noexcept
+        Matrix3 createLookAtView (const Vec3<TType> & from, const Vec3<TType> & to, const Vec3<TType> & up) noexcept
         {
-            const Vector::Vec3<TType> forward   ((to - from).getNormalized());
-            const Vector::Vec3<TType> side      (forward.getCross(up).getNormalized());
-            const Vector::Vec3<TType> vUp        (side.getCross(forward));
+            const Vec3<TType> forward   ((to - from).getNormalized());
+            const Vec3<TType> side      (forward.getCross(up).getNormalized());
+            const Vec3<TType> vUp        (side.getCross(forward));
 
             return {    side.getX(), vUp.getX(), -forward.getX(),
                         side.getY(), vUp.getY(), -forward.getY(),
@@ -192,4 +192,4 @@ namespace FoxMath::Matrix
     template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Mat3b         = Matrix3b<TMatrixConvention>;
 
-} /*namespace FoxMath::Matrix*/
+} /*namespace FoxMath*/

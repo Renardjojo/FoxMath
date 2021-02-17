@@ -29,7 +29,7 @@
 
 #pragma once
 
-namespace FoxMath::Algorythm
+namespace FoxMath
 {
 
 /**
@@ -49,4 +49,4 @@ signed char powSign(size_t numberIt)
     return (numberIt % 2) ? -1 : 1;
 }
 
-} /*namespace FoxMath::Algorythm*/
+} /*namespace FoxMath*/

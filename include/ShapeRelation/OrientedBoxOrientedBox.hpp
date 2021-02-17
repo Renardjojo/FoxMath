@@ -8,7 +8,7 @@
 #include "GE/Core/Maths/ShapeRelation/Intersection.hpp"
 #include "GE/Core/Maths/Shape3D/OrientedBox.hpp"
 
-namespace Engine::Core::Maths::ShapeRelation
+namespace FoxMath
 {
     class OrientedBoxOrientedBox
     {
@@ -38,6 +38,6 @@ namespace Engine::Core::Maths::ShapeRelation
         #pragma endregion //!static methods
     };
 
-} /*namespace Engine::Core::Maths::ShapeRelation*/
+} /*namespace FoxMath*/
 
 #endif //_ORIENTED_BOX_ORIENTED_BOX_H

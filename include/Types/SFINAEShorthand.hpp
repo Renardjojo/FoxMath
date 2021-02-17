@@ -31,7 +31,7 @@
 
 #include <type_traits>
 
-namespace FoxMath::Type
+namespace FoxMath
 {
     /**
      * @brief Sfinae shorthand for std::is_signed_v
@@ -99,7 +99,7 @@ namespace FoxMath::Type
 
     /**
      * @brief Sfinae shorthand for std::is_same
-     * @note usage : `template<IsSame<T1, T2> = true>`. Can be use with Pack : `template<typename... VT, Type::IsSame<Type::Pack<T, VT...>, Type::Pack<T..., VT>> = true>`
+     * @note usage : `template<IsSame<T1, T2> = true>`. Can be use with Pack : `template<typename... VT, IsSame<Pack<T, VT...>, Pack<T..., VT>> = true>`
      * @tparam TType1 to test
      * @tparam TType2 to test
      */
@@ -188,4 +188,4 @@ namespace FoxMath::Type
     template<auto A, auto B>
     using IsGreaterThanOrEqualTo = std::enable_if_t<(A >= B), bool>;
 
-} /*namespace FoxMath::Type*/
+} /*namespace FoxMath*/

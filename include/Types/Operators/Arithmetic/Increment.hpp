@@ -31,7 +31,7 @@
 
 #include "Types/StrongType.hpp"
 
-namespace FoxMath::Type::Operator
+namespace FoxMath::Operator
 {
     /**
      * @brief Increment operator class
@@ -72,4 +72,4 @@ namespace FoxMath::Type::Operator
             return static_cast<Type&>(in_instance)++;
         }
     };
-} /*namespace FoxMath::Type::Operator*/
+} /*namespace FoxMath::Operator*/

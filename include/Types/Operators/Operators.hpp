@@ -34,7 +34,7 @@
 #include "Types/Operators/Arithmetic.hpp"
 #include "Types/Operators/Comparison.hpp"
 
-namespace FoxMath::Type::Operator
+namespace FoxMath::Operator
 {
     /**
      * @brief Module gathering all operators
@@ -50,4 +50,4 @@ namespace FoxMath::Type::Operator
                                     Comparison  <TStrongTypedef>
     {};
 
-} /*namespace FoxMath::Type::Operator*/
+} /*namespace FoxMath::Operator*/

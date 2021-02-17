@@ -30,10 +30,10 @@
 #pragma once
 
 #include "Vector/GenericVector.hpp"
-#include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
+#include "Types/SFINAEShorthand.hpp" //IsArithmetic<TType>, IsSame, Pack
 #include "Macro/CrossInheritanceCompatibility.hpp"
 
-namespace FoxMath::Vector
+namespace FoxMath
 {
     template <typename TType = float>
     class Vector4 : public GenericVector<4, TType>
@@ -128,7 +128,7 @@ namespace FoxMath::Vector
          * @param newX 
          * @return constexpr Vector4& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
         inline constexpr
         Vector4& setX(TscalarType newX) noexcept { Parent::m_data[0] = static_cast<TType>(newX);}
 
@@ -140,7 +140,7 @@ namespace FoxMath::Vector
          * @param newY 
          * @return constexpr Vector4& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
         inline constexpr
         Vector4& setY(TscalarType newY) noexcept { Parent::m_data[1] = static_cast<TType>(newY);}
 
@@ -152,7 +152,7 @@ namespace FoxMath::Vector
          * @param newZ 
          * @return constexpr Vector4& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
         inline constexpr
         Vector4& setZ(TscalarType newZ) noexcept { Parent::m_data[2] = static_cast<TType>(newZ);}
 
@@ -164,7 +164,7 @@ namespace FoxMath::Vector
          * @param newW 
          * @return constexpr Vector4& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
         inline constexpr
         Vector4& setW(TscalarType newW) noexcept { Parent::m_data[3] = static_cast<TType>(newW);}
 
@@ -216,4 +216,4 @@ namespace FoxMath::Vector
     using Vector4b      = Vector4<bool>;
     using Vec4b         = Vector4b;
 
-} /*namespace FoxMath::Vector*/
+} /*namespace FoxMath*/

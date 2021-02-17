@@ -6,14 +6,14 @@
 #ifndef _QUAD_H
 #define _QUAD_H
 
-#include "GE/Core/Maths/vec.hpp"
-#include "GE/Core/Maths/Shape3D/Plane.hpp"
-#include "GE/Core/Maths/Referential.hpp"
-#include "GE/Core/Maths/MathTools.hpp"
+#include "Vector/Vector.hpp"
+#include "Shape3D/Plane.hpp"
+#include "Referential/Referential.hpp"
+#include "Numeric/MathTools.hpp"
 
 #include <limits>
 
-namespace Engine::Core::Maths::Shape3D
+namespace FoxMath
 {
     #define QUAD_OUTCODE_INSIDE   0  // 0000
     #define QUAD_OUTCODE_LEFT     1  // 0001
@@ -128,6 +128,6 @@ namespace Engine::Core::Maths::Shape3D
     
     };
 
-} /*namespace Engine::Core::Maths::Shape3D*/
+} /*namespace FoxMath*/
 
 #endif //_QUAD_H

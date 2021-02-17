@@ -6,10 +6,10 @@
 #define _SEGMENT_ORIENTED_BOX_H
 
 #include "GE/Core/Maths/ShapeRelation/Intersection.hpp"
-#include "GE/Core/Maths/Shape3D/Segment.hpp"
+#include "Shape3D/Segment.hpp"
 #include "GE/Core/Maths/Shape3D/OrientedBox.hpp"
 
-namespace Engine::Core::Maths::ShapeRelation
+namespace FoxMath
 {
     class SegmentOrientedBox
     {
@@ -38,6 +38,6 @@ namespace Engine::Core::Maths::ShapeRelation
         #pragma endregion //!static methods
     };
 
-} /*namespace Engine::Core::Maths::ShapeRelation*/
+} /*namespace FoxMath*/
 
 #endif //_SEGMENT_ORIENTED_BOX_H

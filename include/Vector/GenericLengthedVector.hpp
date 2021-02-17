@@ -33,7 +33,7 @@
 #include "Macro/CrossInheritanceCompatibility.hpp"
 
 
-namespace FoxMath::Vector
+namespace FoxMath
 {
     /**
      * @brief Lengthed vector save vector length. This fact optimize length computation of vector but use more memory to save this variable. Use it if you want to know frequently the vector length with vector that don't move between each length check
@@ -93,7 +93,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return constexpr GenericLengthedVector& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
         inline constexpr  
         GenericLengthedVector& fill (const TscalarType scalar) noexcept
         {
@@ -224,7 +224,7 @@ namespace FoxMath::Vector
          * @param angleRad 
          */
         inline constexpr
-		GenericLengthedVector& rotateAroundAxis (const GenericVector<TLength, TType>& unitAxis, const Angle::Angle<Angle::EAngleType::Radian, TType>& angle) noexcept
+		GenericLengthedVector& rotateAroundAxis (const GenericVector<TLength, TType>& unitAxis, const Angle<EAngleType::Radian, TType>& angle) noexcept
         {
             m_lengthIsDirty = true;
             return GenericVector<TLength, TType>::rotateAroundAxis(unitAxis, angle);
@@ -271,8 +271,8 @@ namespace FoxMath::Vector
         /**
          * @brief Set the Data a index
          * 
-         * A similar member function, GenericVector::setDataAt, has the same behavior as this operator function,
-         * except that GenericVector::setDataAt is bound-checked and signals if the requested position is out of range by throwing an out_of_range exception.
+         * A similar member function, GenericsetDataAt, has the same behavior as this operator function,
+         * except that GenericsetDataAt is bound-checked and signals if the requested position is out of range by throwing an out_of_range exception.
          * 
          * Portable programs should never call this function with an argument index that is out of range,
          * since this causes undefined behavior.
@@ -283,7 +283,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return constexpr GenericLengthedVector& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
 		inline constexpr
 		GenericLengthedVector& setData(size_t index, TscalarType scalar) noexcept
         {
@@ -299,7 +299,7 @@ namespace FoxMath::Vector
          * @brief Set the Data at index
          * 
          * The function automatically checks whether index is within the bounds of valid elements in the GenericVector, throwing an out_of_range exception if it is not (i.e., if n is greater than, or equal to, its size).
-         * This is in contrast with function GenericVector::setData, that does not check against bounds.
+         * This is in contrast with function GenericsetData, that does not check against bounds.
          * 
          * @tparam TscalarType 
          * @tparam true 
@@ -307,7 +307,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return constexpr GenericLengthedVector& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
 		inline constexpr
 		GenericLengthedVector& setDataAt(size_t index, TscalarType scalar) throw ()
         {
@@ -318,7 +318,7 @@ namespace FoxMath::Vector
                 return *this;
             }
 
-            std::__throw_out_of_range_fmt(__N("GenericVector::at: index"
+            std::__throw_out_of_range_fmt(__N("Genericat: index"
                             "(which is %zu) >= TLength "
                             "(which is %zu)"),
                                 index, TLength);
@@ -339,7 +339,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return implicit constexpr& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
 		implicit inline constexpr
 		GenericLengthedVector& operator=(TscalarType scalar) noexcept
         {
@@ -355,7 +355,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return constexpr GenericLengthedVector& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
 		inline constexpr
 		GenericLengthedVector& operator+=(TscalarType scalar) noexcept
         {
@@ -387,7 +387,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return constexpr GenericLengthedVector& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
 		inline constexpr
 		GenericLengthedVector& operator-=(TscalarType scalar) noexcept
         {
@@ -419,7 +419,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return constexpr GenericLengthedVector& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
 		inline constexpr
 		GenericLengthedVector& operator*=(TscalarType scalar) noexcept
         {
@@ -451,7 +451,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return constexpr GenericLengthedVector& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
 		inline constexpr
 		GenericLengthedVector& operator/=(TscalarType scalar) noexcept
         {
@@ -483,7 +483,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return constexpr GenericLengthedVector& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
 		inline constexpr
 		GenericLengthedVector& operator%=(TscalarType scalar) noexcept
         {
@@ -515,7 +515,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return constexpr GenericLengthedVector& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
 		inline constexpr
 		GenericLengthedVector& operator&=(TscalarType scalar) noexcept
         {
@@ -547,7 +547,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return constexpr GenericLengthedVector& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
 		inline constexpr
 		GenericLengthedVector& operator|=(TscalarType scalar) noexcept
         {
@@ -579,7 +579,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return constexpr GenericLengthedVector& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
 		inline constexpr
 		GenericLengthedVector& operator^=(TscalarType scalar) noexcept
         {
@@ -611,7 +611,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return constexpr GenericLengthedVector& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
 		inline constexpr
 		GenericLengthedVector& operator<<=(TscalarType scalar) noexcept
         {
@@ -643,7 +643,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return constexpr GenericLengthedVector& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
 		inline constexpr
 		GenericLengthedVector& operator>>=(TscalarType scalar) noexcept
         {
@@ -725,4 +725,4 @@ namespace FoxMath::Vector
         #pragma endregion //!convertor
     
     };
-} /*namespace FoxMath::Vector*/
+} /*namespace FoxMath*/

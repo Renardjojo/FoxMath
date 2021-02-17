@@ -1,37 +1,6 @@
-/*
- * Project : FoxMath
- * Editing by Six Jonathan
- * Date : 2020-08-05 - 11 h 14
- * 
- * 
- * MIT License
- * 
- * Copyright (c) 2020 Six Jonathan
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-
-#pragma once
-
 template <size_t TLength, typename TType>
-template<typename... T, Type::IsAllSame<TType, T...> = true,
-Type::IsLessThanOrEqualTo<sizeof...(T), TLength> = true>
+template<typename... T, IsAllSame<TType, T...> = true,
+IsLessThanOrEqualTo<sizeof...(T), TLength> = true>
 constexpr inline 
 GenericVector<TLength, TType>::GenericVector (T... args) noexcept
 {
@@ -40,9 +9,9 @@ GenericVector<TLength, TType>::GenericVector (T... args) noexcept
 
 template <size_t TLength, typename TType>
 template<size_t TLengthOther, typename... TScalarArgs, 
-Type::IsAllSame<TType, TScalarArgs...> = true,
-Type::IsLessThanOrEqualTo<sizeof...(TScalarArgs) + TLengthOther, TLength> = true,
-Type::IsLessThan<TLengthOther, TLength> = true>
+IsAllSame<TType, TScalarArgs...> = true,
+IsLessThanOrEqualTo<sizeof...(TScalarArgs) + TLengthOther, TLength> = true,
+IsLessThan<TLengthOther, TLength> = true>
 inline constexpr
 GenericVector<TLength, TType>::GenericVector (const GenericVector<TLengthOther, TType>& other, TScalarArgs... args) noexcept
 {
@@ -84,7 +53,7 @@ GenericVector<TLength, TType>::GenericVector (const GenericVector<TLengthOther, 
 }
 
 template <size_t TLength, typename TType>
-template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+template<typename TscalarType, IsArithmetic<TscalarType> = true>
 inline constexpr 
 GenericVector<TLength, TType>& GenericVector<TLength, TType>::fill(const TscalarType scalar) noexcept
 {
@@ -329,14 +298,14 @@ template <size_t TLength, typename TType>
 inline constexpr
 bool GenericVector<TLength, TType>::isColinearTo	(const GenericVector<TLength, TType>& other) const noexcept
 {
-	return Numeric::isSameAsZero(getCross(other).squareLength()); //hack to avoid sqrt
+	return isSameAsZero(getCross(other).squareLength()); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType>
 inline constexpr
 bool GenericVector<TLength, TType>::isPerpendicularTo	(const GenericVector<TLength, TType>& other) const noexcept
 {
-	return Numeric::isSameAsZero(dot(other)); //hack to avoid sqrt
+	return isSameAsZero(dot(other)); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType>
@@ -355,7 +324,7 @@ TType GenericVector<TLength, TType>::getTriangleArea		(const GenericVector<TLeng
 
 template <size_t TLength, typename TType>
 inline constexpr
-GenericVector<TLength, TType>& GenericVector<TLength, TType>::rotateAroundAxis (const GenericVector<TLength, TType>& unitAxis, const Angle::Angle<Angle::EAngleType::Radian, TType>& angle) noexcept
+GenericVector<TLength, TType>& GenericVector<TLength, TType>::rotateAroundAxis (const GenericVector<TLength, TType>& unitAxis, const Angle<EAngleType::Radian, TType>& angle) noexcept
 {
 	(*this) = getRotationAroundAxis(unitAxis, angle);
     return *this;
@@ -363,7 +332,7 @@ GenericVector<TLength, TType>& GenericVector<TLength, TType>::rotateAroundAxis (
 
 template <size_t TLength, typename TType>
 inline constexpr
-GenericVector<TLength, TType> GenericVector<TLength, TType>::getRotationAroundAxis (const GenericVector<TLength, TType>& unitAxis, const Angle::Angle<Angle::EAngleType::Radian, TType>& angle) const noexcept
+GenericVector<TLength, TType> GenericVector<TLength, TType>::getRotationAroundAxis (const GenericVector<TLength, TType>& unitAxis, const Angle<EAngleType::Radian, TType>& angle) const noexcept
 {
 #ifndef DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR
     assert(unitAxis == static_cast<TType>(1) && "You must use unit generic vector. If you want disable assert for unit generic vector guard, please define DONT_USE_DEBUG_ASSERT_FOR_UNIT_VETOR");
@@ -411,7 +380,7 @@ void outOfRangeThrow()
 }
 
 template <size_t TLength, typename TType>
-template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+template<typename TscalarType, IsArithmetic<TscalarType> = true>
 inline constexpr
 GenericVector<TLength, TType>& GenericVector<TLength, TType>::setDataAt(size_t index, TscalarType scalar) throw ()
 {
@@ -421,7 +390,7 @@ GenericVector<TLength, TType>& GenericVector<TLength, TType>::setDataAt(size_t i
         return *this;
     }
 
-    std::__throw_out_of_range_fmt(__N("GenericVector::at: index"
+    std::__throw_out_of_range_fmt(__N("Genericat: index"
                     "(which is %zu) >= TLength "
                     "(which is %zu)"),
                         index, TLength);
@@ -434,14 +403,14 @@ const TType    GenericVector<TLength, TType>::at (size_t index) const throw ()
     if (index < TLength) [[likely]]
         return m_data[index];
 
-    std::__throw_out_of_range_fmt(__N("GenericVector::at: index "
+    std::__throw_out_of_range_fmt(__N("Genericat: index "
 				        "(which is %zu) >= TLength "
 				       "(which is %zu)"),
 				        index, TLength);
 }
 
 template <size_t TLength, typename TType>
-template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+template<typename TscalarType, IsArithmetic<TscalarType> = true>
 inline constexpr
 GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator=(TscalarType scalar) noexcept
 {
@@ -449,7 +418,7 @@ GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator=(TscalarT
 }
 
 template <size_t TLength, typename TType>
-template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+template<typename TscalarType, IsArithmetic<TscalarType> = true>
 inline constexpr
 GenericVector<TLength, TType>& GenericVector<TLength, TType>::setData(size_t index, TscalarType scalar) noexcept
 {
@@ -468,7 +437,7 @@ const TType    GenericVector<TLength, TType>::operator[]	(size_t index) const no
 }
 
 template <size_t TLength, typename TType>
-template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+template<typename TscalarType, IsArithmetic<TscalarType> = true>
 inline constexpr
 GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator+=(TscalarType scalar) noexcept
 {
@@ -494,7 +463,7 @@ GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator+=(const G
 }
 
 template <size_t TLength, typename TType>
-template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+template<typename TscalarType, IsArithmetic<TscalarType> = true>
 inline constexpr
 GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator-=(TscalarType scalar) noexcept
 {
@@ -520,7 +489,7 @@ GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator-=(const G
 }
 
 template <size_t TLength, typename TType>
-template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+template<typename TscalarType, IsArithmetic<TscalarType> = true>
 inline constexpr
 GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator*=(TscalarType scalar) noexcept
 {
@@ -546,7 +515,7 @@ GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator*=(const G
 }
 
 template <size_t TLength, typename TType>
-template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+template<typename TscalarType, IsArithmetic<TscalarType> = true>
 inline constexpr
 GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator/=(TscalarType scalar) noexcept
 {
@@ -572,7 +541,7 @@ GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator/=(const G
 }
 
 template <size_t TLength, typename TType>
-template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+template<typename TscalarType, IsArithmetic<TscalarType> = true>
 inline constexpr
 GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator%=(TscalarType scalar) noexcept
 {
@@ -598,7 +567,7 @@ GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator%=(const G
 }
 
 template <size_t TLength, typename TType>
-template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+template<typename TscalarType, IsArithmetic<TscalarType> = true>
 inline constexpr
 GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator&=(TscalarType scalar) noexcept
 {
@@ -624,7 +593,7 @@ GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator&=(const G
 }
 
 template <size_t TLength, typename TType>
-template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+template<typename TscalarType, IsArithmetic<TscalarType> = true>
 inline constexpr
 GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator|=(TscalarType scalar) noexcept
 {
@@ -650,7 +619,7 @@ GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator|=(const G
 }
 
 template <size_t TLength, typename TType>
-template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+template<typename TscalarType, IsArithmetic<TscalarType> = true>
 inline constexpr
 GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator^=(TscalarType scalar) noexcept
 {
@@ -676,7 +645,7 @@ GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator^=(const G
 }
 
 template <size_t TLength, typename TType>
-template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+template<typename TscalarType, IsArithmetic<TscalarType> = true>
 inline constexpr
 GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator<<=(TscalarType scalar) noexcept
 {
@@ -702,7 +671,7 @@ GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator<<=(const 
 }
 
 template <size_t TLength, typename TType>
-template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+template<typename TscalarType, IsArithmetic<TscalarType> = true>
 inline constexpr
 GenericVector<TLength, TType>& GenericVector<TLength, TType>::operator>>=(TscalarType scalar) noexcept
 {
@@ -816,14 +785,14 @@ GenericVector<TLength, TType> operator-(GenericVector<TLength, TType> vec) noexc
     return vec *= static_cast<TType>(-1);
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 GenericVector<TLength, TType> operator+(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
     return vec += static_cast<TType>(scalar); 
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 GenericVector<TLength, TType> operator+(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept
 {
@@ -842,14 +811,14 @@ GenericVector<TLength, TType> operator+(GenericVector<TLength, TType> lhs, Gener
     return lhs += rhs;
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 GenericVector<TLength, TType> operator-(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
     return vec -= static_cast<TType>(scalar);
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 GenericVector<TLength, TType> operator-(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept
 {
@@ -868,14 +837,14 @@ GenericVector<TLength, TType> operator-(GenericVector<TLength, TType> lhs, const
     return lhs -= rhs;
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 GenericVector<TLength, TType> operator*(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
     return vec *= static_cast<TType>(scalar);
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 GenericVector<TLength, TType> operator*(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept
 {
@@ -894,14 +863,14 @@ GenericVector<TLength, TType> operator*(GenericVector<TLength, TType> lhs, Gener
     return lhs *= rhs;
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 GenericVector<TLength, TType> operator/(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
     return vec /= static_cast<TType>(scalar);
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 GenericVector<TLength, TType> operator/(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept
 {
@@ -920,14 +889,14 @@ GenericVector<TLength, TType> operator/(GenericVector<TLength, TType> lhs, Gener
     return lhs /= rhs;
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 GenericVector<TLength, TType> operator%(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
     return vec %= static_cast<TType>(scalar);
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 GenericVector<TLength, TType> operator%(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept
 {
@@ -946,14 +915,14 @@ GenericVector<TLength, TType> operator%(GenericVector<TLength, TType> lhs, Gener
     return lhs %= rhs;
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 GenericVector<TLength, TType> operator&(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
     return vec &= static_cast<TType>(scalar);
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 GenericVector<TLength, TType> operator&(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept
 {
@@ -972,14 +941,14 @@ GenericVector<TLength, TType> operator&(GenericVector<TLength, TType> lhs, Gener
     return lhs &= rhs;
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 GenericVector<TLength, TType> operator|(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
     return vec |= static_cast<TType>(scalar);
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 GenericVector<TLength, TType> operator|(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept
 {
@@ -998,14 +967,14 @@ GenericVector<TLength, TType> operator|(GenericVector<TLength, TType> lhs, Gener
     return lhs |= rhs;
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 GenericVector<TLength, TType> operator^(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
     return vec ^= static_cast<TType>(scalar);
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 GenericVector<TLength, TType> operator^(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept
 {
@@ -1025,14 +994,14 @@ GenericVector<TLength, TType> operator^(GenericVector<TLength, TType> lhs, Gener
 }
 
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 GenericVector<TLength, TType> operator<<(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
     return vec << static_cast<TType>(scalar);
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 GenericVector<TLength, TType> operator<<(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept
 {
@@ -1052,14 +1021,14 @@ GenericVector<TLength, TType> operator<<(GenericVector<TLength, TType> lhs, Gene
 }
 
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 GenericVector<TLength, TType> operator>>(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept
 {
     return vec >> static_cast<TType>(scalar);
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 GenericVector<TLength, TType> operator>>(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept
 {
@@ -1133,7 +1102,7 @@ bool operator==(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthO
 {
 #ifdef VECTOR_OPERATOR_EGALE_COMPARE_LENGTH
 
-    return Numeric::isSame<TType>(lhs.squareLength(), static_cast<TType>(rhs.squareLength()));
+    return isSame<TType>(lhs.squareLength(), static_cast<TType>(rhs.squareLength()));
 
 #else
 
@@ -1149,18 +1118,18 @@ bool operator==(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthO
 #endif
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 bool operator==(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
 {
-    return Numeric::isSame<TType>(vec.squareLength(), static_cast<TType>(scalar) * static_cast<TType>(scalar)); //hack to avoid sqrt
+    return isSame<TType>(vec.squareLength(), static_cast<TType>(scalar) * static_cast<TType>(scalar)); //hack to avoid sqrt
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 bool operator==(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept
 {
-    return Numeric::isSame<TType>(static_cast<TType>(scalar) * static_cast<TType>(scalar), vec.squareLength()); //hack to avoid sqrt
+    return isSame<TType>(static_cast<TType>(scalar) * static_cast<TType>(scalar), vec.squareLength()); //hack to avoid sqrt
 }
 
 template <size_t TLength, typename TType, size_t TLengthOther, typename TTypeOther>
@@ -1170,14 +1139,14 @@ bool operator!=(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthO
     return !(lhs == rhs);
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
 bool operator!=(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
 {
     return !(vec == static_cast<TType>(scalar));
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
 bool operator!=(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept
 {
@@ -1191,14 +1160,14 @@ bool operator<(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthOt
     return lhs.squareLength() < static_cast<TType>(rhs.squareLength());
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
 bool operator<(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
 {
     return vec.squareLength() < static_cast<TType>(scalar) * static_cast<TType>(scalar); //hack to avoid sqrt
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
 bool operator<(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept
 {
@@ -1212,14 +1181,14 @@ bool operator>(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthOt
     return lhs.squareLength() > static_cast<TType>(rhs.squareLength());
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
 bool operator>(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
 {
     return vec.squareLength() > static_cast<TType>(scalar) * static_cast<TType>(scalar); //hack to avoid sqrt
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
 bool operator>(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept
 {
@@ -1233,14 +1202,14 @@ bool operator<=(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthO
     return lhs.squareLength() <= static_cast<TType>(rhs.squareLength());
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
 bool operator<=(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
 {
     return vec.squareLength() <= static_cast<TType>(scalar) * static_cast<TType>(scalar); //hack to avoid sqrt
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
 bool operator<=(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept
 {
@@ -1255,14 +1224,14 @@ bool operator>=(GenericVector<TLength, TType> const& lhs, GenericVector<TLengthO
 }
 
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
 bool operator>=(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept
 {
     return vec.squareLength() >= static_cast<TType>(scalar) * static_cast<TType>(scalar); //hack to avoid sqrt
 }
 
-template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 [[nodiscard]] inline constexpr
 bool operator>=(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept
 {

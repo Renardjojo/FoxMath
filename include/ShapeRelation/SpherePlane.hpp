@@ -5,10 +5,10 @@
 #ifndef _SPHERE_PLANE_H
 #define _SPHERE_PLANE_H
 
-#include "GE/Core/Maths/Shape3D/Plane.hpp"
-#include "GE/Core/Maths/Shape3D/Sphere.hpp"
+#include "Shape3D/Plane.hpp"
+#include "Shape3D/Sphere.hpp"
 
-namespace Engine::Core::Maths::ShapeRelation
+namespace FoxMath
 {
     class SpherePlane
     {
@@ -37,6 +37,6 @@ namespace Engine::Core::Maths::ShapeRelation
         #pragma endregion //!static methods
     };
 
-} /*namespace Engine::Core::Maths::ShapeRelation*/
+} /*namespace FoxMath*/
 
 #endif //_SPHERE_PLANE_H

@@ -12,9 +12,9 @@
 
 #include <limits> //std::numeric_limits<T>::espilon()
 
-using namespace FoxMath::Matrix;
-using namespace FoxMath::Vector;
-using namespace FoxMath::Angle;
+using namespace FoxMath;
+using namespace FoxMath;
+using namespace FoxMath;
 
 int main() 
 {
@@ -295,10 +295,10 @@ int main()
     }
 
 
-        //Engine::Core::Maths::Vec3 rotEulerAngle2{rotEulerAngle.getX(), rotEulerAngle.getY(), rotEulerAngle.getZ()};
+        //FoxMath::Vec3 rotEulerAngle2{rotEulerAngle.getX(), rotEulerAngle.getY(), rotEulerAngle.getZ()};
 
-        //std::cout << Engine::Core::Maths::Mat3::createRotationArroundAxisMatrix(rotEulerAngle2.getNormalize(), static_cast<float>(rot)) << std::endl;
-        //std::cout << Engine::Core::Maths::Mat3::createFixedAngleEulerRotationMatrix(rotEulerAngle2) << std::endl;
+        //std::cout << FoxMath::Mat3::createRotationArroundAxisMatrix(rotEulerAngle2.getNormalize(), static_cast<float>(rot)) << std::endl;
+        //std::cout << FoxMath::Mat3::createFixedAngleEulerRotationMatrix(rotEulerAngle2) << std::endl;
 
         return 0;
 

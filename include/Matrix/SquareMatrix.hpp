@@ -30,13 +30,13 @@
 #pragma once
 
 #include "Matrix/GenericMatrix.hpp"
-#include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
+#include "Types/SFINAEShorthand.hpp" //IsArithmetic<TType>, IsSame, Pack
 #include "Types/Implicit.hpp" //implicit
 #include "Angle/Angle.hpp"
 #include "Macro/CrossInheritanceCompatibility.hpp"
 #include "Algorythm/Numeric.hpp" //powSigned
 
-namespace FoxMath::Matrix
+namespace FoxMath
 {
     /*By inherance size cannot be equal to zero and TType must be arythmetic*/
     template <size_t TSize, typename TType = float, EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
@@ -212,7 +212,7 @@ namespace FoxMath::Matrix
          * @return SquareMatrix 
          */
         [[nodiscard]] static inline constexpr
-        SquareMatrix createRotationArroundAxisMatrix (const Vector::GenericVector<TSize, TType>& unitAxis, Angle::Angle<Angle::EAngleType::Radian, TType> angle) noexcept
+        SquareMatrix createRotationArroundAxisMatrix (const GenericVector<TSize, TType>& unitAxis, Angle<EAngleType::Radian, TType> angle) noexcept
         {
             assert(unitAxis == static_cast<TType>(1)); //assert if axis is not unit
 
@@ -230,12 +230,12 @@ namespace FoxMath::Matrix
 
                     if constexpr (TMatrixConvention == EMatrixConvention::ColumnMajor)
                     {
-                        const signed char sign = (i < j) ? -Algorythm::powSign(i + j) : Algorythm::powSign(i + j);
+                        const signed char sign = (i < j) ? -powSign(i + j) : powSign(i + j);
                         rst.getData(i * TSize + j) = t * unitAxis[i] * unitAxis[j] + sign * rotTrigo;
                     }
                     else
                     {
-                        const signed char sign = (i > j) ? -Algorythm::powSign(i + j) : Algorythm::powSign(i + j);
+                        const signed char sign = (i > j) ? -powSign(i + j) : powSign(i + j);
                         rst.getData(i * TSize + j) = t * unitAxis[i] * unitAxis[j] + sign * rotTrigo;
                     }
                 }
@@ -252,7 +252,7 @@ namespace FoxMath::Matrix
          * @return constexpr SquareMatrix 
          */
         [[nodiscard]] static inline constexpr
-        SquareMatrix<TSize + 1, TType, TMatrixConvention> createTranslationMatrix (const Vector::GenericVector<TSize, TType>& vecTranslation) noexcept
+        SquareMatrix<TSize + 1, TType, TMatrixConvention> createTranslationMatrix (const GenericVector<TSize, TType>& vecTranslation) noexcept
         {
             SquareMatrix<TSize + 1, TType, TMatrixConvention> rst;
             rst.generateIdentity();
@@ -274,7 +274,7 @@ namespace FoxMath::Matrix
          * @return constexpr SquareMatrix 
          */
         [[nodiscard]] static inline constexpr
-        SquareMatrix createScaleMatrix (const Vector::GenericVector<TSize, TType>& vecScale) noexcept
+        SquareMatrix createScaleMatrix (const GenericVector<TSize, TType>& vecScale) noexcept
         {
             SquareMatrix rst;
             rst.fill(static_cast<TType>(0));
@@ -301,7 +301,7 @@ namespace FoxMath::Matrix
         /**
          * @brief Converte generic matrix to another generic matrix type
          * @note use static_cast<> to call this function. Is use only if you try to downgrade generic matrix like static_cast<Vec3f>(vec4f). Else use the constructor
-         * @example `FoxMath::Matrix::Matrix<2, 3, float> rhs = static_cast<FoxMath::Matrix::Matrix<8, 2, int, EMatrixConvention::RowMajor>>(lhs)`
+         * @example `FoxMath::Matrix<2, 3, float> rhs = static_cast<FoxMath::Matrix<8, 2, int, EMatrixConvention::RowMajor>>(lhs)`
          * 
          * @tparam TRowSizeOther 
          * @tparam TColumnSizeOther 
@@ -321,4 +321,4 @@ namespace FoxMath::Matrix
 
     #include "Matrix/SquareMatrix.inl"
 
-} /*namespace FoxMath::Matrix*/
+} /*namespace FoxMath*/

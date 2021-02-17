@@ -1,13 +1,13 @@
 ﻿#include "GE/Core/Maths/ShapeRelation/SegmentOrientedBox.hpp"
 
-#include "GE/Core/Maths/vec.hpp"
-#include "GE/Core/Maths/Shape3D/AABB.hpp"
+#include "Vector/Vector.hpp"
+#include "Shape3D/AABB.hpp"
 #include "GE/Core/Maths/ShapeRelation/SegmentAABB.hpp"
-#include "GE/Core/Maths/Referential.hpp"
+#include "Referential/Referential.hpp"
 
-using namespace Engine::Core::Maths;
-using namespace Engine::Core::Maths::Shape3D;
-using namespace Engine::Core::Maths::ShapeRelation;
+using namespace FoxMath;
+using namespace FoxMath;
+using namespace FoxMath;
 
 bool SegmentOrientedBox::isSegmentOrientedBoxCollided(const Segment& seg, const OrientedBox& orientedBox, Intersection& intersection)
 {
@@ -22,12 +22,12 @@ bool SegmentOrientedBox::isSegmentOrientedBoxCollided(const Segment& seg, const 
     {
         intersection.intersection1 = Referential::localToGlobalPosition(orientedBox.getReferential(), intersection.intersection1);
         
-        if (intersection.intersectionType == EIntersectionType::TwoIntersectiont)
+        if (intersection.intersectionType == EIntersectionTwoIntersectiont)
             intersection.intersection2 = Referential::localToGlobalPosition(orientedBox.getReferential(), intersection.intersection2);
 
         intersection.normalI1 = Referential::localToGlobalVector(orientedBox.getReferential(), intersection.normalI1);
 
-        if (intersection.intersectionType == EIntersectionType::TwoIntersectiont)
+        if (intersection.intersectionType == EIntersectionTwoIntersectiont)
         {
             intersection.normalI2 = Referential::localToGlobalVector(orientedBox.getReferential(), intersection.normalI2);
         }
@@ -35,5 +35,5 @@ bool SegmentOrientedBox::isSegmentOrientedBoxCollided(const Segment& seg, const 
         return true;
     }
 
-    return intersection.intersectionType != EIntersectionType::NoIntersection;
+    return intersection.intersectionType != EIntersectionNoIntersection;
 }

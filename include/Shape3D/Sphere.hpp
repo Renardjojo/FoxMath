@@ -5,10 +5,10 @@
 #ifndef _SPHERE_H
 #define _SPHERE_H
 
-#include "GE/Core/Maths/Shape3D/Volume.hpp"
-#include "GE/Core/Maths/vec.hpp"
+#include "Shape3D/Volume.hpp"
+#include "Vector/Vector.hpp"
 
-namespace Engine::Core::Maths::Shape3D
+namespace FoxMath
 {
     class Sphere : public Volume
     {
@@ -56,7 +56,7 @@ namespace Engine::Core::Maths::Shape3D
     
         private:
     };
-} /*namespace Engine::Core::Maths::Shape3D*/
+} /*namespace FoxMath*/
 
 #endif //_SPHERE_H
 

@@ -36,7 +36,7 @@
 #include "Types/Operators/Bitwise/LeftShift.hpp"
 #include "Types/Operators/Bitwise/RightShift.hpp"
 
-namespace FoxMath::Type::Operator
+namespace FoxMath::Operator
 {
 
     /**
@@ -55,4 +55,4 @@ namespace FoxMath::Type::Operator
                     RightShift  <TStrongTypedef>
     {};
 
-} /*namespace FoxMath::Type::Operator*/
+} /*namespace FoxMath::Operator*/

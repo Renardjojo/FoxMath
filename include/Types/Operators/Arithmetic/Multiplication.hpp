@@ -31,7 +31,7 @@
 
 #include "Types/StrongType.hpp"
 
-namespace FoxMath::Type::Operator
+namespace FoxMath::Operator
 {
     /**
      * @brief Multiplication operator class
@@ -81,4 +81,4 @@ namespace FoxMath::Type::Operator
                                 static_cast<Type const&>(in_rhs));
         }
     };
-} /*namespace FoxMath::Type::Operator*/
+} /*namespace FoxMath::Operator*/

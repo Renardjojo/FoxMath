@@ -1,12 +1,12 @@
 ﻿#include "GE/Core/Maths/ShapeRelation/OrientedBoxOrientedBox.hpp"
 #include "GE/Core/Maths/ShapeRelation/AabbAabb.hpp"
-#include "GE/Core/Maths/vec.hpp"
+#include "Vector/Vector.hpp"
 
 #include <limits>
 
-using namespace Engine::Core::Maths;
-using namespace Engine::Core::Maths::Shape3D;
-using namespace Engine::Core::Maths::ShapeRelation;
+using namespace FoxMath;
+using namespace FoxMath;
+using namespace FoxMath;
 
 static void affectMinMaxValue(float& min, float& max, float value)
 {

@@ -163,7 +163,7 @@ TType		SquareMatrix<TSize, TType, TMatrixConvention>::getDeterminant		() const n
         for (size_t i = 0; i < TSize; i++)
         {
             //found signe
-            signed char signe = Algorythm::powSign(0 + i);
+            signed char signe = powSign(0 + i);
 
             //found coef
             TType coef = signe * Parent::m_data[i * TSize];
@@ -210,7 +210,7 @@ SquareMatrix<TSize, TType, TMatrixConvention>		SquareMatrix<TSize, TType, TMatri
 
 	const TType determinant = getDeterminant();
 	
-	if (Numeric::isSameAsZero<TType>(determinant)) //in two step for more perform
+	if (isSameAsZero<TType>(determinant)) //in two step for more perform
 		return SquareMatrix<TSize, TType, TMatrixConvention>::zero();
 
 	SquareMatrix<TSize, TType, TMatrixConvention> reversedMatrix = getCoMatrix();
@@ -236,7 +236,7 @@ SquareMatrix<TSize, TType, TMatrixConvention>&		SquareMatrix<TSize, TType, TMatr
 
 	const TType determinant = getDeterminant();
 	
-	if (Numeric::isSameAsZero<TType>(determinant)) //in two step for more perform
+	if (isSameAsZero<TType>(determinant)) //in two step for more perform
     {
         Parent::fill(static_cast<TType>(0));
 		return *this;

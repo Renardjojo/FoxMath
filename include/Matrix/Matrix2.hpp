@@ -32,7 +32,7 @@
 #include "Matrix/SquareMatrix.hpp"
 #include "Macro/CrossInheritanceCompatibility.hpp"
 
-namespace FoxMath::Matrix
+namespace FoxMath
 {
     template <typename TType = float, EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     class Matrix2 :  public SquareMatrix<2, TType, TMatrixConvention>
@@ -164,4 +164,4 @@ namespace FoxMath::Matrix
     template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Mat2b         = Matrix2b<TMatrixConvention>;
 
-} /*namespace FoxMath::Matrix*/
+} /*namespace FoxMath*/

@@ -1,16 +1,16 @@
 ﻿#include "GE/Core/Maths/ShapeRelation/SegmentCylinder.hpp"
 
-#include "GE/Core/Maths/Shape3D/InfiniteCylinder.hpp"
-#include "GE/Core/Maths/vec.hpp"
-#include "GE/Core/Maths/Shape3D/Plane.hpp"
+#include "Shape3D/InfiniteCylinder.hpp"
+#include "Vector/Vector.hpp"
+#include "Shape3D/Plane.hpp"
 #include "GE/Core/Maths/ShapeRelation/SegmentInfiniteCylinder.hpp"
 #include "GE/Core/Maths/ShapeRelation/SegmentPlane.hpp"
 
 #include <limits>
 
-using namespace Engine::Core::Maths;
-using namespace Engine::Core::Maths::Shape3D;
-using namespace Engine::Core::Maths::ShapeRelation;
+using namespace FoxMath;
+using namespace FoxMath;
+using namespace FoxMath;
 
 bool SegmentCylinder::isSegmentCylinderCollided(const Segment& seg, const Cylinder& cylinder, Intersection& intersection)
 {
@@ -45,7 +45,7 @@ bool SegmentCylinder::isSegmentCylinderCollided(const Segment& seg, const Cylind
     }
 
     /*There is one intersection with the infinite cylinder*/
-    if (intersection.intersectionType == EIntersectionType::OneIntersectiont)
+    if (intersection.intersectionType == EIntersectionOneIntersectiont)
     {
         /*Check if the intersection point is inside the cylinder*/
         if (leftCylindreFace.getSignedDistanceToPlane(intersection.intersection1) > std::numeric_limits<float>::epsilon())
@@ -66,7 +66,7 @@ bool SegmentCylinder::isSegmentCylinderCollided(const Segment& seg, const Cylind
                         {
                             intersection.intersection2 = segQuadIntersection.intersection1;
                             intersection.normalI2 = pt1InFrontOfLeftFace ? -segQuadIntersection.normalI1 : segQuadIntersection.normalI1;
-                            intersection.intersectionType = EIntersectionType::TwoIntersectiont;
+                            intersection.intersectionType = EIntersectionTwoIntersectiont;
                         }
                     }
                     intersection.sortIntersection(seg.getPt1());
@@ -95,7 +95,7 @@ bool SegmentCylinder::isSegmentCylinderCollided(const Segment& seg, const Cylind
                         {
                             intersection.intersection2 = segQuadIntersection.intersection1;
                             intersection.normalI2 = pt1InFrontOfRightFace ? -segQuadIntersection.normalI1 : segQuadIntersection.normalI1;
-                            intersection.intersectionType = EIntersectionType::TwoIntersectiont;
+                            intersection.intersectionType = EIntersectionTwoIntersectiont;
                         }
                     }
                     intersection.sortIntersection(seg.getPt1());
@@ -114,7 +114,7 @@ bool SegmentCylinder::isSegmentCylinderCollided(const Segment& seg, const Cylind
                 {
                     intersection.intersection2 = segQuadIntersection.intersection1;
                     intersection.normalI2 = pt1InFrontOfLeftFace ? segQuadIntersection.normalI1 : -segQuadIntersection.normalI1;
-                    intersection.intersectionType = EIntersectionType::TwoIntersectiont;
+                    intersection.intersectionType = EIntersectionTwoIntersectiont;
                     
                     intersection.sortIntersection(seg.getPt1());
                     return true;
@@ -127,7 +127,7 @@ bool SegmentCylinder::isSegmentCylinderCollided(const Segment& seg, const Cylind
                 {
                     intersection.intersection2 = segQuadIntersection.intersection1;
                     intersection.normalI2 = pt1InFrontOfRightFace ? segQuadIntersection.normalI1 : -segQuadIntersection.normalI1;
-                    intersection.intersectionType = EIntersectionType::TwoIntersectiont;
+                    intersection.intersectionType = EIntersectionTwoIntersectiont;
                     
                     intersection.sortIntersection(seg.getPt1());
                     return true;
@@ -139,7 +139,7 @@ bool SegmentCylinder::isSegmentCylinderCollided(const Segment& seg, const Cylind
     }
 
     /*There is two intersection with the infinite cylinder*/
-    if (intersection.intersectionType == EIntersectionType::TwoIntersectiont)
+    if (intersection.intersectionType == EIntersectionTwoIntersectiont)
     {
         bool keepInter1 = false;
         bool keepInter2 = false;
@@ -218,7 +218,7 @@ bool SegmentCylinder::isSegmentCylinderCollided(const Segment& seg, const Cylind
             }
             else
             {
-                intersection.intersectionType = EIntersectionType::OneIntersectiont;
+                intersection.intersectionType = EIntersectionOneIntersectiont;
                 return true;
             }
         }
@@ -246,7 +246,7 @@ bool SegmentCylinder::isSegmentCylinderCollided(const Segment& seg, const Cylind
         intersection.intersection2 = segQuadIntersection.intersection1;
         intersection.normalI2 = pt1InFrontOfLeftFace ? -segQuadIntersection.normalI1 : segQuadIntersection.normalI1;
 
-        intersection.intersectionType = EIntersectionType::TwoIntersectiont;
+        intersection.intersectionType = EIntersectionTwoIntersectiont;
         return true;
     }
     else if (pt1InFrontOfRightFace && pt2InFrontOfLeftFace)
@@ -260,7 +260,7 @@ bool SegmentCylinder::isSegmentCylinderCollided(const Segment& seg, const Cylind
         intersection.intersection2 = segQuadIntersection.intersection1;
         intersection.normalI2 = pt1InFrontOfRightFace ? -segQuadIntersection.normalI1 : segQuadIntersection.normalI1;
 
-        intersection.intersectionType = EIntersectionType::TwoIntersectiont;
+        intersection.intersectionType = EIntersectionTwoIntersectiont;
         return true;
     }
     else //pt1 or pt2 is inside

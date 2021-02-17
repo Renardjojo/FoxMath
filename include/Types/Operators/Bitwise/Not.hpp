@@ -31,7 +31,7 @@
 
 #include "Types/StrongType.hpp"
 
-namespace FoxMath::Type::Operator
+namespace FoxMath::Operator
 {
     /**
      * @brief Bitwise NOT operator class
@@ -62,4 +62,4 @@ namespace FoxMath::Type::Operator
         }
     };
 
-} /*namespace FoxMath::Type::Operator*/
+} /*namespace FoxMath::Operator*/

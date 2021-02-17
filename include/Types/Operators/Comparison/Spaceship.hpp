@@ -31,7 +31,7 @@
 
 #include "Types/StrongType.hpp"
 
-namespace FoxMath::Type::Operator
+namespace FoxMath::Operator
 {
     /**
      * @brief Spaceship than or equal class
@@ -65,4 +65,4 @@ namespace FoxMath::Type::Operator
 #endif
     };
 
-} /*namespace FoxMath::Type::Operator*/
+} /*namespace FoxMath::Operator*/

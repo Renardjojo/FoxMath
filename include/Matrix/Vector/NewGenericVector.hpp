@@ -33,21 +33,21 @@
 #include "Matrix/GenericMatrix.hpp" //GenericMatrix
 #include "Macro/CrossInheritanceCompatibility.hpp" //DECLARE_CROSS_INHERITANCE_COMPATIBILTY
 
-namespace FoxMath::Vector
+namespace FoxMath
 {
     /*Define default template arg*/
-    template <size_t TSize, typename TType = float, Matrix::EMatrixConvention TMatrixConvention = Matrix::EMatrixConvention::RowMajor>
+    template <size_t TSize, typename TType = float, EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     class NewGenericVector;
 
-    template <size_t TSize, typename TType, Matrix::EMatrixConvention TMatrixConvention>
-    class NewGenericVector : public Matrix::GenericMatrix<((TMatrixConvention == Matrix::EMatrixConvention::ColumnMajor) ? TSize : 1), 
-                                                          ((TMatrixConvention == Matrix::EMatrixConvention::ColumnMajor) ? 1 : TSize),
+    template <size_t TSize, typename TType, EMatrixConvention TMatrixConvention>
+    class NewGenericVector : public GenericMatrix<((TMatrixConvention == EMatrixConvention::ColumnMajor) ? TSize : 1), 
+                                                          ((TMatrixConvention == EMatrixConvention::ColumnMajor) ? 1 : TSize),
                                                           TType, TMatrixConvention>
     {
         private:
     
-        using Parent = Matrix::GenericMatrix<(  (TMatrixConvention == Matrix::EMatrixConvention::ColumnMajor) ? TSize : 1), 
-                                                ((TMatrixConvention == Matrix::EMatrixConvention::ColumnMajor) ? 1 : TSize), 
+        using Parent = GenericMatrix<(  (TMatrixConvention == EMatrixConvention::ColumnMajor) ? TSize : 1), 
+                                                ((TMatrixConvention == EMatrixConvention::ColumnMajor) ? 1 : TSize), 
                                                 TType, TMatrixConvention>;
 
         protected:
@@ -103,4 +103,4 @@ namespace FoxMath::Vector
         #pragma endregion //!convertor
     
     };
-} /*namespace FoxMath::Vector*/
+} /*namespace FoxMath*/

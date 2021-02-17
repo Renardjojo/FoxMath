@@ -5,13 +5,13 @@
 #ifndef _SEGMENT_H
 #define _SEGMENT_H
 
-#include "GE/Core/Maths/vec.hpp"
-#include "GE/Core/Maths/Shape3D/Plane.hpp"
-#include "GE/Core/Maths/Shape3D/Line.hpp"
+#include "Vector/Vector.hpp"
+#include "Shape3D/Plane.hpp"
+#include "Shape3D/Line.hpp"
 
 #include <limits>
 
-namespace Engine::Core::Maths::Shape3D
+namespace FoxMath
 {
     class Segment
     {
@@ -116,6 +116,6 @@ namespace Engine::Core::Maths::Shape3D
         private:
 
     };
-} /*namespace Engine::Core::Maths::Shape3D*/
+} /*namespace FoxMath*/
 
 #endif //_SEGMENT_H

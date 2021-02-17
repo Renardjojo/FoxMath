@@ -31,7 +31,7 @@
 
 #include "Types/StrongType.hpp"
 
-namespace FoxMath::Type::Operator
+namespace FoxMath::Operator
 {
     /**
      * @brief Decrement operator class
@@ -77,4 +77,4 @@ namespace FoxMath::Type::Operator
         }
     };
 
-} /*namespace FoxMath::Type::Operator*/
+} /*namespace FoxMath::Operator*/

@@ -29,7 +29,7 @@
 
 #pragma once
 
-namespace FoxMath::Matrix
+namespace FoxMath
 {
     enum class EMatrixConvention
     {
@@ -53,4 +53,4 @@ namespace FoxMath::Matrix
         }
     }
 
-} /*namespace FoxMath::Matrix*/
+} /*namespace FoxMath*/

@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>
+#include "Types/SFINAEShorthand.hpp" //IsArithmetic<TType>
 #include "Types/StrongType.hpp"
 #include "Types/Operators/Bitwise.hpp"
 #include "Types/Operators/Arithmetic.hpp"
@@ -37,27 +37,27 @@
 #include "Angle/EAngleType.hpp"
 #include "Types/Implicit.hpp"
 
-namespace FoxMath::Angle
+namespace FoxMath
 {
     template <EAngleType TAngleType>
     struct AnglePhantom {};
 
     /*Use of IsArithmetic*/
-    template <EAngleType TAngleType, typename TType, Type::IsArithmetic<TType> = true>
+    template <EAngleType TAngleType, typename TType, IsArithmetic<TType> = true>
     class Angle;
 
     template <EAngleType TAngleType, typename TType>
     class Angle<TAngleType, TType>
-    :   public Type::StrongType <TType, AnglePhantom<TAngleType>>,
-        public Type::Operator::Arithmetic       <Angle<TAngleType, TType>>,
-        public Type::Operator::Comparison       <Angle<TAngleType, TType>>,
-        public Type::Operator::Bitwise          <Angle<TAngleType, TType>>
+    :   public StrongType <TType, AnglePhantom<TAngleType>>,
+        public Operator::Arithmetic       <Angle<TAngleType, TType>>,
+        public Operator::Comparison       <Angle<TAngleType, TType>>,
+        public Operator::Bitwise          <Angle<TAngleType, TType>>
     {
         private:
     
         protected:
 
-        using Base = Type::StrongType <TType, AnglePhantom<TAngleType>>;
+        using Base = StrongType <TType, AnglePhantom<TAngleType>>;
     
         #pragma region attribut
 
@@ -106,7 +106,7 @@ namespace FoxMath::Angle
 
         Angle& operator=(Angle && other) noexcept       = default;
 
-        template<typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+        template<typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
         explicit inline constexpr
         Angle (TTypeScalar angle) noexcept;
     
@@ -148,7 +148,7 @@ namespace FoxMath::Angle
     
         #pragma region mutator
 
-        template<typename TTypeScalar, Type::IsArithmetic<TType> = true>
+        template<typename TTypeScalar, IsArithmetic<TType> = true>
         inline constexpr
         Angle<EAngleType::Degree, TType>& setAngle(TTypeScalar newAngle) noexcept;
 
@@ -240,4 +240,4 @@ namespace FoxMath::Angle
 
     #pragma endregion //!stream operators
 
-} /*namespace FoxMath::Angle*/
+} /*namespace FoxMath*/

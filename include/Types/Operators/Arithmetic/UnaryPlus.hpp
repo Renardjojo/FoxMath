@@ -31,7 +31,7 @@
 
 #include "Types/StrongType.hpp"
 
-namespace FoxMath::Type::Operator
+namespace FoxMath::Operator
 {
     /**
      * @brief UnaryPlus operator class
@@ -61,4 +61,4 @@ namespace FoxMath::Type::Operator
             return TStrongTypedef(+static_cast<Type const&>(in_instance));
         }
     };
-} /*namespace FoxMath::Type::Operator*/
+} /*namespace FoxMath::Operator*/

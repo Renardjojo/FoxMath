@@ -32,16 +32,16 @@
 #include <array>
 #include <limits>
 #include <algorithm> //std::clamp
-#include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>
-#include "Vector/Vector3.hpp" //Vector::Vector3<TType>
-#include "Matrix/Matrix3.hpp" //Matrix::Matrix3
-#include "Numeric/Limits.hpp" //Vector::Vector3<TType>
-#include "Angle/Angle.hpp" //Angle<Angle::EAngleType::Radian, TType>
+#include "Types/SFINAEShorthand.hpp" //IsArithmetic<TType>
+#include "Vector/Vector3.hpp" //Vector3<TType>
+#include "Matrix/Matrix3.hpp" //Matrix3
+#include "Numeric/Limits.hpp" //Vector3<TType>
+#include "Angle/Angle.hpp" //Angle<EAngleType::Radian, TType>
 
-namespace FoxMath::Quaternion
+namespace FoxMath
 {
     /*Use of IsArithmetic*/
-    template <typename TType = float, Type::IsArithmetic<TType> = true>
+    template <typename TType = float, IsArithmetic<TType> = true>
     class Quaternion;
 
     template <typename TType>
@@ -63,7 +63,7 @@ namespace FoxMath::Quaternion
                 TType m_w;
             };
 
-            Vector::Vector3<TType>  m_xyz;
+            Vector3<TType>  m_xyz;
             std::array<TType, 4>    m_data {};
         };
         
@@ -97,7 +97,7 @@ namespace FoxMath::Quaternion
          * 
          */
         explicit inline constexpr
-        Quaternion (Vector::Vector3<TType> axis, Angle::Angle<Angle::EAngleType::Radian, TType> angle = Angle::Angle<Angle::EAngleType::Radian, TType>(0)) noexcept;
+        Quaternion (Vector3<TType> axis, Angle<EAngleType::Radian, TType> angle = Angle<EAngleType::Radian, TType>(0)) noexcept;
     
         /**
          * @brief Create quaternion based on it's paramter
@@ -188,34 +188,34 @@ namespace FoxMath::Quaternion
         /**
          * @brief Compute the angle of the quaternion
          * 
-         * @return constexpr Angle::Angle<Angle::EAngleType::Radian, TType> 
+         * @return constexpr Angle<EAngleType::Radian, TType> 
          */
         [[nodiscard]] inline constexpr
-        Angle::Angle<Angle::EAngleType::Radian, TType> getAngle() const noexcept;
+        Angle<EAngleType::Radian, TType> getAngle() const noexcept;
 
         /**
          * @brief Compute the axis of the quaternion
          * 
-         * @return constexpr Vector::Vector3<TType> 
+         * @return constexpr Vector3<TType> 
          */
         [[nodiscard]] inline constexpr
-        Vector::Vector3<TType> getAxis() const noexcept;
+        Vector3<TType> getAxis() const noexcept;
 
         /**
          * @brief Get the Rotation Matrix of the quaternion
          * 
          * @tparam TMatrixConvention 
-         * @return constexpr Matrix::Matrix3<TType, TMatrixConvention> 
+         * @return constexpr Matrix3<TType, TMatrixConvention> 
          */
-        template <Matrix::EMatrixConvention TMatrixConvention = Matrix::EMatrixConvention::RowMajor>
+        template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
         [[nodiscard]] inline constexpr
-        Matrix::Matrix3<TType, TMatrixConvention> getRotationMatrix() const noexcept;
+        Matrix3<TType, TMatrixConvention> getRotationMatrix() const noexcept;
 
         /**
          * @brief Perform dot product between 2 quaternions
          * 
          * @param other 
-         * @return constexpr Vector::Vector3<TType> 
+         * @return constexpr Vector3<TType> 
          */
         [[nodiscard]] inline constexpr
         TType dot(const Quaternion<TType>& other) const noexcept;
@@ -228,7 +228,7 @@ namespace FoxMath::Quaternion
          */
         template <typename TTypeVector>
         inline constexpr
-        void rotateVector(Vector::Vector3<TTypeVector>& vec) const noexcept;
+        void rotateVector(Vector3<TTypeVector>& vec) const noexcept;
 
         /**
          * @brief Perform the rotation of the vector with the formula : (q1 * q2) * v * (q1 * q2)^-1.
@@ -238,7 +238,7 @@ namespace FoxMath::Quaternion
          */
         template <typename TTypeVector>
         inline constexpr
-        void globalRotateVector(const Quaternion<TType>& otherQuat, Vector::Vector3<TTypeVector>& vec) const noexcept;
+        void globalRotateVector(const Quaternion<TType>& otherQuat, Vector3<TTypeVector>& vec) const noexcept;
 
         /**
          * @brief Perform the rotation of the vector with the formula : (q2 * q1) * v * (q2 * q1)^-1.
@@ -248,7 +248,7 @@ namespace FoxMath::Quaternion
          */
         template <typename TTypeVector>
         inline constexpr
-        void localRotateVector(const Quaternion<TType>& otherQuat, Vector::Vector3<TTypeVector>& vec) const noexcept;
+        void localRotateVector(const Quaternion<TType>& otherQuat, Vector3<TTypeVector>& vec) const noexcept;
 
         /**
          * @brief Get the Global Smallest Diffence With Other quaternion. Use formula : q2 * q1^-1
@@ -323,7 +323,7 @@ namespace FoxMath::Quaternion
          */
         template <typename TTypeVector, typename TTypeAxis>
         static inline constexpr
-        void rotateVector(Vector::Vector3<TTypeVector>& vec, const Vector::Vector3<TTypeAxis>& unitAxis, Angle::Angle<Angle::EAngleType::Radian, TType> angle) noexcept
+        void rotateVector(Vector3<TTypeVector>& vec, const Vector3<TTypeAxis>& unitAxis, Angle<EAngleType::Radian, TType> angle) noexcept
         {
             //Rodrigues formula with quaternion is better than quat * vec * quat.getInverse()
             const TType cosAngle = std::cos(static_cast<TType>(angle));
@@ -332,7 +332,7 @@ namespace FoxMath::Quaternion
 
         template <typename TTypeVector, typename TTypeAxis>
         static inline constexpr
-        void rotateVector2(Vector::Vector3<TTypeVector>& vec, const Vector::Vector3<TTypeAxis>& unitAxis, Angle::Angle<Angle::EAngleType::Radian, TType> angle) noexcept
+        void rotateVector2(Vector3<TTypeVector>& vec, const Vector3<TTypeAxis>& unitAxis, Angle<EAngleType::Radian, TType> angle) noexcept
         {
             Quaternion<TType> quat (unitAxis, angle);
             quat = quat * vec * quat.getInverse();
@@ -371,7 +371,7 @@ namespace FoxMath::Quaternion
          */
         template <typename TTypeVector>
         inline constexpr
-        void globalRotateVector(const Quaternion<TType>& q1, const Quaternion<TType>& q2, Vector::Vector3<TTypeVector>& vec) noexcept
+        void globalRotateVector(const Quaternion<TType>& q1, const Quaternion<TType>& q2, Vector3<TTypeVector>& vec) noexcept
         {
             q1.GlobalRotateVector(q2, vec);
         }
@@ -384,7 +384,7 @@ namespace FoxMath::Quaternion
          */
         template <typename TTypeVector>
         inline constexpr
-        void localRotateVector(const Quaternion<TType>& q1, const Quaternion<TType>& q2, Vector::Vector3<TTypeVector>& vec) noexcept
+        void localRotateVector(const Quaternion<TType>& q1, const Quaternion<TType>& q2, Vector3<TTypeVector>& vec) noexcept
         {
             q1.LocalRotateVector(q2, vec);
         }
@@ -406,7 +406,7 @@ namespace FoxMath::Quaternion
         TType getW() const noexcept { return m_w; }
 
         [[nodiscard]] inline constexpr
-        Vector::Vector3<TType> getXYZ() const noexcept { return m_xyz; }
+        Vector3<TType> getXYZ() const noexcept { return m_xyz; }
 
         #pragma endregion //!accessor
     
@@ -457,7 +457,7 @@ namespace FoxMath::Quaternion
          * @param scalar 
          * @return constexpr Quaternion& 
          */
-        template <typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+        template <typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 		inline constexpr
 		Quaternion& operator*=(TTypeScalar scalar) noexcept;
 
@@ -468,9 +468,9 @@ namespace FoxMath::Quaternion
          * @param vec 
          * @return constexpr Quaternion& 
          */
-        template <typename TTypeVector, Type::IsArithmetic<TTypeVector> = true>
+        template <typename TTypeVector, IsArithmetic<TTypeVector> = true>
 		inline constexpr
-		Quaternion& operator*=(Vector::Vector3<TTypeVector> vec) noexcept;
+		Quaternion& operator*=(Vector3<TTypeVector> vec) noexcept;
 
         /**
          * @brief division with a scalar number
@@ -479,7 +479,7 @@ namespace FoxMath::Quaternion
          * @param scalar 
          * @return constexpr Quaternion& 
          */
-        template <typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+        template <typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 		inline constexpr
 		Quaternion& operator/=(TTypeScalar scalar) noexcept;
 
@@ -568,7 +568,7 @@ namespace FoxMath::Quaternion
      * @param scalar 
      * @return constexpr Quaternion<TType> 
      */
-	template <typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
     Quaternion<TType> operator*(Quaternion<TType> quat, TTypeScalar scalar) noexcept;
 
@@ -581,9 +581,9 @@ namespace FoxMath::Quaternion
      * @param vec 
      * @return constexpr Quaternion<TType> 
      */
-	template <typename TType, typename TTypeVector, Type::IsArithmetic<TTypeVector> = true>
+	template <typename TType, typename TTypeVector, IsArithmetic<TTypeVector> = true>
 	[[nodiscard]] inline constexpr
-    Quaternion<TType> operator*(Quaternion<TType> quat, const Vector::Vector3<TTypeVector>& vec) noexcept;
+    Quaternion<TType> operator*(Quaternion<TType> quat, const Vector3<TTypeVector>& vec) noexcept;
 
     /**
      * @brief division of quaternion with a scale
@@ -594,7 +594,7 @@ namespace FoxMath::Quaternion
      * @param scalar 
      * @return constexpr Quaternion<TType> 
      */
-	template <typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
     Quaternion<TType> operator/(Quaternion<TType> quat, TTypeScalar scalar) noexcept;
 
@@ -607,7 +607,7 @@ namespace FoxMath::Quaternion
      * @param quat 
      * @return constexpr Quaternion<TType> 
      */
-	template <typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
     Quaternion<TType> operator*(TTypeScalar scalar, Quaternion<TType> quat) noexcept;
 
@@ -632,4 +632,4 @@ namespace FoxMath::Quaternion
 
     #include "Quaternion.inl"
 
-} /*namespace FoxMath::Quaternion*/
+} /*namespace FoxMath*/

@@ -5,13 +5,13 @@
 #ifndef _CYLINDER_H
 #define _CYLINDER_H
 
-#include "GE/Core/Maths/Shape3D/Volume.hpp"
-#include "GE/Core/Maths/vec.hpp"
-#include "GE/Core/Maths/Shape3D/Segment.hpp"
-#include "GE/Core/Maths/Shape3D/Plane.hpp"
-#include "GE/Core/Maths/Shape3D/InfiniteCylinder.hpp"
+#include "Shape3D/Volume.hpp"
+#include "Vector/Vector.hpp"
+#include "Shape3D/Segment.hpp"
+#include "Shape3D/Plane.hpp"
+#include "Shape3D/InfiniteCylinder.hpp"
 
-namespace Engine::Core::Maths::Shape3D
+namespace FoxMath
 {
     class Cylinder : public Volume
     {
@@ -98,6 +98,6 @@ namespace Engine::Core::Maths::Shape3D
     
     };
 
-} /*namespace Engine::Core::Maths::Shape3D*/
+} /*namespace FoxMath*/
 
 #endif //_CYLINDER_H

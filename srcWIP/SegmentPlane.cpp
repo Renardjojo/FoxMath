@@ -1,11 +1,11 @@
 ﻿#include "GE/Core/Maths/ShapeRelation/SegmentPlane.hpp"
 
-#include "GE/Core/Maths/vec.hpp"
+#include "Vector/Vector.hpp"
 #include <limits>
 
-using namespace Engine::Core::Maths;
-using namespace Engine::Core::Maths::Shape3D;
-using namespace Engine::Core::Maths::ShapeRelation;
+using namespace FoxMath;
+using namespace FoxMath;
+using namespace FoxMath;
 
 bool SegmentPlane::isSegmentPlaneCollided(const Segment& seg, const Plane& plane, Intersection& intersection)
 {

@@ -5,10 +5,10 @@
 #ifndef _VOLUME_H
 #define _VOLUME_H
 
-#include "GE/Core/Maths/vec.hpp"
-#include "GE/Core/Maths/MathTools.hpp"
+#include "Vector/Vector.hpp"
+#include "Numeric/MathTools.hpp"
 
-namespace Engine::Core::Maths::Shape3D
+namespace FoxMath
 {
     class Volume
     {
@@ -29,6 +29,6 @@ namespace Engine::Core::Maths::Shape3D
 
     };
 
-} /*namespace Engine::Core::Maths:Shape3D*/
+} /*namespace FoxMath:Shape3D*/
 
 #endif //_VOLUME_H

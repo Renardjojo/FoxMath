@@ -5,11 +5,11 @@
 #ifndef _INFINITE_CYLINDER_H
 #define _INFINITE_CYLINDER_H
 
-#include "GE/Core/Maths/Shape3D/Volume.hpp"
-#include "GE/Core/Maths/vec.hpp"
-#include "GE/Core/Maths/Shape3D/Line.hpp"
+#include "Shape3D/Volume.hpp"
+#include "Vector/Vector.hpp"
+#include "Shape3D/Line.hpp"
 
-namespace Engine::Core::Maths::Shape3D
+namespace FoxMath
 {
     class InfiniteCylinder : public Volume
     {
@@ -75,6 +75,6 @@ namespace Engine::Core::Maths::Shape3D
     
     };
 
-} /*namespace Engine::Core::Maths::Shape3D*/
+} /*namespace FoxMath*/
 
 #endif //_INFINITE_CYLINDER_H

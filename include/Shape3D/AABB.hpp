@@ -5,11 +5,11 @@
 #ifndef _AABB_H
 #define _AABB_H
 
-#include "GE/Core/Maths/Shape3D/Volume.hpp"
-#include "GE/Core/Maths/vec.hpp"
-#include "GE/Core/Maths/MathTools.hpp"
+#include "Shape3D/Volume.hpp"
+#include "Vector/Vector.hpp"
+#include "Numeric/MathTools.hpp"
 
-namespace Engine::Core::Maths::Shape3D
+namespace FoxMath
 {
     class AABB : public Volume
     {
@@ -80,6 +80,6 @@ namespace Engine::Core::Maths::Shape3D
 
     };
 
-} /*namespace Engine::Core::Maths:Shape3D*/
+} /*namespace FoxMath:Shape3D*/
 
 #endif //_AABB_H

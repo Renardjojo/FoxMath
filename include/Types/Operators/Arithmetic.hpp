@@ -39,7 +39,7 @@
 #include "Types/Operators/Arithmetic/Subtraction.hpp"
 #include "Types/Operators/Arithmetic/Multiplication.hpp"
 
-namespace FoxMath::Type::Operator
+namespace FoxMath::Operator
 {
     /**
      * @brief Module gathering all common arithmetic operators
@@ -60,7 +60,7 @@ namespace FoxMath::Type::Operator
                         Multiplication  <TStrongTypedef>
     {};
 
-} /*namespace FoxMath::Type::Operator*/
+} /*namespace FoxMath::Operator*/
 
 
 

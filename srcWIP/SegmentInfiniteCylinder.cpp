@@ -1,10 +1,10 @@
 ﻿#include "GE/Core/Maths/ShapeRelation/SegmentInfiniteCylinder.hpp"
 
-#include "GE/Core/Maths/vec.hpp"
+#include "Vector/Vector.hpp"
 
-using namespace Engine::Core::Maths;
-using namespace Engine::Core::Maths::Shape3D;
-using namespace Engine::Core::Maths::ShapeRelation;
+using namespace FoxMath;
+using namespace FoxMath;
+using namespace FoxMath;
 
 bool SegmentInfiniteCylinder::isSegmentInfiniteCylinderCollided(const Segment& seg, const InfiniteCylinder& infCylinder, Intersection& intersection)
 { 
@@ -29,7 +29,7 @@ bool SegmentInfiniteCylinder::isSegmentInfiniteCylinderCollided(const Segment& s
     /*We comput the discriminent*/
     if (Intersection::computeDiscriminentAndSolveEquation(a, b, c, seg.getPt1(), seg.getPt2(), intersection))
     {
-        if (intersection.intersectionType == EIntersectionType::TwoIntersectiont)
+        if (intersection.intersectionType == EIntersectionTwoIntersectiont)
         {
             Vec3 cylPtToInter2 = intersection.intersection2 - infCylinder.getLine().getOrigin();
             intersection.normalI2 = (cylPtToInter2 - infCylinder.getLine().getNormal() * Vec3::dot(cylPtToInter2, infCylinder.getLine().getNormal())).normalize();

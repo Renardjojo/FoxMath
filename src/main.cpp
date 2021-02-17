@@ -5,9 +5,7 @@
 #include "Matrix/Matrix.hpp"
 #include "Matrix/Vector/NewGenericVector.hpp"
 #include "Angle/Angle.hpp"
-
-#include "../benchmark/include/mat.hpp"
-#include "../benchmark/include/vec.hpp"
+#include "Random/Random.hpp"
 
 #include "Quaternion/Quaternion.hpp"
 
@@ -15,10 +13,7 @@
 
 #include <limits> //std::numeric_limits<T>::espilon()
 
-using namespace FoxMath::Matrix;
-using namespace FoxMath::Vector;
-using namespace FoxMath::Angle;
-using namespace FoxMath::Quaternion;
+using namespace FoxMath;
 
 int main() 
 {
@@ -27,6 +22,11 @@ int main()
 
     Quaternion<> q(2.f ,5.f, 6.f, 8.f);
     std::cout << genericVector << std::endl;
+
+    for (size_t i = 0; i < 20; i++)
+    {
+        std::cout << Random::ranged<int>(5, 10) << std::endl;
+    }
 
     return 0;
 }

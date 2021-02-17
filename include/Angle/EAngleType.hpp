@@ -29,7 +29,7 @@
 
 #pragma once
 
-namespace FoxMath::Angle
+namespace FoxMath
 {
     enum class EAngleType
     {
@@ -53,4 +53,4 @@ namespace FoxMath::Angle
         }
     }
 
-} /*namespace FoxMath::Angle*/
+} /*namespace FoxMath*/

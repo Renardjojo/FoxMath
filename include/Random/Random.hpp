@@ -11,9 +11,10 @@
 #include <algorithm>
 #include <limits>
 
-#include "GE/Core/Maths/vec.hpp"
+#include "Vector/Vector.hpp"
+#include "Macro/Constants.hpp"
 
-namespace Engine::Core::Maths
+namespace FoxMath
 {
     class Random
     {
@@ -24,7 +25,7 @@ namespace Engine::Core::Maths
         Random ()					            = delete;
         Random (const Random& other)			= delete;
         Random (Random&& other)				    = delete;
-        virtual ~Random ()				        = delete;
+        ~Random ()				                = delete;
         Random& operator=(Random const& other)  = delete;
         Random& operator=(Random && other)		= delete;
 
@@ -118,25 +119,25 @@ namespace Engine::Core::Maths
 #pragma region Cicular
 
         template<typename T = float>
-        static Vec2 circularCoordinate(const Vec2& center, const T& range)
+        static Vec2<T> circularCoordinate(const Vec2<T>& center, const T& range)
         {
             T randValue = static_cast<T>(rand());
             T scale = unitValue<T>();
-            return Vec2{center.x + range * std::cos(randValue) * scale, center.y + range * std::sin(randValue) * scale};
+            return Vec2<T>{center.x + range * std::cos(randValue) * scale, center.y + range * std::sin(randValue) * scale};
         }
 
         template<typename T = float>
-        static Vec2 peripheralCircularCoordinate(const Vec2& center, const T& range)
+        static Vec2<T> peripheralCircularCoordinate(const Vec2<T>& center, const T& range)
         {
             T randValue = static_cast<T>(rand());
-            return Vec2{center.x + range * std::cos(randValue), center.y + range * std::sin(randValue)};
+            return Vec2<T>{center.x + range * std::cos(randValue), center.y + range * std::sin(randValue)};
         }
 
         template<typename T = float>
-        static Vec2 unitPeripheralCircularCoordinate()
+        static Vec2<T> unitPeripheralCircularCoordinate()
         {
             T randValue = static_cast<T>(rand());
-            return Vec2{std::cos(randValue), std::sin(randValue)};
+            return Vec2<T>{std::cos(randValue), std::sin(randValue)};
         }
 
 #pragma endregion //!Cicular
@@ -144,21 +145,21 @@ namespace Engine::Core::Maths
 #pragma region Spherique
 
         template<typename T = float>
-        static Vec3 unitPeripheralSphericalCoordonate()
+        static Vec3<T> unitPeripheralSphericalCoordonate()
         {
-            T phi = ranged<T>(static_cast<T>(0), static_cast<T>(M_PI * static_cast<T>(2)));
-            T theta = ranged<T>(static_cast<T>(0), static_cast<T>(M_PI * static_cast<T>(2)));
-            return Vec3{std::sin(phi) * std::cos(theta), std::sin(phi) * std::sin(theta), std::cos(phi)};
+            T phi = ranged<T>(static_cast<T>(0), static_cast<T>(PI * static_cast<T>(2)));
+            T theta = ranged<T>(static_cast<T>(0), static_cast<T>(PI * static_cast<T>(2)));
+            return Vec3<T>{std::sin(phi) * std::cos(theta), std::sin(phi) * std::sin(theta), std::cos(phi)};
         }
 
         template<typename T = float>
-        static Vec3 sphericalCoordinate(const Vec3& center, const T& range)
+        static Vec3<T> sphericalCoordinate(const Vec3<T>& center, const T& range)
         {
             return (center + unitPeripheralSphericalCoordonate()) * unitValue<T>() * range;
         }
 
         template<typename T = float>
-        static Vec3 peripheralSphericalCoordinate(const Vec3& center, const T& range)
+        static Vec3<T> peripheralSphericalCoordinate(const Vec3<T>& center, const T& range)
         {
             return (center + unitPeripheralSphericalCoordonate()) * range;
         }
@@ -169,22 +170,22 @@ namespace Engine::Core::Maths
 #pragma region Square
 
        template<typename T = float>
-        static Vec2 peripheralSquareCoordinate(const Vec2& center, const T& extX, const T& extY)
+        static Vec2<T> peripheralSquareCoordinate(const Vec2<T>& center, const T& extX, const T& extY)
         {           
             if (unitValue<bool>())
             {
                 if (unitValue<bool>())
                 {
-                    return Vec2{center.x -extX, center.y + ranged<T>(-extY, extY)};
+                    return Vec2<T>{center.x -extX, center.y + ranged<T>(-extY, extY)};
                 }
-                return Vec2{center.x + extX, center.y + ranged<T>(-extY, extY)};
+                return Vec2<T>{center.x + extX, center.y + ranged<T>(-extY, extY)};
             }
 
             if (unitValue<bool>())
             {
-                return Vec2{center.x + ranged<T>(-extX, extX), center.y - extY};
+                return Vec2<T>{center.x + ranged<T>(-extX, extX), center.y - extY};
             }
-            return Vec2{center.x + ranged<T>(-extX, extX), center.y + extY};
+            return Vec2<T>{center.x + ranged<T>(-extX, extX), center.y + extY};
         }
 
         /**
@@ -194,24 +195,24 @@ namespace Engine::Core::Maths
          * @param center the center of the square
          * @param extX half saquare extension on x axis
          * @param extY half saquare extension on y axis
-         * @return Vec2 
+         * @return Vec2<T> 
          */
         template<typename T = float>
-        static Vec2 squareCoordinate(const Vec2& center, const T& extX, const T& extY)
+        static Vec2<T> squareCoordinate(const Vec2<T>& center, const T& extX, const T& extY)
         {           
-            return Vec2{center.x + ranged<T>(-extX, extX), center.y + ranged<T>(-extY, extY)};
+            return Vec2<T>{center.x + ranged<T>(-extX, extX), center.y + ranged<T>(-extY, extY)};
         }
 
         /**
          * @brief return unit sqare with value between 0 and 1
          * 
          * @tparam float 
-         * @return Vec2 
+         * @return Vec2<T> 
          */
         template<typename T = float>
-        static Vec2 unitPeripheralSquareCoordinate()
+        static Vec2<T> unitPeripheralSquareCoordinate()
         {
-            return Vec2{unitValue<T>(), unitValue<T>()};
+            return Vec2<T>{unitValue<T>(), unitValue<T>()};
         }
 
 #pragma endregion //!Square
@@ -220,31 +221,31 @@ namespace Engine::Core::Maths
         
 
         template<typename T = float>
-        static Vec3 peripheralCubiqueCoordinate(const Vec3& center, const T& extX, const T& extY, const T& extZ)
+        static Vec3<T> peripheralCubiqueCoordinate(const Vec3<T>& center, const T& extX, const T& extY, const T& extZ)
         {    
             if (unitValue<bool>())
             {
                 if (unitValue<bool>())
                 {
-                    return Vec3{center.x -extX, center.y + ranged<T>(-extY, extY), center.z + ranged<T>(-extZ, extZ)};
+                    return Vec3<T>{center.x -extX, center.y + ranged<T>(-extY, extY), center.z + ranged<T>(-extZ, extZ)};
                 }
-                return Vec3{center.x + extX, center.y + ranged<T>(-extY, extY), center.z + ranged<T>(-extZ, extZ)};
+                return Vec3<T>{center.x + extX, center.y + ranged<T>(-extY, extY), center.z + ranged<T>(-extZ, extZ)};
             }
 
             if (unitValue<bool>())
             {
                 if (unitValue<bool>())
                 {
-                    return Vec3{center.x + ranged<T>(-extX, extX), center.y -extY, center.z + ranged<T>(-extZ, extZ)};
+                    return Vec3<T>{center.x + ranged<T>(-extX, extX), center.y -extY, center.z + ranged<T>(-extZ, extZ)};
                 }
-                return Vec3{center.x + ranged<T>(-extX, extX), center.y + extY, center.z + ranged<T>(-extZ, extZ)};
+                return Vec3<T>{center.x + ranged<T>(-extX, extX), center.y + extY, center.z + ranged<T>(-extZ, extZ)};
             }
 
             if (unitValue<bool>())
             {
-                return Vec3{center.x + ranged<T>(-extX, extX), center.y + ranged<T>(-extY, extY), center.z -extZ};
+                return Vec3<T>{center.x + ranged<T>(-extX, extX), center.y + ranged<T>(-extY, extY), center.z -extZ};
             }
-            return Vec3{center.x + ranged<T>(-extX, extX), center.y + ranged<T>(-extY, extY), center.z + extZ};
+            return Vec3<T>{center.x + ranged<T>(-extX, extX), center.y + ranged<T>(-extY, extY), center.z + extZ};
         }
         
         /**
@@ -255,24 +256,24 @@ namespace Engine::Core::Maths
          * @param extX half saquare extension on x axis
          * @param extY half saquare extension on y axis
          * @param extZ half saquare extension on z axis
-         * @return Vec3 
+         * @return Vec3<T> 
          */
         template<typename T = float>
-        static Vec3 cubiqueCoordinate(const Vec3& center, const T& extX, const T& extY, const T& extZ)
+        static Vec3<T> cubiqueCoordinate(const Vec3<T>& center, const T& extX, const T& extY, const T& extZ)
         {           
-            return Vec3{center.x + ranged<T>(-extX, extX), center.y + ranged<T>(-extY, extY), center.z + ranged<T>(-extZ, extZ)};
+            return Vec3<T>{center.x + ranged<T>(-extX, extX), center.y + ranged<T>(-extY, extY), center.z + ranged<T>(-extZ, extZ)};
         }
 
         /**
          * @brief return unit cubic with value between 0 and 1
          * 
          * @tparam float 
-         * @return Vec3 
+         * @return Vec3<T> 
          */
         template<typename T = float>
-        static Vec3 unitPeripheralCubiqueCoordinate()
+        static Vec3<T> unitPeripheralCubiqueCoordinate()
         {
-            return Vec3{unitValue<T>(), unitValue<T>(), unitValue<T>()};
+            return Vec3<T>{unitValue<T>(), unitValue<T>(), unitValue<T>()};
         }
 
 #pragma endregion //!Cubique
@@ -294,6 +295,6 @@ namespace Engine::Core::Maths
         #pragma endregion //!methods
     };
 
-} //namespace Engine::Core::Maths
+} //namespace FoxMath
 
 #endif //_RANDOM_H

@@ -31,7 +31,7 @@
 
 #include "Types/StrongType.hpp"
 
-namespace FoxMath::Type::Operator
+namespace FoxMath::Operator
 {
     /**
      * @brief Bitwise left shift operator class
@@ -80,4 +80,4 @@ namespace FoxMath::Type::Operator
             return TStrongTypedef(static_cast<Type const&>(in_lhs) << static_cast<Type const&>(in_rhs));
         }
     };
-} /*namespace FoxMath::Type::Operator*/
+} /*namespace FoxMath::Operator*/

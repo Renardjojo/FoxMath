@@ -33,7 +33,7 @@
 #include "Types/Operators/Logical/LogicalAnd.hpp"
 #include "Types/Operators/Logical/LogicalNot.hpp"
 
-namespace FoxMath::Type::Operator
+namespace FoxMath::Operator
 {
     /**
      * @brief Module gathering all common logical operators
@@ -47,4 +47,4 @@ namespace FoxMath::Type::Operator
                     LogicalAnd  <TStrongTypedef>,
                     LogicalNot  <TStrongTypedef>
     {};
-} /*namespace FoxMath::Type::Operator*/
+} /*namespace FoxMath::Operator*/

@@ -5,10 +5,10 @@
 #ifndef _PLANE_H
 #define _PLANE_H
 
-#include "GE/Core/Maths/vec.hpp"
+#include "Vector/Vector.hpp"
 #include <limits>
 
-namespace Engine::Core::Maths::Shape3D
+namespace FoxMath
 {
     class Plane
     {
@@ -149,6 +149,6 @@ namespace Engine::Core::Maths::Shape3D
         private:
 
     };
-} // !Engine::Core::Maths::Shape3D
+} // !FoxMath
 
 #endif // _PLANE_H

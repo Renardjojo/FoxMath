@@ -1,10 +1,10 @@
 ﻿#include "GE/Core/Maths/ShapeRelation/SegmentAABB.hpp"
-#include "GE/Core/Maths/MathTools.hpp"
+#include "Numeric/MathTools.hpp"
 #include <limits>
 
-using namespace Engine::Core::Maths;
-using namespace Engine::Core::Maths::Shape3D;
-using namespace Engine::Core::Maths::ShapeRelation;
+using namespace FoxMath;
+using namespace FoxMath;
+using namespace FoxMath;
 
 bool SegmentAABB::isSegmentAABBCollided(const Segment& seg, const AABB& AABB, Intersection& intersection)
 {
@@ -12,7 +12,7 @@ bool SegmentAABB::isSegmentAABBCollided(const Segment& seg, const AABB& AABB, In
     float tx0, tx1, ty0, ty1, tz0, tz1, tempT;
     tempT = 1.f; // memorise with temporal float the value of T. Compare this value to the new T and compute the nearest point af seg.pt1
 
-    intersection.intersectionType = EIntersectionType::NoIntersection;
+    intersection.intersectionType = EIntersectionNoIntersection;
 
     if (!isBetween(AB.x, -std::numeric_limits<float>::epsilon(), std::numeric_limits<float>::epsilon()))
     {
@@ -62,12 +62,12 @@ bool SegmentAABB::isSegmentAABBCollided(const Segment& seg, const AABB& AABB, In
         }
     }
 
-    if (intersection.intersectionType != EIntersectionType::OneIntersectiont)
+    if (intersection.intersectionType != EIntersectionOneIntersectiont)
     {
         /*Check if segment is inside*/
         if (AABB.isInside(seg.getPt1()) && AABB.isInside(seg.getPt2()))
         {
-            intersection.intersectionType = EIntersectionType::InfinyIntersection;
+            intersection.intersectionType = EIntersectionInfinyIntersection;
             return true;
         }
         return false;
@@ -83,7 +83,7 @@ bool SegmentAABB::addIntersectionWithScalerIfOnAABBAndReturnIfFull(const Segment
 
         if (AABB.isInside(pt))
         {
-            if (intersection.intersectionType != EIntersectionType::OneIntersectiont)
+            if (intersection.intersectionType != EIntersectionOneIntersectiont)
             {
                 intersection.setOneIntersection(pt);
                 intersection.normalI1 = faceNormal;

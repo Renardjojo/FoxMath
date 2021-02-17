@@ -2,11 +2,11 @@
 
 #include "GE/Core/Maths/ShapeRelation/SegmentOrientedBox.hpp"
 #include "GE/Core/Maths/ShapeRelation/SegmentCapsule.hpp"
-#include "GE/Core/Maths/Referential.hpp"
+#include "Referential/Referential.hpp"
 
-using namespace Engine::Core::Maths;
-using namespace Engine::Core::Maths::Shape3D;
-using namespace Engine::Core::Maths::ShapeRelation;
+using namespace FoxMath;
+using namespace FoxMath;
+using namespace FoxMath;
 
 /*get the first collision point between moving sphere and box*/
 bool MovingSphereOrientedBox::isMovingSphereOrientedBoxCollided(const Sphere& sphere, const OrientedBox& box, const Vec3& sphereVelocity, Intersection& intersection)
@@ -24,7 +24,7 @@ bool MovingSphereOrientedBox::isMovingSphereOrientedBoxCollided(const Sphere& sp
     /*Step 2, check if intersection points are on the veronoi face*/
     applyVeronoiRegionCorrection(box, intersection, spherePt1ToPt2, sphere.getRadius());
 
-    return intersection.intersectionType != EIntersectionType::NoIntersection;
+    return intersection.intersectionType != EIntersectionNoIntersection;
 }
 
 OrientedBox MovingSphereOrientedBox::getMinkowskiSumOBB (const OrientedBox& box, float sphereRadius)
@@ -34,7 +34,7 @@ OrientedBox MovingSphereOrientedBox::getMinkowskiSumOBB (const OrientedBox& box,
 
 void MovingSphereOrientedBox::applyVeronoiRegionCorrection(const OrientedBox& box, Intersection& intersection, const Segment& seg, float sphereRadius)
 {
-    if (intersection.intersectionType == EIntersectionType::OneIntersectiont)
+    if (intersection.intersectionType == EIntersectionOneIntersectiont)
     {
         int topVeronoiOutCode = getTopVeronoiFace(box, sphereRadius).isPointInsideQuadZoneOutCode(intersection.intersection1);
         int rightVeronoiOutCode = getRightVeronoiFace(box, sphereRadius).isPointInsideQuadZoneOutCode(intersection.intersection1);
@@ -59,7 +59,7 @@ void MovingSphereOrientedBox::applyVeronoiRegionCorrection(const OrientedBox& bo
             applyVeronoiRegionCorrectionWithOutCode(box, intersection, seg, sphereRadius, topVeronoiOutCode, rightVeronoiOutCode, forwardVeronoiOutCode, true);
         }
     }
-    else if (intersection.intersectionType == EIntersectionType::TwoIntersectiont)
+    else if (intersection.intersectionType == EIntersectionTwoIntersectiont)
     {
         bool keepInter1 = false;
         bool keepInter2 = false;
@@ -102,7 +102,7 @@ void MovingSphereOrientedBox::applyVeronoiRegionCorrection(const OrientedBox& bo
             applyVeronoiRegionCorrectionWithOutCode(box, intersection, seg, sphereRadius, topVeronoiOutCodePt1, rightVeronoiOutCodePt1, forwardVeronoiOutCodePt1, true);
         }
     } 
-    else if (intersection.intersectionType == EIntersectionType::InfinyIntersection)
+    else if (intersection.intersectionType == EIntersectionInfinyIntersection)
     {
         int topVeronoiOutCodeSegPt1 = getTopVeronoiFace(box, sphereRadius).isPointInsideQuadZoneOutCode(seg.getPt1());
         int rightVeronoiOutCodeSegPt1 = getRightVeronoiFace(box, sphereRadius).isPointInsideQuadZoneOutCode(seg.getPt1());
@@ -112,11 +112,11 @@ void MovingSphereOrientedBox::applyVeronoiRegionCorrection(const OrientedBox& bo
         {
             if (applyVeronoiRegionCorrectionWithOutCode(box, intersection, seg, sphereRadius, topVeronoiOutCodeSegPt1, rightVeronoiOutCodeSegPt1, forwardVeronoiOutCodeSegPt1, true))
             {
-                intersection.intersectionType = EIntersectionType::OneIntersectiont;
+                intersection.intersectionType = EIntersectionOneIntersectiont;
             }
             else
             {
-                intersection.intersectionType = EIntersectionType::NoIntersection;
+                intersection.intersectionType = EIntersectionNoIntersection;
             }
         }
     }     

@@ -5,11 +5,11 @@
 #ifndef _INTERSECTION_3D_H
 #define _INTERSECTION_3D_H
 
-#include "GE/Core/Maths/vec.hpp"
+#include "Vector/Vector.hpp"
 
 #include <limits>
 
-namespace Engine::Core::Maths::ShapeRelation
+namespace FoxMath
 {
     enum class EIntersectionType
     {
@@ -22,7 +22,7 @@ namespace Engine::Core::Maths::ShapeRelation
 
     struct Intersection
     {
-        EIntersectionType intersectionType = EIntersectionType::NoIntersection;
+        EIntersectionType intersectionType = EIntersectionNoIntersection;
         Vec3 intersection1;
         Vec3 intersection2;
         Vec3 normalI1;
@@ -30,57 +30,57 @@ namespace Engine::Core::Maths::ShapeRelation
 
         void setNotIntersection ()
         {
-            intersectionType = EIntersectionType::NoIntersection;
+            intersectionType = EIntersectionNoIntersection;
         }
 
         void setOneIntersection(const Vec3& intersectionPoint)
         {
-            intersectionType = EIntersectionType::OneIntersectiont;
+            intersectionType = EIntersectionOneIntersectiont;
             intersection1 = intersectionPoint;
         }
 
         void setTwoIntersection(const Vec3& intersectionPoint1, const Vec3 intersectionPoint2)
         {
-            intersectionType = EIntersectionType::TwoIntersectiont;
+            intersectionType = EIntersectionTwoIntersectiont;
             intersection1 = intersectionPoint1;
             intersection2 = intersectionPoint2;
         }
 
         void setSecondIntersection(const Vec3& intersectionPoint2)
         {
-            intersectionType = EIntersectionType::TwoIntersectiont;
+            intersectionType = EIntersectionTwoIntersectiont;
             intersection2 = intersectionPoint2;
         }
 
         void setInifitIntersection()
         {
-            intersectionType = EIntersectionType::InfinyIntersection;
+            intersectionType = EIntersectionInfinyIntersection;
         }
 
         void setUnKnowIntersection()
         {
-            intersectionType = EIntersectionType::UnknowIntersection;
+            intersectionType = EIntersectionUnknowIntersection;
         }
 
         void removeFirstIntersection()
         {
-            if (intersectionType == EIntersectionType::TwoIntersectiont)
+            if (intersectionType == EIntersectionTwoIntersectiont)
             {
-                intersectionType = EIntersectionType::OneIntersectiont;
+                intersectionType = EIntersectionOneIntersectiont;
                 intersection1 = intersection2;
                 normalI1 = normalI2;
             }
             else
             {
-                intersectionType = EIntersectionType::NoIntersection;
+                intersectionType = EIntersectionNoIntersection;
             }
         }
 
         void removeSecondIntersection()
         {
-            if (intersectionType == EIntersectionType::TwoIntersectiont)
+            if (intersectionType == EIntersectionTwoIntersectiont)
             {
-                intersectionType = EIntersectionType::OneIntersectiont;
+                intersectionType = EIntersectionOneIntersectiont;
 
             }
         }
@@ -88,7 +88,7 @@ namespace Engine::Core::Maths::ShapeRelation
         /*return true if intersection contenor is full (if there are 2 intersection)*/
         bool addIntersectionAndCheckIfSecond(const Vec3& intersection)
         {
-            if (intersectionType != EIntersectionType::OneIntersectiont)
+            if (intersectionType != EIntersectionOneIntersectiont)
             {
                 setOneIntersection(intersection);
                 return false;
@@ -111,7 +111,7 @@ namespace Engine::Core::Maths::ShapeRelation
 
         void sortIntersection(const Vec3& pt1Seg)
         {
-            if (intersectionType != EIntersectionType::TwoIntersectiont)
+            if (intersectionType != EIntersectionTwoIntersectiont)
             {
                 return;
             }
@@ -124,6 +124,6 @@ namespace Engine::Core::Maths::ShapeRelation
 
         static bool computeDiscriminentAndSolveEquation(float a, float b, float c, const Vec3& segPt1, const Vec3& segPt2, Intersection& intersection);
     };
-} /*namespace Engine::Core::Maths::ShapeRelation*/
+} /*namespace FoxMath*/
 
 #endif //_INTERSECTION_3D_H

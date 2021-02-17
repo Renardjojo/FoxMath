@@ -5,14 +5,14 @@
 #ifndef _MOVING_SPHERE_ORIENTED_BOX_H
 #define _MOVING_SPHERE_ORIENTED_BOX_H
 
-#include "GE/Core/Maths/vec.hpp"
+#include "Vector/Vector.hpp"
 #include "GE/Core/Maths/ShapeRelation/Intersection.hpp"
-#include "GE/Core/Maths/Shape3D/Segment.hpp"
+#include "Shape3D/Segment.hpp"
 #include "GE/Core/Maths/Shape3D/Capsule.hpp"
 #include "GE/Core/Maths/Shape3D/Quad.hpp"
 #include "GE/Core/Maths/Shape3D/OrientedBox.hpp"
 
-namespace Engine::Core::Maths::ShapeRelation
+namespace FoxMath
 {
     class MovingSphereOrientedBox
     {
@@ -107,6 +107,6 @@ namespace Engine::Core::Maths::ShapeRelation
         #pragma endregion //!static attribut
     };
 
-} /*namespace Engine::Core::Maths::ShapeRelation*/
+} /*namespace FoxMath*/
 
 #endif //_MOVING_SPHERE_ORIENTED_BOX_H

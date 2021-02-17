@@ -5,9 +5,9 @@
 #ifndef _LINE_H
 #define _LINE_H
 
-#include "GE/Core/Maths/vec.hpp"
+#include "Vector/Vector.hpp"
 
-namespace Engine::Core::Maths::Shape3D
+namespace FoxMath
 {
     class Line
     {
@@ -48,7 +48,7 @@ namespace Engine::Core::Maths::Shape3D
         Vec3    origin_, 
                 normal_;
     };
-} /*namespace Engine::Core::Maths::Shape3D*/
+} /*namespace FoxMath*/
 #endif //_LINE_H
 
 

@@ -33,7 +33,7 @@
 #include <type_traits> //is_floating_point
 #include <cmath> //fmod
 
-namespace FoxMath::Type::Operator
+namespace FoxMath::Operator
 {
 
     /**
@@ -98,4 +98,4 @@ namespace FoxMath::Type::Operator
             }
         }
     };
-} /*namespace FoxMath::Type::Operator*/
+} /*namespace FoxMath::Operator*/

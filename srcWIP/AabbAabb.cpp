@@ -1,11 +1,11 @@
 ﻿#include "GE/Core/Maths/ShapeRelation/AabbAabb.hpp"
-#include "GE/Core/Maths/vec.hpp"
+#include "Vector/Vector.hpp"
 
 #include <algorithm>
 
-using namespace Engine::Core::Maths;
-using namespace Engine::Core::Maths::Shape3D;
-using namespace Engine::Core::Maths::ShapeRelation;
+using namespace FoxMath;
+using namespace FoxMath;
+using namespace FoxMath;
 
 
 bool AabbAabb::isBothAABBCollided(const AABB& aabb1, const AABB& aabb2, Intersection& intersection)

@@ -1,8 +1,8 @@
-#include "GE/Core/Maths/Shape3D/Plane.hpp"
-#include "GE/Core/Maths/mat.hpp"
+#include "Shape3D/Plane.hpp"
+#include "Matrix/Matrix.hpp"
 
-using namespace Engine::Core::Maths;
-using namespace Engine::Core::Maths::Shape3D;
+using namespace FoxMath;
+using namespace FoxMath;
 
 Plane::Plane (float distance, const Vec3& normal)
     :   normal_     (normal.getNormalize()),

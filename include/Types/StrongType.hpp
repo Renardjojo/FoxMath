@@ -32,7 +32,7 @@
 #include "Types/SFINAEShorthand.hpp"
 #include <type_traits> //std::is_nothrow_copy_constructible_v, is_nothrow_copy_assignable_v, is_nothrow_move_assignable_v...
 
-namespace FoxMath::Type
+namespace FoxMath
 {
     /**
      * @brief A strong type allows the creation of strong types more easily
@@ -45,7 +45,7 @@ namespace FoxMath::Type
      * @example :
      * // This class is strongly typed and only has the addition and subtraction operators available
      * struct Meter : StrongType<float, Meter>, Addition<Meter>, Subtraction<Meter>
-     * { using StrongType::StrongType };
+     * { using StrongStrongType };
      * 
      * @tparam TBase Base type, could be any fundamental type
      * @tparam TUniquePhantom Phantom type, this should be unique for each type
@@ -105,7 +105,7 @@ namespace FoxMath::Type
 		 * @tparam TArgs Arguments type
 		 * @param in_args arguments
 		 */
-		template <typename ...TArgs, Type::IsConstructible<TBase, TArgs...> = true>
+		template <typename ...TArgs, IsConstructible<TBase, TArgs...> = true>
 		explicit constexpr StrongType(TArgs&&... in_args) noexcept(noexcept(TBase(std::forward<TArgs>(in_args)...)));
 
 		/**
@@ -152,7 +152,7 @@ namespace FoxMath::Type
 	/**
 	 * @brief UnderlyingType helper method, this is used internally to get the underlying type of complex NamedType types
 	 * 
-	 * This has to be used instead of NamedType::UnderlyingType since complex NamedTypes inherits from the NamedType class.
+	 * This has to be used instead of NamedUnderlyingType since complex NamedTypes inherits from the NamedType class.
 	 * This methods avoids the issue of ill-formed types.
 	 * 
 	 * @see This wonderful article, where everything is nicely explained : https://foonathan.net/blog/2016/10/19/strong-typedefs.html
@@ -163,4 +163,4 @@ namespace FoxMath::Type
 
     #include "StrongType.inl"
 
-} /*namespace FoxMath::Type*/
+} /*namespace FoxMath*/

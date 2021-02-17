@@ -5,16 +5,10 @@
 
 #include "Quaternion/Quaternion.hpp"
 
-#include "mat.hpp"
-#include "vec.hpp"
-
 #include <stdlib.h>     /* std::rand, std::rand */
 #include <time.h>       /* time */
 
-using namespace FoxMath::Matrix;
-using namespace FoxMath::Vector;
-using namespace FoxMath::Angle;
-using namespace FoxMath::Quaternion;
+using namespace FoxMath;
 
 #define RAND_FLOAT (float)std::rand()
 static void _ (benchmark::State& state){}
@@ -88,13 +82,14 @@ static void BM_NewReverseMatrixAtRunTime(benchmark::State& state)
 BENCHMARK(BM_NewReverseMatrixAtRunTime);
 
 // Define another benchmark
+/*
 static void BM_OldReverseMatrixAtRunTime(benchmark::State& state)
 {
   std::srand (time(NULL));
 
   for (auto _ : state)
   {
-        Engine::Core::Maths::Mat3 rst { RAND_FLOAT, RAND_FLOAT, RAND_FLOAT, 
+        FoxMath::Mat3 rst { RAND_FLOAT, RAND_FLOAT, RAND_FLOAT, 
                                         RAND_FLOAT, RAND_FLOAT, RAND_FLOAT,
                                         RAND_FLOAT, RAND_FLOAT, RAND_FLOAT};
 
@@ -106,7 +101,7 @@ static void BM_OldReverseMatrixAtRunTime(benchmark::State& state)
 }
 
 BENCHMARK(BM_OldReverseMatrixAtRunTime);
-
+*/
 BENCHMARK(_);
 
 static void BM_NewTRSMatrixAtCompileTime(benchmark::State& state) 
@@ -148,7 +143,7 @@ static void BM_NewTRSMatrixAtRunTime(benchmark::State& state)
 }
 // Register the function as a benchmark
 BENCHMARK(BM_NewTRSMatrixAtRunTime);
-
+/*
 // Define another benchmark
 static void BM_OldTRSMatrixAtRunTime(benchmark::State& state)
 {
@@ -156,18 +151,18 @@ static void BM_OldTRSMatrixAtRunTime(benchmark::State& state)
 
   for (auto _ : state)
   {
-        const Engine::Core::Maths::Vec3 translation  {RAND_FLOAT, RAND_FLOAT, RAND_FLOAT};
-        const Engine::Core::Maths::Vec3 rotation     {RAND_FLOAT, RAND_FLOAT, RAND_FLOAT};
-        const Engine::Core::Maths::Vec3 scale        {RAND_FLOAT, RAND_FLOAT, RAND_FLOAT};
+        const FoxMath::Vec3 translation  {RAND_FLOAT, RAND_FLOAT, RAND_FLOAT};
+        const FoxMath::Vec3 rotation     {RAND_FLOAT, RAND_FLOAT, RAND_FLOAT};
+        const FoxMath::Vec3 scale        {RAND_FLOAT, RAND_FLOAT, RAND_FLOAT};
 
-        Engine::Core::Maths::Mat4 rst = Engine::Core::Maths::Mat4::createTRSMatrix(scale, rotation, translation);
+        FoxMath::Mat4 rst = FoxMath::Mat4::createTRSMatrix(scale, rotation, translation);
         benchmark::DoNotOptimize(rst);
         //benchmark::ClobberMemory();
   }
 }
 
 BENCHMARK(BM_OldTRSMatrixAtRunTime);
-BENCHMARK(_);
+BENCHMARK(_);*/
 
 static void BM_NewAngle(benchmark::State& state)
 {
@@ -175,7 +170,7 @@ static void BM_NewAngle(benchmark::State& state)
 
   for (auto _ : state)
   {
-    FoxMath::Angle::Angle<FoxMath::Angle::EAngleType::Radian, float> rst(FoxMath::Angle::Angle<FoxMath::Angle::EAngleType::Degree, float>(RAND_FLOAT));
+    FoxMath::Angle<FoxMath::EAngleType::Radian, float> rst(FoxMath::Angle<FoxMath::EAngleType::Degree, float>(RAND_FLOAT));
     float rstRad = static_cast<float>(rst);
     
     benchmark::DoNotOptimize(rstRad);
@@ -197,9 +192,9 @@ static void BM_OldAngle(benchmark::State& state)
     //benchmark::ClobberMemory();
   }
 }
-
+/*
 BENCHMARK(BM_OldAngle);
-
+*/
 
 
 BENCHMARK_MAIN();

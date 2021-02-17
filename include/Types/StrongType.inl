@@ -28,7 +28,7 @@
  */
 
 template <typename TBase, class TPhantom>
-template <typename ...TArgs, Type::IsConstructible<TBase, TArgs...>>
+template <typename ...TArgs, IsConstructible<TBase, TArgs...>>
 constexpr StrongType<TBase, TPhantom>::StrongType(TArgs&&... in_args) noexcept(noexcept(TBase(std::forward<TArgs>(in_args)...)))
 :	m_value {TBase(std::forward<TArgs>(in_args)...)}
 {}

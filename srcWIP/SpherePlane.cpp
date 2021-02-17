@@ -1,9 +1,9 @@
 ﻿#include "GE/Core/Maths/ShapeRelation/SpherePlane.hpp"
-#include "GE/Core/Maths/vec.hpp"
+#include "Vector/Vector.hpp"
 
-using namespace Engine::Core::Maths::ShapeRelation;
-using namespace Engine::Core::Maths::Shape3D;
-using namespace Engine::Core::Maths;
+using namespace FoxMath;
+using namespace FoxMath;
+using namespace FoxMath;
 
 
 bool SpherePlane::isSphereOnOrForwardPlanCollided(const Shape3D::Sphere& sphere, const Shape3D::Plane& plane)

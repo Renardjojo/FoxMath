@@ -1,16 +1,16 @@
 ﻿#include "GE/Core/Maths/ShapeRelation/SegmentCapsule.hpp"
 
-#include "GE/Core/Maths/Shape3D/InfiniteCylinder.hpp"
-#include "GE/Core/Maths/Shape3D/Plane.hpp"
+#include "Shape3D/InfiniteCylinder.hpp"
+#include "Shape3D/Plane.hpp"
 #include "GE/Core/Maths/ShapeRelation/SegmentInfiniteCylinder.hpp"
 #include "GE/Core/Maths/ShapeRelation/SegmentPlane.hpp"
 #include "GE/Core/Maths/ShapeRelation/SegmentSphere.hpp"
 
 #include <limits>
 
-using namespace Engine::Core::Maths;
-using namespace Engine::Core::Maths::Shape3D;
-using namespace Engine::Core::Maths::ShapeRelation;
+using namespace FoxMath;
+using namespace FoxMath;
+using namespace FoxMath;
 
 bool SegmentCapsule::isSegmentCapsuleCollided(const Segment& seg, const Capsule& capsule, Intersection& intersection)
 {
@@ -55,7 +55,7 @@ bool SegmentCapsule::isSegmentCapsuleCollided(const Segment& seg, const Capsule&
 
     /*Check the intersection found on the infinyte cylinder and remove the wrong intersection*/
     checkCapsuleInfinitCylinderCollisionPoint(capsule, intersection);
-    if (intersection.intersectionType == EIntersectionType::TwoIntersectiont)
+    if (intersection.intersectionType == EIntersectionTwoIntersectiont)
         return true;
 
     /*Try all combination of position of point 1 with position of point 2 and check the associate collision detection*/
@@ -66,17 +66,17 @@ bool SegmentCapsule::isSegmentCapsuleCollided(const Segment& seg, const Capsule&
 
             checkLeftCapsuleSphereCollision(seg, capsule, intersection);
 
-            if (intersection.intersectionType == EIntersectionType::TwoIntersectiont)
+            if (intersection.intersectionType == EIntersectionTwoIntersectiont)
                 return true;
 
             checkRightCapsuleSphereCollision(seg, capsule, intersection);
 
-            return intersection.intersectionType != EIntersectionType::NoIntersection;
+            return intersection.intersectionType != EIntersectionNoIntersection;
         }
         else //On the middle or on the left
         {
             checkLeftCapsuleSphereCollision(seg, capsule, intersection);
-            return intersection.intersectionType != EIntersectionType::NoIntersection;
+            return intersection.intersectionType != EIntersectionNoIntersection;
         }
     }
     else if ((outCodePt1 & ON_THE_RIGHT_MASK) == ON_THE_RIGHT_MASK)
@@ -87,12 +87,12 @@ bool SegmentCapsule::isSegmentCapsuleCollided(const Segment& seg, const Capsule&
 
             checkLeftCapsuleSphereCollision(seg, capsule, intersection);
 
-            return intersection.intersectionType != EIntersectionType::NoIntersection;
+            return intersection.intersectionType != EIntersectionNoIntersection;
         }
         else //On the middle or on the left
         {
             checkRightCapsuleSphereCollision(seg, capsule, intersection);
-            return intersection.intersectionType != EIntersectionType::NoIntersection;
+            return intersection.intersectionType != EIntersectionNoIntersection;
         }
     }
     else //On the middle
@@ -100,12 +100,12 @@ bool SegmentCapsule::isSegmentCapsuleCollided(const Segment& seg, const Capsule&
         if ((outCodePt2 & ON_THE_LEFT_MASK) == ON_THE_LEFT_MASK)
         {
             checkLeftCapsuleSphereCollision(seg, capsule, intersection);
-            return intersection.intersectionType != EIntersectionType::NoIntersection;
+            return intersection.intersectionType != EIntersectionNoIntersection;
         }
         else //On the middle or on the right
         {
             checkRightCapsuleSphereCollision(seg, capsule, intersection);
-            return intersection.intersectionType != EIntersectionType::NoIntersection;
+            return intersection.intersectionType != EIntersectionNoIntersection;
         }
     }
 }
@@ -182,7 +182,7 @@ void SegmentCapsule::detectSegmentPointPosition(const Segment& seg, const Capsul
 
 void SegmentCapsule::checkCapsuleInfinitCylinderCollisionPoint(const Capsule& capsule, Intersection& intersection)
 {
-    if (intersection.intersectionType == EIntersectionType::OneIntersectiont)
+    if (intersection.intersectionType == EIntersectionOneIntersectiont)
     {
         if (pointIsBetweenCapsuleSegLimit(capsule, intersection.intersection1))
         {
@@ -193,7 +193,7 @@ void SegmentCapsule::checkCapsuleInfinitCylinderCollisionPoint(const Capsule& ca
             intersection.setNotIntersection();
         }
     }
-    else if (intersection.intersectionType == EIntersectionType::TwoIntersectiont)
+    else if (intersection.intersectionType == EIntersectionTwoIntersectiont)
     {
         bool keepInter1 = false;
         bool keepInter2 = false;
@@ -214,7 +214,7 @@ void SegmentCapsule::checkCapsuleInfinitCylinderCollisionPoint(const Capsule& ca
         {
             if (!keepInter2)
             {
-                intersection.intersectionType = EIntersectionType::OneIntersectiont;
+                intersection.intersectionType = EIntersectionOneIntersectiont;
             }
         }
         else if (keepInter2)
@@ -236,11 +236,11 @@ void SegmentCapsule::checkLeftCapsuleSphereCollision (const Segment& seg, const 
     Intersection shapeIntersection;
     if (SegmentSphere::isSegmentSphereCollided(seg, leftCapsuleSphere, shapeIntersection))
     {
-        if (shapeIntersection.intersectionType == EIntersectionType::OneIntersectiont)
+        if (shapeIntersection.intersectionType == EIntersectionOneIntersectiont)
         {
             if (capsule.getSegment().getLeftPlane().getSignedDistanceToPlane(shapeIntersection.intersection1) >= std::numeric_limits<float>::epsilon())
             {
-                if (intersection.intersectionType == EIntersectionType::OneIntersectiont)
+                if (intersection.intersectionType == EIntersectionOneIntersectiont)
                 {
                     intersection.setSecondIntersection(shapeIntersection.intersection1);
                     intersection.normalI2 = shapeIntersection.normalI1;
@@ -252,7 +252,7 @@ void SegmentCapsule::checkLeftCapsuleSphereCollision (const Segment& seg, const 
                 }
             }
         }
-        else if (shapeIntersection.intersectionType == EIntersectionType::TwoIntersectiont)
+        else if (shapeIntersection.intersectionType == EIntersectionTwoIntersectiont)
         {
             bool keepInter1 = false;
             bool keepInter2 = false;
@@ -271,7 +271,7 @@ void SegmentCapsule::checkLeftCapsuleSphereCollision (const Segment& seg, const 
             /*processes the test result*/
             if (keepInter1)
             {
-                if (intersection.intersectionType == EIntersectionType::OneIntersectiont)
+                if (intersection.intersectionType == EIntersectionOneIntersectiont)
                 {
                     intersection.setSecondIntersection(shapeIntersection.intersection1);
                     intersection.normalI2 = shapeIntersection.normalI1;
@@ -293,7 +293,7 @@ void SegmentCapsule::checkLeftCapsuleSphereCollision (const Segment& seg, const 
             }
             else if (keepInter2)
             {
-                if (intersection.intersectionType == EIntersectionType::OneIntersectiont)
+                if (intersection.intersectionType == EIntersectionOneIntersectiont)
                 {
                     intersection.setSecondIntersection(shapeIntersection.intersection2);
                     intersection.normalI2 = shapeIntersection.normalI2;
@@ -317,11 +317,11 @@ void SegmentCapsule::checkRightCapsuleSphereCollision(const Segment& seg, const 
     Intersection shapeIntersection;
     if (SegmentSphere::isSegmentSphereCollided(seg, rightCapsuleSphere, shapeIntersection))
     {
-        if (shapeIntersection.intersectionType == EIntersectionType::OneIntersectiont)
+        if (shapeIntersection.intersectionType == EIntersectionOneIntersectiont)
         {
             if (capsule.getSegment().getRightPlane().getSignedDistanceToPlane(shapeIntersection.intersection1) >= std::numeric_limits<float>::epsilon())
             {
-                if (intersection.intersectionType == EIntersectionType::OneIntersectiont)
+                if (intersection.intersectionType == EIntersectionOneIntersectiont)
                 {
                     intersection.setSecondIntersection(shapeIntersection.intersection1);
                     intersection.normalI2 = shapeIntersection.normalI1;
@@ -333,7 +333,7 @@ void SegmentCapsule::checkRightCapsuleSphereCollision(const Segment& seg, const 
                 }
             }
         }
-        else if (shapeIntersection.intersectionType == EIntersectionType::TwoIntersectiont)
+        else if (shapeIntersection.intersectionType == EIntersectionTwoIntersectiont)
         {
             bool keepInter1 = false;
             bool keepInter2 = false;
@@ -352,7 +352,7 @@ void SegmentCapsule::checkRightCapsuleSphereCollision(const Segment& seg, const 
             /*processes the test result*/
             if (keepInter1)
             {
-                if (intersection.intersectionType == EIntersectionType::OneIntersectiont)
+                if (intersection.intersectionType == EIntersectionOneIntersectiont)
                 {
                     intersection.setSecondIntersection(shapeIntersection.intersection1);
                     intersection.normalI2 = shapeIntersection.normalI1;
@@ -373,7 +373,7 @@ void SegmentCapsule::checkRightCapsuleSphereCollision(const Segment& seg, const 
             }
             else if (keepInter2)
             {
-                if (intersection.intersectionType == EIntersectionType::OneIntersectiont)
+                if (intersection.intersectionType == EIntersectionOneIntersectiont)
                 {
                     intersection.setSecondIntersection(shapeIntersection.intersection2);
                     intersection.normalI2 = shapeIntersection.normalI2;

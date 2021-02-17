@@ -5,13 +5,13 @@
 #ifndef _ORIENTED_BOX_H
 #define _ORIENTED_BOX_H
 
-#include "GE/Core/Maths/Shape3D/Volume.hpp"
-#include "GE/Core/Maths/vec.hpp"
-#include "GE/Core/Maths/mat.hpp"
-#include "GE/Core/Maths/Referential.hpp"
-#include "GE/Core/Maths/Shape3D/AABB.hpp"
+#include "Shape3D/Volume.hpp"
+#include "Vector/Vector.hpp"
+#include "Matrix/Matrix.hpp"
+#include "Referential/Referential.hpp"
+#include "Shape3D/AABB.hpp"
 
-namespace Engine::Core::Maths::Shape3D
+namespace FoxMath
 {
     class OrientedBox : public Volume
     {
@@ -104,6 +104,6 @@ namespace Engine::Core::Maths::Shape3D
         private:
 
     };
-} /*namespace Engine::Core::Maths::Shape3D*/
+} /*namespace FoxMath*/
 
 #endif //_ORIENTED_BOX_H

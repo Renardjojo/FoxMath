@@ -1,11 +1,11 @@
 ﻿#include "GE/Core/Maths/ShapeRelation/SphereOrientedBox.hpp"
 
-#include "GE/Core/Maths/vec.hpp"
+#include "Vector/Vector.hpp"
 #include <algorithm>
 
-using namespace Engine::Core::Maths;
-using namespace Engine::Core::Maths::Shape3D;
-using namespace Engine::Core::Maths::ShapeRelation;
+using namespace FoxMath;
+using namespace FoxMath;
+using namespace FoxMath;
 
 bool SphereOrientedBox::isSphereOrientedBoxCollided(const Sphere& sphere, const OrientedBox& box, Intersection& intersection)
 {

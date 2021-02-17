@@ -6,9 +6,9 @@
 #define _AABB_AABB_H
 
 #include "GE/Core/Maths/ShapeRelation/Intersection.hpp"
-#include "GE/Core/Maths/Shape3D/AABB.hpp"
+#include "Shape3D/AABB.hpp"
 
-namespace Engine::Core::Maths::ShapeRelation
+namespace FoxMath
 {
     class AabbAabb
     {
@@ -39,6 +39,6 @@ namespace Engine::Core::Maths::ShapeRelation
         #pragma endregion //!static methods
     };
 
-} /*namespace Engine::Core::Maths::ShapeRelation*/
+} /*namespace FoxMath*/
 
 #endif //_AABB_AABB_H

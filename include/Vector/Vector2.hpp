@@ -30,10 +30,10 @@
 #pragma once
 
 #include "Vector/GenericVector.hpp"
-#include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
+#include "Types/SFINAEShorthand.hpp" //IsArithmetic<TType>, IsSame, Pack
 #include "Macro/CrossInheritanceCompatibility.hpp"
 
-namespace FoxMath::Vector
+namespace FoxMath
 {
     template <typename TType = float>
     class Vector2 : public GenericVector<2, TType>
@@ -112,7 +112,7 @@ namespace FoxMath::Vector
          * @param newX 
          * @return constexpr Vector2& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
         inline constexpr
         Vector2& setX(TscalarType newX) noexcept { Parent::m_data[0] = static_cast<TType>(newX);}
 
@@ -124,7 +124,7 @@ namespace FoxMath::Vector
          * @param newY 
          * @return constexpr Vector2& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
         inline constexpr
         Vector2& setY(TscalarType newY) noexcept { Parent::m_data[1] = static_cast<TType>(newY);}
 
@@ -169,4 +169,4 @@ namespace FoxMath::Vector
     using Vector2b      = Vector2<bool>;
     using Vec2b         = Vector2b;
 
-} /*namespace FoxMath::Vector*/
+} /*namespace FoxMath*/

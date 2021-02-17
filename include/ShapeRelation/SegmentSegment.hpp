@@ -5,11 +5,11 @@
 #ifndef _SEGMENT_SEGMENT_H
 #define _SEGMENT_SEGMENT_H
 
-#include "GE/Core/Maths/vec.hpp"
+#include "Vector/Vector.hpp"
 #include "GE/Core/Maths/ShapeRelation/Intersection.hpp"
-#include "GE/Core/Maths/Shape3D/Segment.hpp"
+#include "Shape3D/Segment.hpp"
 
-namespace Engine::Core::Maths::ShapeRelation
+namespace FoxMath
 {
     class SegmentSegment
     {
@@ -39,6 +39,6 @@ namespace Engine::Core::Maths::ShapeRelation
         #pragma endregion //!static methods
     };
 
-} /*namespace Engine::Core::Maths::ShapeRelation*/
+} /*namespace FoxMath*/
 
 #endif //_SEGMENT_SEGMENT_H

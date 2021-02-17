@@ -5,14 +5,14 @@
 #ifndef _SEGMENT_CAPSULE_H
 #define _SEGMENT_CAPSULE_H
 
-#include "GE/Core/Maths/vec.hpp"
+#include "Vector/Vector.hpp"
 #include "GE/Core/Maths/ShapeRelation/Intersection.hpp"
-#include "GE/Core/Maths/Shape3D/Segment.hpp"
+#include "Shape3D/Segment.hpp"
 #include "GE/Core/Maths/Shape3D/Capsule.hpp"
-#include "GE/Core/Maths/Shape3D/Cylinder.hpp"
-#include "GE/Core/Maths/Shape3D/Sphere.hpp"
+#include "Shape3D/Cylinder.hpp"
+#include "Shape3D/Sphere.hpp"
 
-namespace Engine::Core::Maths::ShapeRelation
+namespace FoxMath
 {
     class SegmentCapsule
     {
@@ -69,6 +69,6 @@ namespace Engine::Core::Maths::ShapeRelation
         #pragma endregion //!static attribut
     };
 
-} /*namespace Engine::Core::Maths::ShapeRelation*/
+} /*namespace FoxMath*/
 
 #endif //_SEGMENT_CAPSULE_H

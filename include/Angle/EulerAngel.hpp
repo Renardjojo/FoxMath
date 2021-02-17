@@ -29,9 +29,9 @@
 
 #pragma once
 
-namespace FoxMath::Angle
+namespace FoxMath
 {
 
 
 
-} /*namespace FoxMath::Angle*/
+} /*namespace FoxMath*/

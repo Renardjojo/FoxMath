@@ -31,7 +31,7 @@
 
 #include "Types/StrongType.hpp"
 
-namespace FoxMath::Type::Operator
+namespace FoxMath::Operator
 {
     /**
      * @brief Logical NOT operator class
@@ -61,4 +61,4 @@ namespace FoxMath::Type::Operator
             return !static_cast<Type const&>(in_instance);
         }
     };
-} /*namespace FoxMath::Type::Operator*/
+} /*namespace FoxMath::Operator*/

@@ -31,7 +31,7 @@
 
 #include "Types/StrongType.hpp"
 
-namespace FoxMath::Type::Operator
+namespace FoxMath::Operator
 {
     /**
      * @brief Greater operator class
@@ -62,4 +62,4 @@ namespace FoxMath::Type::Operator
             return static_cast<Type const&>(in_lhs) > static_cast<Type const&>(in_rhs);
         }
     };
-} /*namespace FoxMath::Type::Operator*/
+} /*namespace FoxMath::Operator*/

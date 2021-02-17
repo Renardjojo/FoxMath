@@ -5,9 +5,9 @@
 #ifndef _MATHS_TOOLS_H
 #define _MATHS_TOOLS_H
 
-#include "GE/Core/Maths/vec.hpp"
+#include "Vector/Vector.hpp"
 
-namespace Engine::Core::Maths
+namespace FoxMath
 {
     /*isBetween(5, 0, 10)*/
     template<class T = float>

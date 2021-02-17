@@ -31,7 +31,7 @@
 
 template <typename TType>
 inline constexpr
-Quaternion<TType>::Quaternion (Vector::Vector3<TType> axis, Angle::Angle<Angle::EAngleType::Radian, TType> angle) noexcept
+Quaternion<TType>::Quaternion (Vector3<TType> axis, Angle<EAngleType::Radian, TType> angle) noexcept
 {
     const TType halfAngle    = static_cast<TType>(angle) / static_cast<TType>(2);
     const TType halfSinAngle = std::sin(halfAngle);
@@ -124,23 +124,23 @@ Quaternion<TType> Quaternion<TType>::getInverse() const noexcept
 
 template <typename TType>
 inline constexpr
-Angle::Angle<Angle::EAngleType::Radian, TType> Quaternion<TType>::getAngle() const noexcept
+Angle<EAngleType::Radian, TType> Quaternion<TType>::getAngle() const noexcept
 {
-    return Angle::Angle<Angle::EAngleType::Radian, TType>(std::acos(m_w) * static_cast<TType>(2));
+    return Angle<EAngleType::Radian, TType>(std::acos(m_w) * static_cast<TType>(2));
 }
 
 
 template <typename TType>
 inline constexpr
-Vector::Vector3<TType> Quaternion<TType>::getAxis() const noexcept
+Vector3<TType> Quaternion<TType>::getAxis() const noexcept
 {
     return m_xyz / (std::sin(static_cast<TType>(getAngle()) / static_cast<TType>(2)));
 }
 
 template <typename TType>
-template <Matrix::EMatrixConvention TMatrixConvention = Matrix::EMatrixConvention::RowMajor>
+template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
 [[nodiscard]] inline constexpr
-Matrix::Matrix3<TType, TMatrixConvention> Quaternion<TType>::getRotationMatrix() const noexcept
+Matrix3<TType, TMatrixConvention> Quaternion<TType>::getRotationMatrix() const noexcept
 {
     const TType one = static_cast<TType>(1); 
     const TType two = static_cast<TType>(2);
@@ -157,11 +157,11 @@ Matrix::Matrix3<TType, TMatrixConvention> Quaternion<TType>::getRotationMatrix()
     const TType twoZZ = twoZ * m_z;
     const TType twoZW = twoZ * m_w;
 
-    const Vector::Vector3<TType> vec1 (one - twoYY - twoZZ, twoXY + twoZW, twoXZ - twoYW);
-    const Vector::Vector3<TType> vec2 (twoXY - twoZW, one - twoXX - twoZZ, twoYZ + twoXW);
-    const Vector::Vector3<TType> vec3 (twoXZ + twoYW, twoYZ - twoXW, one - twoXX - twoYY);
+    const Vector3<TType> vec1 (one - twoYY - twoZZ, twoXY + twoZW, twoXZ - twoYW);
+    const Vector3<TType> vec2 (twoXY - twoZW, one - twoXX - twoZZ, twoYZ + twoXW);
+    const Vector3<TType> vec3 (twoXZ + twoYW, twoYZ - twoXW, one - twoXX - twoYY);
 
-    Matrix::Mat3<TType, TMatrixConvention> rst ({vec1, vec2, vec3});
+    Mat3<TType, TMatrixConvention> rst ({vec1, vec2, vec3});
     return rst;
 }
 
@@ -175,11 +175,11 @@ TType Quaternion<TType>::dot(const Quaternion<TType>& other) const noexcept
 template <typename TType>
 template <typename TTypeVector>
 inline constexpr
-void Quaternion<TType>::rotateVector(Vector::Vector3<TTypeVector>& vec) const noexcept
+void Quaternion<TType>::rotateVector(Vector3<TTypeVector>& vec) const noexcept
 {
     //Rodrigues formula with quaternion is better than quat * vec * quat.getInverse()
     TType angle = static_cast<TType>(getAngle());
-    Vector::Vector3<TType> unitAxis = getAxis();
+    Vector3<TType> unitAxis = getAxis();
 
     const TType cosAngle = std::cos(static_cast<TType>(angle));
     vec = cosAngle * vec + (static_cast<TType>(1) - cosAngle) * vec.dot(unitAxis) * unitAxis + std::sin(static_cast<TType>(angle)) * unitAxis.getCross(vec);
@@ -188,7 +188,7 @@ void Quaternion<TType>::rotateVector(Vector::Vector3<TTypeVector>& vec) const no
 template <typename TType>
 template <typename TTypeVector>
 inline constexpr
-void Quaternion<TType>::globalRotateVector(const Quaternion<TType>& otherQuat, Vector::Vector3<TTypeVector>& vec) const noexcept
+void Quaternion<TType>::globalRotateVector(const Quaternion<TType>& otherQuat, Vector3<TTypeVector>& vec) const noexcept
 {
     const Quaternion<TType> q1q2 = (*this) * otherQuat;
     vec = (q1q2 * vec * q1q2.getInverse()).getXYZ();
@@ -197,7 +197,7 @@ void Quaternion<TType>::globalRotateVector(const Quaternion<TType>& otherQuat, V
 template <typename TType>
 template <typename TTypeVector>
 inline constexpr
-void Quaternion<TType>::localRotateVector(const Quaternion<TType>& otherQuat, Vector::Vector3<TTypeVector>& vec) const noexcept
+void Quaternion<TType>::localRotateVector(const Quaternion<TType>& otherQuat, Vector3<TTypeVector>& vec) const noexcept
 {
     const Quaternion<TType> q2q1 = otherQuat * (*this);
     vec = (q2q1 * vec * q2q1.getInverse()).getXYZ();
@@ -291,10 +291,10 @@ template <typename TTypeOther>
 inline constexpr
 Quaternion<TType>& Quaternion<TType>::operator*=(const Quaternion<TTypeOther>& other) noexcept
 {
-    TType WTemp = m_w * other.getW() - Vector::Vector3<TType>::dot(m_xyz, other.getXYZ());
+    TType WTemp = m_w * other.getW() - Vector3<TType>::dot(m_xyz, other.getXYZ());
     m_xyz  =   static_cast<TType>(m_w) * other.getXYZ() +
                 static_cast<TType>(other.getW()) * m_xyz +
-                Vector::Vector3<TType>::cross(m_xyz, other.getXYZ());
+                Vector3<TType>::cross(m_xyz, other.getXYZ());
     
     m_w = std::move(WTemp);
     
@@ -302,7 +302,7 @@ Quaternion<TType>& Quaternion<TType>::operator*=(const Quaternion<TTypeOther>& o
 }
 
 template <typename TType>
-template <typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 Quaternion<TType>& Quaternion<TType>::operator*=(TTypeScalar scalar) noexcept
 {
@@ -312,13 +312,13 @@ Quaternion<TType>& Quaternion<TType>::operator*=(TTypeScalar scalar) noexcept
 }
 
 template <typename TType>
-template <typename TTypeVector, Type::IsArithmetic<TTypeVector> = true>
+template <typename TTypeVector, IsArithmetic<TTypeVector> = true>
 inline constexpr
-Quaternion<TType>& Quaternion<TType>::operator*=(Vector::Vector3<TTypeVector> vec) noexcept
+Quaternion<TType>& Quaternion<TType>::operator*=(Vector3<TTypeVector> vec) noexcept
 {
-    TType WTemp = -Vector::Vector3<TType>::dot(m_xyz, vec);
+    TType WTemp = -Vector3<TType>::dot(m_xyz, vec);
     m_xyz  =   static_cast<TType>(m_w) * vec +
-                Vector::Vector3<TType>::cross(m_xyz, vec);
+                Vector3<TType>::cross(m_xyz, vec);
     
     m_w = std::move(WTemp);
     
@@ -326,7 +326,7 @@ Quaternion<TType>& Quaternion<TType>::operator*=(Vector::Vector3<TTypeVector> ve
 }
 
 template <typename TType>
-template <typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 Quaternion<TType>& Quaternion<TType>::operator/=(TTypeScalar scalar) noexcept
 {
@@ -370,28 +370,28 @@ Quaternion<TType> operator*(Quaternion<TType> lhs, const Quaternion<TTypeOther>&
     return lhs *= rhs;
 }
    
-template <typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 Quaternion<TType> operator*(Quaternion<TType> quat, TTypeScalar scalar) noexcept
 {
     return quat *= static_cast<TType>(scalar);
 }
 
-template <typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 Quaternion<TType> operator*(TTypeScalar scalar, Quaternion<TType> quat) noexcept
 {
     return quat *= static_cast<TType>(scalar);
 }
 
-template <typename TType, typename TTypeVector, Type::IsArithmetic<TTypeVector> = true>
+template <typename TType, typename TTypeVector, IsArithmetic<TTypeVector> = true>
 inline constexpr
-Quaternion<TType> operator*(Quaternion<TType> quat, const Vector::Vector3<TTypeVector>& vec) noexcept
+Quaternion<TType> operator*(Quaternion<TType> quat, const Vector3<TTypeVector>& vec) noexcept
 {
     return quat *= vec;
 }
 
-template <typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+template <typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 inline constexpr
 Quaternion<TType> operator/(Quaternion<TType> quat, TTypeScalar scalar) noexcept
 {

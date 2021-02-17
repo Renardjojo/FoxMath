@@ -31,11 +31,11 @@
 
 #include <limits> //std::numeric_limits<T>::espilon()
 #include <cmath> //abs
-#include "Types/SFINAEShorthand.hpp" // Type::IsArithmetic<T>
+#include "Types/SFINAEShorthand.hpp" // IsArithmetic<T>
 
-namespace FoxMath::Numeric
+namespace FoxMath
 {
-    template<typename T, Type::IsArithmetic<T> = true>
+    template<typename T, IsArithmetic<T> = true>
     inline constexpr
     bool isSame(T v1, T v2)
     {
@@ -49,7 +49,7 @@ namespace FoxMath::Numeric
         }
     }
 
-    template<typename T, Type::IsArithmetic<T> = true>
+    template<typename T, IsArithmetic<T> = true>
     inline constexpr
     bool isSameAsZero(T v1)
     {
@@ -63,4 +63,4 @@ namespace FoxMath::Numeric
         }
     }
 
-} /*namespace FoxMath::Numeric*/
+} /*namespace FoxMath::*/

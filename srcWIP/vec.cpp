@@ -1,6 +1,6 @@
-#include "GE/Core/Maths/vec.hpp"
+#include "Vector/Vector.hpp"
 
-using namespace Engine::Core::Maths;
+using namespace FoxMath;
 
 Vec2 Vec2::zero ({0.f, 0.f});
 Vec2 Vec2::one ({1.f, 1.f});

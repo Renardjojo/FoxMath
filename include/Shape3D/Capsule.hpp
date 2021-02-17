@@ -5,14 +5,14 @@
 #ifndef _CAPSULE_H
 #define _CAPSULE_H
 
-#include "GE/Core/Maths/Shape3D/Volume.hpp"
-#include "GE/Core/Maths/vec.hpp"
-#include "GE/Core/Maths/Shape3D/Segment.hpp"
-#include "GE/Core/Maths/Shape3D/InfiniteCylinder.hpp"
-#include "GE/Core/Maths/Shape3D/Sphere.hpp"
-#include "GE/Core/Maths/Shape3D/Cylinder.hpp"
+#include "Shape3D/Volume.hpp"
+#include "Vector/Vector.hpp"
+#include "Shape3D/Segment.hpp"
+#include "Shape3D/InfiniteCylinder.hpp"
+#include "Shape3D/Sphere.hpp"
+#include "Shape3D/Cylinder.hpp"
 
-namespace Engine::Core::Maths::Shape3D
+namespace FoxMath
 {
     class Capsule : public Volume
     {
@@ -117,6 +117,6 @@ namespace Engine::Core::Maths::Shape3D
 
     };
 
-} /*namespace Engine::Core::Maths::Shape3D*/
+} /*namespace FoxMath*/
 
 #endif //_CAPSULE_H

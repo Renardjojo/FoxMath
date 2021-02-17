@@ -1,7 +1,7 @@
 ﻿#include "GE/Core/Maths/ShapeRelation/SegmentSegment.hpp"
 
-using namespace Engine::Core::Maths;
-using namespace Engine::Core::Maths::ShapeRelation;
+using namespace FoxMath;
+using namespace FoxMath;
 
 static float d(const Vec3& m, const Vec3& n, const Vec3& o, const Vec3& p)
 {
@@ -32,7 +32,7 @@ bool SegmentSegment::isSegmentSegmentCollided(const Vec3& a1, const Vec3& a2, co
         return false;
 
     /*OM = OA + t(OB - OA)*/
-    if (intersection.intersectionType == EIntersectionType::OneIntersectiont)
+    if (intersection.intersectionType == EIntersectionOneIntersectiont)
     {
         intersection.setSecondIntersection(a1 + t1 * (a2 - a1));
     }

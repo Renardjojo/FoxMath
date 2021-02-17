@@ -6,10 +6,10 @@
 #define _SPHERE_ORIENTED_BOX_H
 
 #include "GE/Core/Maths/ShapeRelation/Intersection.hpp"
-#include "GE/Core/Maths/Shape3D/Sphere.hpp"
+#include "Shape3D/Sphere.hpp"
 #include "GE/Core/Maths/Shape3D/OrientedBox.hpp"
 
-namespace Engine::Core::Maths::ShapeRelation
+namespace FoxMath
 {
     class SphereOrientedBox
     {
@@ -38,6 +38,6 @@ namespace Engine::Core::Maths::ShapeRelation
         #pragma endregion //!static methods
     };
 
-} /*namespace Engine::Core::Maths::ShapeRelation*/
+} /*namespace FoxMath*/
 
 #endif //_SPHERE_ORIENTED_BOX_H

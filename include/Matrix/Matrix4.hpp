@@ -34,7 +34,7 @@
 #include "Macro/CrossInheritanceCompatibility.hpp"
 #include "Angle/Angle.hpp"
 
-namespace FoxMath::Matrix
+namespace FoxMath
 {
     template <typename TType = float, EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     class Matrix4 :  public SquareMatrix<4, TType, TMatrixConvention>
@@ -93,11 +93,11 @@ namespace FoxMath::Matrix
          * @return constexpr Matrix4 
          */
         [[nodiscard]] static constexpr inline
-        Matrix4 createLookAtView (const Vector::Vec3<TType> & from, const Vector::Vec3<TType> & to, const Vector::Vec3<TType> & up) noexcept
+        Matrix4 createLookAtView (const Vec3<TType> & from, const Vec3<TType> & to, const Vec3<TType> & up) noexcept
         {
-            const Vector::Vec3<TType>   forward ((to - from).getNormalized());
-            const Vector::Vec3<TType>   side    (forward.getCross(up).getNormalized());
-            const Vector::Vec3<TType>   vUp     (side.getCross(forward));
+            const Vec3<TType>   forward ((to - from).getNormalized());
+            const Vec3<TType>   side    (forward.getCross(up).getNormalized());
+            const Vec3<TType>   vUp     (side.getCross(forward));
             const TType                 zero    {static_cast<TType>(0)};
             const TType                 one     {static_cast<TType>(1)};
 
@@ -149,7 +149,7 @@ namespace FoxMath::Matrix
          * @return constexpr Matrix4 
          */
         [[nodiscard]] static constexpr inline
-        Matrix4 createPerspectiveMatrix 	(TType aspect, TType near, TType far, Angle::Angle<Angle::EAngleType::Radian, TType> fov) noexcept
+        Matrix4 createPerspectiveMatrix 	(TType aspect, TType near, TType far, Angle<EAngleType::Radian, TType> fov) noexcept
         {
             const TType zero    {static_cast<TType>(0)};
             const TType one     {static_cast<TType>(1)};
@@ -203,7 +203,7 @@ namespace FoxMath::Matrix
          * @return constexpr Matrix4 
          */
         [[nodiscard]] static constexpr inline 
-        Matrix4 createXRotationMatrix		(Angle::Angle<Angle::EAngleType::Radian, TType> rotRadx) //rot of axis Y to axis Z arround X
+        Matrix4 createXRotationMatrix		(Angle<EAngleType::Radian, TType> rotRadx) //rot of axis Y to axis Z arround X
         {
             const TType cosT = std::cos(static_cast<TType>(rotRadx));
             const TType sinT = std::sin(static_cast<TType>(rotRadx));
@@ -223,7 +223,7 @@ namespace FoxMath::Matrix
          * @return constexpr Matrix4 
          */
         [[nodiscard]] static constexpr inline 
-        Matrix4 createYRotationMatrix		(Angle::Angle<Angle::EAngleType::Radian, TType> rotRady) //rot of axis Z to axis X arround Y
+        Matrix4 createYRotationMatrix		(Angle<EAngleType::Radian, TType> rotRady) //rot of axis Z to axis X arround Y
         {
             const TType cosT = std::cos(static_cast<TType>(rotRady));
             const TType sinT = std::sin(static_cast<TType>(rotRady));
@@ -243,7 +243,7 @@ namespace FoxMath::Matrix
          * @return constexpr Matrix4 
          */
         [[nodiscard]] static constexpr inline 
-        Matrix4 createZRotationMatrix		(Angle::Angle<Angle::EAngleType::Radian, TType> rotRadz) //rot of axis X to axis Y arround Z
+        Matrix4 createZRotationMatrix		(Angle<EAngleType::Radian, TType> rotRadz) //rot of axis X to axis Y arround Z
         {
             const TType cosT = std::cos(static_cast<TType>(rotRadz));
             const TType sinT = std::sin(static_cast<TType>(rotRadz));
@@ -263,7 +263,7 @@ namespace FoxMath::Matrix
          * @return constexpr Matrix4 
          */
         [[nodiscard]] static constexpr inline //TODO: Transform (space an right and and left hand referential!)
-        Matrix4 createFixedAngleEulerRotationMatrix	(const Vector::Vec3<TType>& rVec)
+        Matrix4 createFixedAngleEulerRotationMatrix	(const Vec3<TType>& rVec)
         {
             const TType cosTX = std::cos(static_cast<TType>(rVec.getX()));
             const TType sinTX = std::sin(static_cast<TType>(rVec.getX()));
@@ -300,7 +300,7 @@ namespace FoxMath::Matrix
          * @return constexpr Matrix4 
          */
         [[nodiscard]] static constexpr inline
-        Matrix4 createTRSMatrix(const Vector::Vec3<TType>& translVec, const Vector::Vec3<TType>& rotVec, const Vector::Vec3<TType>& scaleVec)
+        Matrix4 createTRSMatrix(const Vec3<TType>& translVec, const Vec3<TType>& rotVec, const Vec3<TType>& scaleVec)
         {
             if constexpr (TMatrixConvention == EMatrixConvention::ColumnMajor)
             {
@@ -365,7 +365,7 @@ namespace FoxMath::Matrix
         }
 
         [[nodiscard]] static constexpr inline
-        Matrix4 createSRTMatrix(const Vector::Vec3<TType>& scaleVec, const Vector::Vec3<TType>& rotVec, const Vector::Vec3<TType>& translVec)
+        Matrix4 createSRTMatrix(const Vec3<TType>& scaleVec, const Vec3<TType>& rotVec, const Vec3<TType>& translVec)
         {
             if constexpr (TMatrixConvention == EMatrixConvention::ColumnMajor)
             {
@@ -515,4 +515,4 @@ namespace FoxMath::Matrix
     template <EMatrixConvention TMatrixConvention = EMatrixConvention::RowMajor>
     using Mat4b         = Matrix4b<TMatrixConvention>;
 
-} /*namespace FoxMath::Matrix*/
+} /*namespace FoxMath*/

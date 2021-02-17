@@ -30,7 +30,7 @@
 #pragma once
 
 #include "Types/Implicit.hpp" //implicit
-#include "Types/SFINAEShorthand.hpp" //Type::IsArithmetic<TType>, Type::IsSame, Type::Pack
+#include "Types/SFINAEShorthand.hpp" //IsArithmetic<TType>, IsSame, Pack
 #include "Numeric/Limits.hpp" //isSame
 #include "Angle/Angle.hpp" //Angle
 
@@ -48,12 +48,12 @@
 #include <type_traits> //std::is_constant_evaluated
 #endif
 
-namespace FoxMath::Vector
+namespace FoxMath
 {
     /*Use of IsArithmetic*/
     template <size_t TLength, typename TType = float, 
-                Type::IsNotEqualTo<TLength, 0> = true, 
-                Type::IsArithmetic<TType> = true>
+                IsNotEqualTo<TLength, 0> = true, 
+                IsArithmetic<TType> = true>
     class GenericVector;
 
     /*Specilisation of GenericVector class*/
@@ -102,27 +102,27 @@ namespace FoxMath::Vector
          * @note : If the number of initializer clauses is less than the number of members or initializer list is completely empty, the remaining members are value-initialized. 
          * If a member of a reference type is one of these remaining members, the program is ill-formed.
          * 
-         * @example `FoxMath::Vector::Vector<2, int> vec (1, 1, 3)` or `FoxMath::Vector::Vector<2, int> vec (1, 2)`
+         * @example `FoxMath::Vector<2, int> vec (1, 1, 3)` or `FoxMath::Vector<2, int> vec (1, 2)`
          * 
          * @tparam T 
          * @tparam Sfinae IsSame 
          */
-        template<typename... T, Type::IsAllSame<TType, T...> = true,
-        Type::IsLessThanOrEqualTo<sizeof...(T), TLength> = true>
+        template<typename... T, IsAllSame<TType, T...> = true,
+        IsLessThanOrEqualTo<sizeof...(T), TLength> = true>
         explicit inline constexpr
         GenericVector (T... args) noexcept;
 
         /**
          * @brief Variadic templated constructor to init member with generic vector and scalar
          * @note Is use whene you try to upgrade generic vector with static cast like static_cast<Vec4f>(vec3f). Else use the convertor operator
-         * @example `FoxMath::Vector::Vector<10, int> vect(FoxMath::Vector::Vector<5, int>(), 22, 31)`
+         * @example `FoxMath::Vector<10, int> vect(FoxMath::Vector<5, int>(), 22, 31)`
          * @tparam TLengthOther 
          * @tparam TScalarArgs
          */
         template<size_t TLengthOther, typename... TScalarArgs, 
-        Type::IsAllSame<TType, TScalarArgs...> = true,
-        Type::IsLessThanOrEqualTo<sizeof...(TScalarArgs) + TLengthOther, TLength> = true,
-        Type::IsLessThan<TLengthOther, TLength> = true>
+        IsAllSame<TType, TScalarArgs...> = true,
+        IsLessThanOrEqualTo<sizeof...(TScalarArgs) + TLengthOther, TLength> = true,
+        IsLessThan<TLengthOther, TLength> = true>
         explicit inline constexpr
         GenericVector (const GenericVector<TLengthOther, TType>& other, TScalarArgs... args) noexcept;
 
@@ -138,7 +138,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return constexpr GenericVector& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
         inline constexpr  
         GenericVector& fill (const TscalarType scalar) noexcept;
 
@@ -325,7 +325,7 @@ namespace FoxMath::Vector
          * @param angleRad 
          */
         inline constexpr
-		GenericVector& rotateAroundAxis (const GenericVector& unitAxis, const Angle::Angle<Angle::EAngleType::Radian, TType>& angle) noexcept;
+		GenericVector& rotateAroundAxis (const GenericVector& unitAxis, const Angle<EAngleType::Radian, TType>& angle) noexcept;
 
         /**
          * @brief Get the Rotation Around Axis object
@@ -335,7 +335,7 @@ namespace FoxMath::Vector
          * @return GenericVector 
          */
         [[nodiscard]] inline constexpr
-		GenericVector getRotationAroundAxis (const GenericVector& unitAxis, const Angle::Angle<Angle::EAngleType::Radian, TType>& angle) const noexcept;
+		GenericVector getRotationAroundAxis (const GenericVector& unitAxis, const Angle<EAngleType::Radian, TType>& angle) const noexcept;
 
         /**
          * @brief Get the projection with another generic vector
@@ -493,8 +493,8 @@ namespace FoxMath::Vector
         /**
          * @brief Set the Data a index
          * 
-         * A similar member function, GenericVector::setDataAt, has the same behavior as this operator function,
-         * except that GenericVector::setDataAt is bound-checked and signals if the requested position is out of range by throwing an out_of_range exception.
+         * A similar member function, GenericsetDataAt, has the same behavior as this operator function,
+         * except that GenericsetDataAt is bound-checked and signals if the requested position is out of range by throwing an out_of_range exception.
          * 
          * Portable programs should never call this function with an argument index that is out of range,
          * since this causes undefined behavior.
@@ -505,7 +505,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return constexpr GenericVector& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
 		inline constexpr
 		GenericVector& setData(size_t index, TscalarType scalar) noexcept;
 
@@ -513,7 +513,7 @@ namespace FoxMath::Vector
          * @brief Set the Data at index
          * 
          * The function automatically checks whether index is within the bounds of valid elements in the GenericVector, throwing an out_of_range exception if it is not (i.e., if n is greater than, or equal to, its size).
-         * This is in contrast with function GenericVector::setData, that does not check against bounds.
+         * This is in contrast with function GenericsetData, that does not check against bounds.
          * 
          * @tparam TscalarType 
          * @tparam true 
@@ -521,7 +521,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return constexpr GenericVector& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
 		inline constexpr
 		GenericVector& setDataAt(size_t index, TscalarType scalar) throw ();
 
@@ -534,8 +534,8 @@ namespace FoxMath::Vector
         /**
          * @brief Returns a reference to the element at position index in the GenericVector.
          * 
-         * A similar member function, GenericVector::at, has the same behavior as this operator function,
-         * except that GenericVector::at is bound-checked and signals if the requested position is out of range by throwing an out_of_range exception.
+         * A similar member function, Genericat, has the same behavior as this operator function,
+         * except that Genericat is bound-checked and signals if the requested position is out of range by throwing an out_of_range exception.
          * 
          * Portable programs should never call this function with an argument index that is out of range,
          * since this causes undefined behavior.
@@ -557,7 +557,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return implicit constexpr& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
 		implicit inline constexpr
 		GenericVector& operator=(TscalarType scalar) noexcept;
 
@@ -569,7 +569,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return constexpr GenericVector& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
 		inline constexpr
 		GenericVector& operator+=(TscalarType scalar) noexcept;
 
@@ -593,7 +593,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return constexpr GenericVector& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
 		inline constexpr
 		GenericVector& operator-=(TscalarType scalar) noexcept;
 
@@ -617,7 +617,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return constexpr GenericVector& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
 		inline constexpr
 		GenericVector& operator*=(TscalarType scalar) noexcept;
 
@@ -641,7 +641,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return constexpr GenericVector& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
 		inline constexpr
 		GenericVector& operator/=(TscalarType scalar) noexcept;
 
@@ -665,7 +665,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return constexpr GenericVector& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
 		inline constexpr
 		GenericVector& operator%=(TscalarType scalar) noexcept;
 
@@ -689,7 +689,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return constexpr GenericVector& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
 		inline constexpr
 		GenericVector& operator&=(TscalarType scalar) noexcept;
 
@@ -713,7 +713,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return constexpr GenericVector& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
 		inline constexpr
 		GenericVector& operator|=(TscalarType scalar) noexcept;
 
@@ -737,7 +737,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return constexpr GenericVector& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
 		inline constexpr
 		GenericVector& operator^=(TscalarType scalar) noexcept;
 
@@ -761,7 +761,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return constexpr GenericVector& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
 		inline constexpr
 		GenericVector& operator<<=(TscalarType scalar) noexcept;
 
@@ -785,7 +785,7 @@ namespace FoxMath::Vector
          * @param scalar 
          * @return constexpr GenericVector& 
          */
-        template<typename TscalarType, Type::IsArithmetic<TscalarType> = true>
+        template<typename TscalarType, IsArithmetic<TscalarType> = true>
 		inline constexpr
 		GenericVector& operator>>=(TscalarType scalar) noexcept;
 
@@ -842,7 +842,7 @@ namespace FoxMath::Vector
         /**
          * @brief Converte generic vector to another generic vector type
          * @note use static_cast<> to call this function. Is use only if you try to downgrade generic vector like static_cast<Vec3f>(vec4f). Else use the constructor
-         * @example `FoxMath::Vector::Vector<2, float> rhs = static_cast<FoxMath::Vector::Vector<2, float>>(vec)`
+         * @example `FoxMath::Vector<2, float> rhs = static_cast<FoxMath::Vector<2, float>>(vec)`
          * @tparam TLengthOther 
          * @tparam TTypeOther 
          * @return GenericVector<TLengthOther, TTypeOther> 
@@ -891,7 +891,7 @@ namespace FoxMath::Vector
      * @param scalar 
      * @return constexpr GenericVector<TLength, TType> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
     GenericVector<TLength, TType> operator+(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
@@ -904,7 +904,7 @@ namespace FoxMath::Vector
      * @param vec 
      * @return constexpr GenericVector<TLength, TType> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
     GenericVector<TLength, TType> operator+(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
 
@@ -930,7 +930,7 @@ namespace FoxMath::Vector
      * @param scalar 
      * @return constexpr GenericVector<TLength, TType> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
     GenericVector<TLength, TType> operator-(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
@@ -943,7 +943,7 @@ namespace FoxMath::Vector
      * @param vec 
      * @return constexpr GenericVector<TLength, TType> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
     GenericVector<TLength, TType> operator-(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
 
@@ -969,7 +969,7 @@ namespace FoxMath::Vector
      * @param scalar 
      * @return constexpr GenericVector<TLength, TType> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
     GenericVector<TLength, TType> operator*(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
@@ -982,7 +982,7 @@ namespace FoxMath::Vector
      * @param vec 
      * @return constexpr GenericVector<TLength, TType> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
     GenericVector<TLength, TType> operator*(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
 
@@ -1008,7 +1008,7 @@ namespace FoxMath::Vector
      * @param scalar 
      * @return constexpr GenericVector<TLength, TType> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
     GenericVector<TLength, TType> operator/(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
@@ -1021,7 +1021,7 @@ namespace FoxMath::Vector
      * @param vec 
      * @return constexpr GenericVector<TLength, TType> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
     GenericVector<TLength, TType> operator/(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
 
@@ -1047,7 +1047,7 @@ namespace FoxMath::Vector
      * @param scalar 
      * @return constexpr GenericVector<TLength, TType> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
     GenericVector<TLength, TType> operator%(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
@@ -1060,7 +1060,7 @@ namespace FoxMath::Vector
      * @param vec 
      * @return constexpr GenericVector<TLength, TType> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
     GenericVector<TLength, TType> operator%(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
 
@@ -1089,7 +1089,7 @@ namespace FoxMath::Vector
      * @param scalar 
      * @return constexpr GenericVector<TLength, TType> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
     GenericVector<TLength, TType> operator&(GenericVector<TLength, TType> lhs, TTypeScalar scalar) noexcept;
 
@@ -1102,7 +1102,7 @@ namespace FoxMath::Vector
      * @param vec 
      * @return constexpr GenericVector<TLength, TType> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
     GenericVector<TLength, TType> operator&(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
 
@@ -1128,7 +1128,7 @@ namespace FoxMath::Vector
      * @param scalar 
      * @return constexpr GenericVector<TLength, TType> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
     GenericVector<TLength, TType> operator|(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
@@ -1141,7 +1141,7 @@ namespace FoxMath::Vector
      * @param vec 
      * @return constexpr GenericVector<TLength, TType> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
     GenericVector<TLength, TType> operator|(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
 
@@ -1167,7 +1167,7 @@ namespace FoxMath::Vector
      * @param scalar 
      * @return constexpr GenericVector<TLength, TType> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
     GenericVector<TLength, TType> operator^(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
@@ -1180,7 +1180,7 @@ namespace FoxMath::Vector
      * @param vec 
      * @return constexpr GenericVector<TLength, TType> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
     GenericVector<TLength, TType> operator^(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
 
@@ -1206,7 +1206,7 @@ namespace FoxMath::Vector
      * @param scalar 
      * @return constexpr GenericVector<TLength, TType> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
     GenericVector<TLength, TType> operator<<(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
@@ -1219,7 +1219,7 @@ namespace FoxMath::Vector
      * @param vec 
      * @return constexpr GenericVector<TLength, TType> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
     GenericVector<TLength, TType> operator<<(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
 
@@ -1245,7 +1245,7 @@ namespace FoxMath::Vector
      * @param scalar 
      * @return constexpr GenericVector<TLength, TType> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
     GenericVector<TLength, TType> operator>>(GenericVector<TLength, TType> vec, TTypeScalar scalar) noexcept;
 
@@ -1258,7 +1258,7 @@ namespace FoxMath::Vector
      * @param vec 
      * @return constexpr GenericVector<TLength, TType> 
      */
-	template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+	template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
 	[[nodiscard]] inline constexpr
     GenericVector<TLength, TType> operator>>(TTypeScalar scalar, GenericVector<TLength, TType> vec) noexcept;
 
@@ -1351,7 +1351,7 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+    template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
     bool operator==(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
 
@@ -1365,7 +1365,7 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+    template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
     bool operator==(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept;
 
@@ -1393,7 +1393,7 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+    template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
     bool operator!=(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
 
@@ -1407,7 +1407,7 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+    template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
     bool operator!=(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept;
 
@@ -1435,7 +1435,7 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+    template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
     bool operator<(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
 
@@ -1449,7 +1449,7 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+    template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
     bool operator<(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept;
 
@@ -1477,7 +1477,7 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+    template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
     bool operator>(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
 
@@ -1491,7 +1491,7 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+    template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
     bool operator>(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept;
 
@@ -1519,7 +1519,7 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+    template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
     bool operator<=(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
 
@@ -1533,7 +1533,7 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+    template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
     bool operator<=(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept;
 
@@ -1561,7 +1561,7 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+    template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
     [[nodiscard]] inline constexpr
     bool operator>=(GenericVector<TLength, TType> const& vec, TTypeScalar scalar) noexcept;
 
@@ -1575,7 +1575,7 @@ namespace FoxMath::Vector
      * @return true 
      * @return false 
      */
-    template <size_t TLength, typename TType, typename TTypeScalar, Type::IsArithmetic<TTypeScalar> = true>
+    template <size_t TLength, typename TType, typename TTypeScalar, IsArithmetic<TTypeScalar> = true>
     inline constexpr
     bool operator>=(TTypeScalar scalar, GenericVector<TLength, TType> const& vec) noexcept;
 
@@ -1621,4 +1621,4 @@ namespace FoxMath::Vector
     template <size_t TLength, typename TType  = float>
     using Vec = Vector<TLength, TType>;
 
-} /*namespace FoxMath::Vector*/
+} /*namespace FoxMath*/

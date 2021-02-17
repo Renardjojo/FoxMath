@@ -1,10 +1,10 @@
 ﻿#include "GE/Core/Maths/ShapeRelation/SegmentSphere.hpp"
 
-#include "GE/Core/Maths/vec.hpp"
+#include "Vector/Vector.hpp"
 
-using namespace Engine::Core::Maths;
-using namespace Engine::Core::Maths::Shape3D;
-using namespace Engine::Core::Maths::ShapeRelation;
+using namespace FoxMath;
+using namespace FoxMath;
+using namespace FoxMath;
 
 bool SegmentSphere::isSegmentSphereCollided(const Segment& seg, const Sphere& sphere, Intersection& intersection)
 {
@@ -21,7 +21,7 @@ bool SegmentSphere::isSegmentSphereCollided(const Segment& seg, const Sphere& sp
     /*We comput the discriminent*/
     if (Intersection::computeDiscriminentAndSolveEquation(a, b, c, seg.getPt1(), seg.getPt2(), intersection))
     {
-        if (intersection.intersectionType == EIntersectionType::TwoIntersectiont)
+        if (intersection.intersectionType == EIntersectionTwoIntersectiont)
         {
             intersection.normalI2 = (intersection.intersection2 - sphere.getCenter()).normalize();
         }

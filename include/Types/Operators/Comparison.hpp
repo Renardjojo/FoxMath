@@ -37,7 +37,7 @@
 #include "Types/Operators/Comparison/Spaceship.hpp"
 #include "Types/Operators/Comparison/GreaterEqual.hpp"
 
-namespace FoxMath::Type::Operator
+namespace FoxMath::Operator
 {
     /**
      * @brief Module gathering all common comparison operators
@@ -55,4 +55,4 @@ namespace FoxMath::Type::Operator
                         Spaceship   <TStrongTypedef>,
                         GreaterEqual<TStrongTypedef>
     {};
-} /*namespace FoxMath::Type::Operator*/
+} /*namespace FoxMath::Operator*/

@@ -1,13 +1,13 @@
 ﻿#include "GE/Core/Maths/ShapeRelation/SegmentQuad.hpp"
 
-#include "GE/Core/Maths/vec.hpp"
-#include "GE/Core/Maths/Shape3D/Plane.hpp"
+#include "Vector/Vector.hpp"
+#include "Shape3D/Plane.hpp"
 #include "GE/Core/Maths/ShapeRelation/SegmentPlane.hpp"
 #include "GE/Core/Maths/ShapeRelation/SegmentSegment.hpp"
 
-using namespace Engine::Core::Maths;
-using namespace Engine::Core::Maths::Shape3D;
-using namespace Engine::Core::Maths::ShapeRelation;
+using namespace FoxMath;
+using namespace FoxMath;
+using namespace FoxMath;
 
 bool SegmentQuad::isSegmentQuadCollided(const Segment& seg, const Quad& quad, Intersection& intersection)
 {
@@ -21,7 +21,7 @@ bool SegmentQuad::isSegmentQuadCollided(const Segment& seg, const Quad& quad, In
     }
 
     /*Check if the segment is on the plan*/
-    if (intersection.intersectionType == EIntersectionType::InfinyIntersection)
+    if (intersection.intersectionType == EIntersectionInfinyIntersection)
     {
         /*This is a plan problem that must be solve with SAT algorythme in 2 dimension*/
         /*This case is imposible with 3d trajectory*/
