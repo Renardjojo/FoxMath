@@ -37,20 +37,14 @@ namespace FoxMath
          * @brief Init random seed with the current time
          * 
          */
-        static void initSeed()
-        {
-            std::srand(time(NULL));
-        }
-        
+        static void initSeed();
+
         /**
          * @brief Initialize random number generator
          * 
          * @param seed The pseudo-random number generator is initialized using the argument passed as seed.
          */
-        static void initSeed(float seed)
-        {
-            srand(seed);
-        }
+        static void initSeed(float seed);
 
         /**
          * @brief This will generate a number from 0.0 to 1.0, inclusive.
@@ -59,10 +53,7 @@ namespace FoxMath
          * @return T 
          */
         template<typename T = float> 
-        static auto unitValue() -> std::enable_if_t<std::is_floating_point<T>::value, T>
-        {
-            return static_cast <T> (rand()) / static_cast <T> (RAND_MAX);
-        } 
+        static auto unitValue() -> std::enable_if_t<std::is_floating_point<T>::value, T>;
 
 
         /**
@@ -72,10 +63,7 @@ namespace FoxMath
          * @return T 
          */
         template<typename T = int> 
-        static auto unitValue() -> std::enable_if_t<std::is_integral<T>::value, T>
-        {
-            return static_cast<T>(rand() % static_cast<T>(2));
-        }
+        static auto unitValue() -> std::enable_if_t<std::is_integral<T>::value, T>;
 
         /**
          * @brief This will generate a number from 0.0 to some arbitrary float, max:
@@ -85,16 +73,10 @@ namespace FoxMath
          * @return T 
          */
         template<typename T = float>
-        static auto ranged(const T& max) -> std::enable_if_t<std::is_floating_point<T>::value, T>
-        {
-            return max <= std::numeric_limits<T>::epsilon() ? static_cast<T>(0) : static_cast <T> (rand()) / (static_cast <T> (RAND_MAX / max));
-        }
+        static auto ranged(const T& max) -> std::enable_if_t<std::is_floating_point<T>::value, T>;
 
         template<typename T = int>
-        static auto ranged(const T& max) -> std::enable_if_t<std::is_integral<T>::value, T>
-        {
-            return max <= std::numeric_limits<T>::epsilon() ? static_cast<T>(0) : ranged<T>(0, max);
-        }
+        static auto ranged(const T& max) -> std::enable_if_t<std::is_integral<T>::value, T>;
 
         /**
          * @brief This will generate a number from some arbitrary min to some arbitrary max:
@@ -105,64 +87,34 @@ namespace FoxMath
          * @return T 
          */
         template<typename T = float>
-        static auto ranged(const T& min, const T& max) -> std::enable_if_t<std::is_floating_point<T>::value, T>
-        {
-            return max - min <= std::numeric_limits<T>::epsilon() ? max : min + static_cast <T> (rand()) /( static_cast <T> (RAND_MAX/(max - min)));
-        }
+        static auto ranged(const T& min, const T& max) -> std::enable_if_t<std::is_floating_point<T>::value, T>;
 
         template<typename T = int>
-        static auto ranged(const T& min, const T& max) -> std::enable_if_t<std::is_integral<T>::value, T>
-        {
-            return max - min <= std::numeric_limits<T>::epsilon() ? max : min + static_cast <T> (rand()) / (static_cast <T> (RAND_MAX/((max + static_cast<T>(1)) - min)));
-        }
+        static inline auto ranged(const T& min, const T& max) -> std::enable_if_t<std::is_integral<T>::value, T>;
 
 #pragma region Cicular
 
         template<typename T = float>
-        static Vec2<T> circularCoordinate(const Vec2<T>& center, const T& range)
-        {
-            T randValue = static_cast<T>(rand());
-            T scale = unitValue<T>();
-            return Vec2<T>{center.x + range * std::cos(randValue) * scale, center.y + range * std::sin(randValue) * scale};
-        }
+        static Vec2<T> circularCoordinate(const Vec2<T>& center, const T& range);
 
         template<typename T = float>
-        static Vec2<T> peripheralCircularCoordinate(const Vec2<T>& center, const T& range)
-        {
-            T randValue = static_cast<T>(rand());
-            return Vec2<T>{center.x + range * std::cos(randValue), center.y + range * std::sin(randValue)};
-        }
+        static Vec2<T> peripheralCircularCoordinate(const Vec2<T>& center, const T& range);
 
         template<typename T = float>
-        static Vec2<T> unitPeripheralCircularCoordinate()
-        {
-            T randValue = static_cast<T>(rand());
-            return Vec2<T>{std::cos(randValue), std::sin(randValue)};
-        }
+        static Vec2<T> unitPeripheralCircularCoordinate();
 
 #pragma endregion //!Cicular
 
 #pragma region Spherique
 
         template<typename T = float>
-        static Vec3<T> unitPeripheralSphericalCoordonate()
-        {
-            T phi = ranged<T>(static_cast<T>(0), static_cast<T>(PI * static_cast<T>(2)));
-            T theta = ranged<T>(static_cast<T>(0), static_cast<T>(PI * static_cast<T>(2)));
-            return Vec3<T>{std::sin(phi) * std::cos(theta), std::sin(phi) * std::sin(theta), std::cos(phi)};
-        }
+        static Vec3<T> unitPeripheralSphericalCoordonate();
 
         template<typename T = float>
-        static Vec3<T> sphericalCoordinate(const Vec3<T>& center, const T& range)
-        {
-            return (center + unitPeripheralSphericalCoordonate()) * unitValue<T>() * range;
-        }
+        static Vec3<T> sphericalCoordinate(const Vec3<T>& center, const T& range);
 
         template<typename T = float>
-        static Vec3<T> peripheralSphericalCoordinate(const Vec3<T>& center, const T& range)
-        {
-            return (center + unitPeripheralSphericalCoordonate()) * range;
-        }
+        static Vec3<T> peripheralSphericalCoordinate(const Vec3<T>& center, const T& range);
 
 
 #pragma endregion //!Spherique
@@ -170,23 +122,7 @@ namespace FoxMath
 #pragma region Square
 
        template<typename T = float>
-        static Vec2<T> peripheralSquareCoordinate(const Vec2<T>& center, const T& extX, const T& extY)
-        {           
-            if (unitValue<bool>())
-            {
-                if (unitValue<bool>())
-                {
-                    return Vec2<T>{center.x -extX, center.y + ranged<T>(-extY, extY)};
-                }
-                return Vec2<T>{center.x + extX, center.y + ranged<T>(-extY, extY)};
-            }
-
-            if (unitValue<bool>())
-            {
-                return Vec2<T>{center.x + ranged<T>(-extX, extX), center.y - extY};
-            }
-            return Vec2<T>{center.x + ranged<T>(-extX, extX), center.y + extY};
-        }
+        static Vec2<T> peripheralSquareCoordinate(const Vec2<T>& center, const T& extX, const T& extY);
 
         /**
          * @brief return square coordonate
@@ -198,10 +134,7 @@ namespace FoxMath
          * @return Vec2<T> 
          */
         template<typename T = float>
-        static Vec2<T> squareCoordinate(const Vec2<T>& center, const T& extX, const T& extY)
-        {           
-            return Vec2<T>{center.x + ranged<T>(-extX, extX), center.y + ranged<T>(-extY, extY)};
-        }
+        static Vec2<T> squareCoordinate(const Vec2<T>& center, const T& extX, const T& extY);
 
         /**
          * @brief return unit sqare with value between 0 and 1
@@ -210,10 +143,7 @@ namespace FoxMath
          * @return Vec2<T> 
          */
         template<typename T = float>
-        static Vec2<T> unitPeripheralSquareCoordinate()
-        {
-            return Vec2<T>{unitValue<T>(), unitValue<T>()};
-        }
+        static Vec2<T> unitPeripheralSquareCoordinate();
 
 #pragma endregion //!Square
 
@@ -221,32 +151,7 @@ namespace FoxMath
         
 
         template<typename T = float>
-        static Vec3<T> peripheralCubiqueCoordinate(const Vec3<T>& center, const T& extX, const T& extY, const T& extZ)
-        {    
-            if (unitValue<bool>())
-            {
-                if (unitValue<bool>())
-                {
-                    return Vec3<T>{center.x -extX, center.y + ranged<T>(-extY, extY), center.z + ranged<T>(-extZ, extZ)};
-                }
-                return Vec3<T>{center.x + extX, center.y + ranged<T>(-extY, extY), center.z + ranged<T>(-extZ, extZ)};
-            }
-
-            if (unitValue<bool>())
-            {
-                if (unitValue<bool>())
-                {
-                    return Vec3<T>{center.x + ranged<T>(-extX, extX), center.y -extY, center.z + ranged<T>(-extZ, extZ)};
-                }
-                return Vec3<T>{center.x + ranged<T>(-extX, extX), center.y + extY, center.z + ranged<T>(-extZ, extZ)};
-            }
-
-            if (unitValue<bool>())
-            {
-                return Vec3<T>{center.x + ranged<T>(-extX, extX), center.y + ranged<T>(-extY, extY), center.z -extZ};
-            }
-            return Vec3<T>{center.x + ranged<T>(-extX, extX), center.y + ranged<T>(-extY, extY), center.z + extZ};
-        }
+        static Vec3<T> peripheralCubiqueCoordinate(const Vec3<T>& center, const T& extX, const T& extY, const T& extZ);
         
         /**
          * @brief return cubique coordonate
@@ -259,10 +164,7 @@ namespace FoxMath
          * @return Vec3<T> 
          */
         template<typename T = float>
-        static Vec3<T> cubiqueCoordinate(const Vec3<T>& center, const T& extX, const T& extY, const T& extZ)
-        {           
-            return Vec3<T>{center.x + ranged<T>(-extX, extX), center.y + ranged<T>(-extY, extY), center.z + ranged<T>(-extZ, extZ)};
-        }
+        static Vec3<T> cubiqueCoordinate(const Vec3<T>& center, const T& extX, const T& extY, const T& extZ);
 
         /**
          * @brief return unit cubic with value between 0 and 1
@@ -271,10 +173,7 @@ namespace FoxMath
          * @return Vec3<T> 
          */
         template<typename T = float>
-        static Vec3<T> unitPeripheralCubiqueCoordinate()
-        {
-            return Vec3<T>{unitValue<T>(), unitValue<T>(), unitValue<T>()};
-        }
+        static Vec3<T> unitPeripheralCubiqueCoordinate();
 
 #pragma endregion //!Cubique
 
@@ -287,13 +186,12 @@ namespace FoxMath
          * @return false 
          */
         template<typename T = float>
-        static bool ranPercentProba(const T& percent)
-        { 
-            return ranged<T>(static_cast<T>(0), static_cast<T>(100)) <= percent;
-        }
+        static bool ranPercentProba(const T& percent);
 
         #pragma endregion //!methods
     };
+
+#include "Random.inl"
 
 } //namespace FoxMath
 
