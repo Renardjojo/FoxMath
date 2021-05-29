@@ -6,7 +6,7 @@
 #define _SEGMENT_CAPSULE_H
 
 #include "Vector/Vector.hpp"
-#include "GE/Core/Maths/ShapeRelation/Intersection.hpp"
+#include "ShapeRelation/Intersection.hpp"
 #include "Shape3D/Segment.hpp"
 #include "GE/Core/Maths/Shape3D/Capsule.hpp"
 #include "Shape3D/Cylinder.hpp"
@@ -31,7 +31,7 @@ namespace FoxMath
 
         #pragma region static methods
 
-        static bool isSegmentCapsuleCollided(const Shape3D::Segment& seg, const Shape3D::Capsule& capsule, Intersection& intersection);
+        static bool isSegmentCapsuleCollided(const Segment& seg, const Capsule& capsule, Intersection& intersection);
 
         #pragma endregion //!static methods
 
@@ -39,15 +39,15 @@ namespace FoxMath
 
         #pragma region static methods
 
-        static void detectSegmentPointPosition(const Shape3D::Segment& seg, const Shape3D::Capsule& capsule, int& outCodePt1, int& outCodePt2);
+        static void detectSegmentPointPosition(const Segment& seg, const Capsule& capsule, int& outCodePt1, int& outCodePt2);
 
-        static void checkCapsuleInfinitCylinderCollisionPoint(const Shape3D::Capsule& capsule, Intersection& intersection);
+        static void checkCapsuleInfinitCylinderCollisionPoint(const Capsule& capsule, Intersection& intersection);
 
-        static void checkLeftCapsuleSphereCollision (const Shape3D::Segment& seg, const Shape3D::Capsule& capsule, Intersection& intersection);
+        static void checkLeftCapsuleSphereCollision (const Segment& seg, const Capsule& capsule, Intersection& intersection);
 
-        static void checkRightCapsuleSphereCollision(const Shape3D::Segment& seg, const Shape3D::Capsule& capsule, Intersection& intersection);
+        static void checkRightCapsuleSphereCollision(const Segment& seg, const Capsule& capsule, Intersection& intersection);
 
-        static bool pointIsBetweenCapsuleSegLimit(const Shape3D::Capsule& capsule, const Vec3& pt);
+        static bool pointIsBetweenCapsuleSegLimit(const Capsule& capsule, const Vec3& pt);
 
         #pragma endregion //!static methods
 

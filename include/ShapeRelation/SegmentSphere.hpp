@@ -5,7 +5,7 @@
 #ifndef _SEGMENT_SPHERE_H
 #define _SEGMENT_SPHERE_H
 
-#include "GE/Core/Maths/ShapeRelation/Intersection.hpp"
+#include "ShapeRelation/Intersection.hpp"
 #include "Shape3D/Segment.hpp"
 #include "Shape3D/Sphere.hpp"
 
@@ -28,7 +28,7 @@ namespace FoxMath
 
         #pragma region static methods
 
-        static bool isSegmentSphereCollided(const Shape3D::Segment& seg, const Shape3D::Sphere& sphere, Intersection& intersection);
+        static bool isSegmentSphereCollided(const Segment& seg, const Sphere& sphere, Intersection& intersection);
 
         #pragma endregion //!static methods
 

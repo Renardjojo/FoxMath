@@ -6,7 +6,7 @@ using namespace FoxMath;
 using namespace FoxMath;
 
 
-bool SpherePlane::isSphereOnOrForwardPlanCollided(const Shape3D::Sphere& sphere, const Shape3D::Plane& plane)
+bool SpherePlane::isSphereOnOrForwardPlanCollided(const Sphere& sphere, const Plane& plane)
 {
     float distanceSphereToOrigin = Vec3::dot(sphere.getCenter(), plane.getNormal());
     return distanceSphereToOrigin > -sphere.getRadius() + plane.getDistance();

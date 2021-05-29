@@ -30,7 +30,7 @@ bool AabbAabb::isBothAABBCollided(const AABB& aabb1, const AABB& aabb2, Intersec
     return true;
 }
 
-bool AabbAabb::isBothAABBCollided(const Shape3D::AABB& aabb1, const Shape3D::AABB& aabb2)
+bool AabbAabb::isBothAABBCollided(const AABB& aabb1, const AABB& aabb2)
 {
     /*Step 1 : Find if the both shape are non collided*/
     //looking for a collision between the bow and the AABB of the sphere.

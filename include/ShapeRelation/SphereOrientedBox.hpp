@@ -5,7 +5,7 @@
 #ifndef _SPHERE_ORIENTED_BOX_H
 #define _SPHERE_ORIENTED_BOX_H
 
-#include "GE/Core/Maths/ShapeRelation/Intersection.hpp"
+#include "ShapeRelation/Intersection.hpp"
 #include "Shape3D/Sphere.hpp"
 #include "GE/Core/Maths/Shape3D/OrientedBox.hpp"
 
@@ -28,7 +28,7 @@ namespace FoxMath
 
         #pragma region static methods
 
-        static bool isSphereOrientedBoxCollided(const Shape3D::Sphere& sphere, const Shape3D::OrientedBox& box, Intersection& intersection);
+        static bool isSphereOrientedBoxCollided(const Sphere& sphere, const OrientedBox& box, Intersection& intersection);
 
         #pragma endregion //!static methods
 

@@ -51,7 +51,7 @@ namespace FoxMath
 
         #pragma region methods
 
-        Shape3D::AABB getAABB() const noexcept
+        AABB getAABB() const noexcept
         {
             Vec3 vecIi = referential_.unitI * iI_;
             Vec3 vecIj = referential_.unitJ * iJ_;
@@ -59,7 +59,7 @@ namespace FoxMath
             float AABBiI = std::abs(Vec3::dot(Vec3::right, vecIi)) + std::abs(Vec3::dot(Vec3::right, vecIj)) + std::abs(Vec3::dot(Vec3::right, vecIk));
             float AABBiJ = std::abs(Vec3::dot(Vec3::up, vecIi)) + std::abs(Vec3::dot(Vec3::up, vecIj)) + std::abs(Vec3::dot(Vec3::up, vecIk));
             float AABBiK = std::abs(Vec3::dot(Vec3::forward, vecIi)) + std::abs(Vec3::dot(Vec3::forward, vecIj)) + std::abs(Vec3::dot(Vec3::forward, vecIk));
-            return Shape3D::AABB{referential_.origin, AABBiI, AABBiJ, AABBiK};
+            return AABB{referential_.origin, AABBiI, AABBiJ, AABBiK};
         }
 
         Vec3 ptForwardTopLeft     () const noexcept { return referential_.origin - (referential_.unitI * iI_) + (referential_.unitJ * iJ_) + (referential_.unitK * iK_); }

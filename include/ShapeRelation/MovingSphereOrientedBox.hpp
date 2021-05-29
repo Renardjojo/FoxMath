@@ -6,7 +6,7 @@
 #define _MOVING_SPHERE_ORIENTED_BOX_H
 
 #include "Vector/Vector.hpp"
-#include "GE/Core/Maths/ShapeRelation/Intersection.hpp"
+#include "ShapeRelation/Intersection.hpp"
 #include "Shape3D/Segment.hpp"
 #include "GE/Core/Maths/Shape3D/Capsule.hpp"
 #include "GE/Core/Maths/Shape3D/Quad.hpp"
@@ -32,7 +32,7 @@ namespace FoxMath
         #pragma region static methods
 
         /*get the first collision point between moving sphere and static box*/
-        static bool isMovingSphereOrientedBoxCollided(const Shape3D::Sphere& sphere, const Shape3D::OrientedBox& box, const Vec3& sphereVelocity, Intersection& intersection);
+        static bool isMovingSphereOrientedBoxCollided(const Sphere& sphere, const OrientedBox& box, const Vec3& sphereVelocity, Intersection& intersection);
 
         #pragma endregion //!static methods
 
@@ -40,50 +40,50 @@ namespace FoxMath
 
         #pragma region static methods
 
-        static Shape3D::OrientedBox getMinkowskiSumOBB (const Shape3D::OrientedBox& box, float sphereRadius);
+        static OrientedBox getMinkowskiSumOBB (const OrientedBox& box, float sphereRadius);
 
-        static void applyVeronoiRegionCorrection(const Shape3D::OrientedBox& box, Intersection& intersection, const Shape3D::Segment& seg, float sphereRadius);
+        static void applyVeronoiRegionCorrection(const OrientedBox& box, Intersection& intersection, const Segment& seg, float sphereRadius);
 
-        static bool applyVeronoiRegionCorrectionWithOutCode(const Shape3D::OrientedBox& box, Intersection& intersection, const Shape3D::Segment& seg, float sphereRadius, int topOutCode, int rightOutCode, int forwardOutCode, bool checkFirstIntersection);
+        static bool applyVeronoiRegionCorrectionWithOutCode(const OrientedBox& box, Intersection& intersection, const Segment& seg, float sphereRadius, int topOutCode, int rightOutCode, int forwardOutCode, bool checkFirstIntersection);
 
-        static bool applyCapsuleCorrection(const Shape3D::Segment& seg, const Shape3D::Capsule& _capsule, Intersection& intersection, bool checkFirstIntersection);
+        static bool applyCapsuleCorrection(const Segment& seg, const Capsule& _capsule, Intersection& intersection, bool checkFirstIntersection);
 
         /*Sub component of minkowski sum*/
-        static Shape3D::Capsule getTopLeftVeronoiCapsule(const Shape3D::OrientedBox& box, float sphereRadius);
+        static Capsule getTopLeftVeronoiCapsule(const OrientedBox& box, float sphereRadius);
 
-        static Shape3D::Capsule getTopRightVeronoiCapsule(const Shape3D::OrientedBox& box, float sphereRadius);
+        static Capsule getTopRightVeronoiCapsule(const OrientedBox& box, float sphereRadius);
 
-        static Shape3D::Capsule getTopForwardVeronoiCapsule(const Shape3D::OrientedBox& box, float sphereRadius);
+        static Capsule getTopForwardVeronoiCapsule(const OrientedBox& box, float sphereRadius);
 
-        static Shape3D::Capsule getTopBackwardVeronoiCapsule(const Shape3D::OrientedBox& box, float sphereRadius);
+        static Capsule getTopBackwardVeronoiCapsule(const OrientedBox& box, float sphereRadius);
 
-        static Shape3D::Capsule getBottomLeftVeronoiCapsule(const Shape3D::OrientedBox& box, float sphereRadius);
+        static Capsule getBottomLeftVeronoiCapsule(const OrientedBox& box, float sphereRadius);
 
-        static Shape3D::Capsule getBottomRightVeronoiCapsule(const Shape3D::OrientedBox& box, float sphereRadius);
+        static Capsule getBottomRightVeronoiCapsule(const OrientedBox& box, float sphereRadius);
 
-        static Shape3D::Capsule getBottomForwardVeronoiCapsule(const Shape3D::OrientedBox& box, float sphereRadius);
+        static Capsule getBottomForwardVeronoiCapsule(const OrientedBox& box, float sphereRadius);
 
-        static Shape3D::Capsule getBottomBackwardVeronoiCapsule(const Shape3D::OrientedBox& box, float sphereRadius);
+        static Capsule getBottomBackwardVeronoiCapsule(const OrientedBox& box, float sphereRadius);
 
-        static Shape3D::Capsule getLeftForwardVeronoiCapsule(const Shape3D::OrientedBox& box, float sphereRadius);
+        static Capsule getLeftForwardVeronoiCapsule(const OrientedBox& box, float sphereRadius);
 
-        static Shape3D::Capsule getLeftBackwardVeronoiCapsule(const Shape3D::OrientedBox& box, float sphereRadius);
+        static Capsule getLeftBackwardVeronoiCapsule(const OrientedBox& box, float sphereRadius);
 
-        static Shape3D::Capsule getRightForwardVeronoiCapsule(const Shape3D::OrientedBox& box, float sphereRadius);
+        static Capsule getRightForwardVeronoiCapsule(const OrientedBox& box, float sphereRadius);
 
-        static Shape3D::Capsule getRightBackwardVeronoiCapsule(const Shape3D::OrientedBox& box, float sphereRadius);
+        static Capsule getRightBackwardVeronoiCapsule(const OrientedBox& box, float sphereRadius);
 
-        static Shape3D::Quad getTopVeronoiFace (const Shape3D::OrientedBox& box, float sphereRadius);
+        static Quad getTopVeronoiFace (const OrientedBox& box, float sphereRadius);
 
-        static Shape3D::Quad getBottomVeronoiFace(const Shape3D::OrientedBox& box, float sphereRadius);
+        static Quad getBottomVeronoiFace(const OrientedBox& box, float sphereRadius);
 
-        static Shape3D::Quad getRightVeronoiFace(const Shape3D::OrientedBox& box, float sphereRadius);
+        static Quad getRightVeronoiFace(const OrientedBox& box, float sphereRadius);
 
-        static Shape3D::Quad getLeftVeronoiFace(const Shape3D::OrientedBox& box, float sphereRadius);
+        static Quad getLeftVeronoiFace(const OrientedBox& box, float sphereRadius);
 
-        static Shape3D::Quad getFowardVeronoiFace(const Shape3D::OrientedBox& box, float sphereRadius);
+        static Quad getFowardVeronoiFace(const OrientedBox& box, float sphereRadius);
 
-        static Shape3D::Quad getBackwardVeronoiFace(const Shape3D::OrientedBox& box, float sphereRadius);
+        static Quad getBackwardVeronoiFace(const OrientedBox& box, float sphereRadius);
 
         #pragma endregion //!static methods
 

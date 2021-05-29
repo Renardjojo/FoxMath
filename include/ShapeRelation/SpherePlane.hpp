@@ -27,7 +27,7 @@ namespace FoxMath
 
         #pragma region static methods
 
-        static bool isSphereOnOrForwardPlanCollided(const Shape3D::Sphere& sphere, const Shape3D::Plane& plane);
+        static bool isSphereOnOrForwardPlanCollided(const Sphere& sphere, const Plane& plane);
 
         #pragma endregion //!static methods
 

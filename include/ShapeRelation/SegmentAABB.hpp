@@ -6,7 +6,7 @@
 #define _SEGMENT_AABB_H
 
 #include "Vector/Vector.hpp"
-#include "GE/Core/Maths/ShapeRelation/Intersection.hpp"
+#include "ShapeRelation/Intersection.hpp"
 #include "Shape3D/Segment.hpp"
 #include "Shape3D/AABB.hpp"
 
@@ -29,7 +29,7 @@ namespace FoxMath
 
         #pragma region static methods
 
-        static bool isSegmentAABBCollided(const Shape3D::Segment& seg, const Shape3D::AABB& AABB, Intersection& intersection);
+        static bool isSegmentAABBCollided(const Segment& seg, const AABB& AABB, Intersection& intersection);
 
         #pragma endregion //!static methods
 
@@ -38,7 +38,7 @@ namespace FoxMath
         #pragma region static methods
 
         /*memorise with temporal float the value of T. Compare this value to the new T and compute the nearest point af seg.pt1*/
-        static bool addIntersectionWithScalerIfOnAABBAndReturnIfFull(const Shape3D::Segment& seg, const Shape3D::AABB& AABB, Intersection& intersection, float scaler, float& tempT, Vec3 faceNormal);
+        static bool addIntersectionWithScalerIfOnAABBAndReturnIfFull(const Segment& seg, const AABB& AABB, Intersection& intersection, float scaler, float& tempT, Vec3 faceNormal);
 
         #pragma endregion //!static methods
     };

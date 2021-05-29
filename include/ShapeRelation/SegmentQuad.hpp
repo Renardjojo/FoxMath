@@ -5,7 +5,7 @@
 #ifndef _SEGMENT_QUAD_H
 #define _SEGMENT_QUAD_H
 
-#include "GE/Core/Maths/ShapeRelation/Intersection.hpp"
+#include "ShapeRelation/Intersection.hpp"
 #include "Shape3D/Segment.hpp"
 #include "GE/Core/Maths/Shape3D/Quad.hpp"
 
@@ -28,7 +28,7 @@ namespace FoxMath
 
         #pragma region static methods
 
-        static bool isSegmentQuadCollided(const Shape3D::Segment& seg, const Shape3D::Quad& quad, Intersection& intersection);
+        static bool isSegmentQuadCollided(const Segment& seg, const Quad& quad, Intersection& intersection);
 
         #pragma endregion //!static methods
 
@@ -39,7 +39,7 @@ namespace FoxMath
         /*using the Cohen–Sutherland algorithm to detect the emplacement of the point*/
         static int detectPointEmplacement (const Vec2& point, const Vec2& min, const Vec2& max);
 
-        static bool detectCollisionOn2DQuad(const Shape3D::Quad& quad, const Shape3D::Segment& seg, Intersection& intersection);
+        static bool detectCollisionOn2DQuad(const Quad& quad, const Segment& seg, Intersection& intersection);
 
         #pragma endregion //!static methods
 

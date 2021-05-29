@@ -5,7 +5,7 @@
 #ifndef _AABB_AABB_H
 #define _AABB_AABB_H
 
-#include "GE/Core/Maths/ShapeRelation/Intersection.hpp"
+#include "ShapeRelation/Intersection.hpp"
 #include "Shape3D/AABB.hpp"
 
 namespace FoxMath
@@ -27,8 +27,8 @@ namespace FoxMath
 
         #pragma region static methods
 
-        static bool isBothAABBCollided(const Shape3D::AABB& aabb1, const Shape3D::AABB& aabb2, Intersection& intersection);
-        static bool isBothAABBCollided(const Shape3D::AABB& aabb1, const Shape3D::AABB& aabb2);
+        static bool isBothAABBCollided(const AABB& aabb1, const AABB& aabb2, Intersection& intersection);
+        static bool isBothAABBCollided(const AABB& aabb1, const AABB& aabb2);
 
         #pragma endregion //!static methods
 

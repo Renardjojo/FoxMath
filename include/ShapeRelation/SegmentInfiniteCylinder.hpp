@@ -5,7 +5,7 @@
 #ifndef _SEGMENT_INFINITE_CYLINDER_H
 #define _SEGMENT_INFINITE_CYLINDER_H
 
-#include "GE/Core/Maths/ShapeRelation/Intersection.hpp"
+#include "ShapeRelation/Intersection.hpp"
 #include "Shape3D/Segment.hpp"
 #include "Shape3D/InfiniteCylinder.hpp"
 
@@ -28,7 +28,7 @@ namespace FoxMath
 
         #pragma region static methods
 
-        static bool isSegmentInfiniteCylinderCollided(const Shape3D::Segment& seg, const Shape3D::InfiniteCylinder& infCylinder, Intersection& intersection);
+        static bool isSegmentInfiniteCylinderCollided(const Segment& seg, const InfiniteCylinder& infCylinder, Intersection& intersection);
 
         #pragma endregion //!static methods
 

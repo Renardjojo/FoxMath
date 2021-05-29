@@ -6,7 +6,7 @@
 #define _SEGMENT_SEGMENT_H
 
 #include "Vector/Vector.hpp"
-#include "GE/Core/Maths/ShapeRelation/Intersection.hpp"
+#include "ShapeRelation/Intersection.hpp"
 #include "Shape3D/Segment.hpp"
 
 namespace FoxMath
