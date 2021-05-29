@@ -129,9 +129,9 @@ namespace FoxMath
             const TType a22 = two / (top - bottom);
             const TType a33 = -two / (farVal - nearVal);
 
-            const TType tx = (right + left) / (right - left);
-            const TType ty = (top + bottom) / (top - bottom);  
-            const TType tz = (farVal + nearVal)/ (farVal - nearVal);
+            const TType tx = -(right + left) / (right - left);
+            const TType ty = -(top + bottom) / (top - bottom);  
+            const TType tz = -(farVal + nearVal)/ (farVal - nearVal);
 
             return Matrix4 (    a11,    zero,   zero,   tx,
                                 zero,   a22,    zero,   ty,
