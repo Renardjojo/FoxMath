@@ -43,7 +43,7 @@ auto Random::ranged(const T& min, const T& max)  -> std::enable_if_t<std::is_flo
 template<typename T>
 auto Random::ranged(const T& min, const T& max) -> std::enable_if_t<std::is_integral<T>::value, T>
 {
-    return max - min <= std::numeric_limits<T>::epsilon() ? max : min + static_cast <T> (rand()) / (static_cast <T> (RAND_MAX/((max + static_cast<T>(1)) - min)));
+    return max - min <= std::numeric_limits<T>::epsilon() ? max : min + static_cast <T> (rand()) / (static_cast <T> (RAND_MAX/(max - min)));
 }
 
 template<typename T = float>
