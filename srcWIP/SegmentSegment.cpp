@@ -32,14 +32,6 @@ bool SegmentSegment::isSegmentSegmentCollided(const Vec3& a1, const Vec3& a2, co
         return false;
 
     /*OM = OA + t(OB - OA)*/
-    if (intersection.intersectionType == EIntersectionOneIntersectiont)
-    {
-        intersection.setSecondIntersection(a1 + t1 * (a2 - a1));
-    }
-    else
-    {
-        intersection.setOneIntersection(a1 + t1 * (a2 - a1));
-    }
-
+    intersection.setOneIntersection(a1 + t1 * (a2 - a1));
     return true;
 }
