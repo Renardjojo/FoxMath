@@ -32,15 +32,9 @@ bool AabbAabb::isBothAABBCollided(const AABB& aabb1, const AABB& aabb2, Intersec
 
 bool AabbAabb::isBothAABBCollided(const AABB& aabb1, const AABB& aabb2)
 {
-    /*Step 1 : Find if the both shape are non collided*/
-    //looking for a collision between the bow and the AABB of the sphere.
     Vec3 BOmega = aabb2.getCenter() - aabb1.getCenter();
 
-    if (std::abs(BOmega.x) > aabb1.getExtI() + aabb2.getExtI() ||
-        std::abs(BOmega.y) > aabb1.getExtJ() + aabb2.getExtJ() ||
-        std::abs(BOmega.z) > aabb1.getExtK() + aabb2.getExtK())
-    {
-        return false;
-    }
-    return true;
+    return !(std::abs(BOmega.x) > aabb1.getExtI() + aabb2.getExtI() ||
+    std::abs(BOmega.y) > aabb1.getExtJ() + aabb2.getExtJ() ||
+    std::abs(BOmega.z) > aabb1.getExtK() + aabb2.getExtK());
 }
